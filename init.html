@@ -3,140 +3,155 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Baralho Realista - IA Mobile</title>
+  <title>Baralho Mobile - Versão Final</title>
   <style>
     :root { 
-      --bg-table: radial-gradient(circle, #1a4a32 0%, #0d2e1a 100%); 
-      --card-w: 62px; 
-      --card-h: 90px; 
+      --bg-table: #1a4a32; 
+      --card-w: 60px; 
+      --card-h: 88px; 
       --gold: #fbc531; 
-      --gold-dark: #e1b12c; 
-      --success: #4cd137; 
       --red: #d63031; 
-      --text-light: #fff; 
     }
     
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { 
-        height: 100%; 
-        margin: 0; 
-        padding: 0; 
-        overflow-x: hidden; 
-        background: var(--bg-table);
-        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto;
+    /* Reset básico para evitar scroll lateral */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+    
+    body { 
+      background-color: var(--bg-table);
+      background-image: radial-gradient(circle, #1a4a32 0%, #0d2e1a 100%);
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      min-height: 100vh;
+      color: white;
     }
 
-    body { padding: 10px; display: flex; flex-direction: column; align-items: center; }
-    
-    /* Barra de Status Compacta */
+    /* Top Bar */
     .top-bar { 
       width: 100%; 
-      max-width: 450px; 
+      max-width: 400px; 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 8px 15px; 
-      margin-bottom: 12px; 
-      background: rgba(0,0,0,0.85); 
+      padding: 10px; 
+      margin-bottom: 10px; 
+      background: rgba(0,0,0,0.8); 
       border: 1px solid var(--gold); 
-      border-radius: 25px; 
-      font-size: 0.8rem;
+      border-radius: 12px;
     }
 
     button { 
-      border: 0; border-radius: 18px; padding: 8px 15px; 
-      cursor: pointer; font-weight: 800; text-transform: uppercase;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark)); 
-      color: #000;
+      background: var(--gold); 
+      color: #000; 
+      border: none; 
+      padding: 8px 12px; 
+      border-radius: 8px; 
+      font-weight: bold; 
+      font-size: 12px;
     }
 
-    /* Grid do Tabuleiro */
-    .board { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 10px; }
-
+    /* Tabuleiro */
+    .board { width: 100%; max-width: 400px; }
     .container { 
+      background: rgba(255,255,255,0.1); 
+      border-radius: 8px; 
       padding: 8px; 
-      background: rgba(255,255,255,0.05); 
-      border: 1px solid rgba(255,255,255,0.1); 
-      border-radius: 10px; 
+      margin-bottom: 8px;
     }
 
-    .columns-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    .columns-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; justify-items: center; }
+
+    .btn-action { 
+      width: 100%; margin-bottom: 6px; padding: 6px; 
+      background: #222; border: 1px solid var(--gold); 
+      color: var(--gold); font-size: 10px; font-weight: bold; border-radius: 4px;
     }
 
-    .grid-cards { 
-      display: grid; 
-      grid-template-columns: repeat(3, 1fr); 
-      gap: 4px; 
-      justify-items: center; 
+    /* CARTAS - Versão Sem Erros de Render */
+    .card-wrapper { 
+      width: var(--card-w); 
+      height: var(--card-h); 
+      position: relative; 
+      display: inline-block;
     }
 
-    .clickable-title { 
-      width: 100%; margin-bottom: 8px; padding: 10px 5px; 
-      background: rgba(0,0,0,0.4); border: 1px solid var(--gold-dark); 
-      border-radius: 6px; color: var(--gold); font-size: 0.7rem; font-weight: 900;
+    /* Em vez de 3D, usamos visibilidade simples */
+    .card-back, .card-front {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border-radius: 5px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
 
-    .purchase-area { display: flex; justify-content: center; min-height: 105px; }
-    .discard-area { min-height: 90px; }
-    .discard-list { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
-
-    /* Cartas Estilizadas para Mobile */
-    .card-wrapper { width: var(--card-w); height: var(--card-h); perspective: 800px; }
-    .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.4s; transform-style: preserve-3d; }
-    .flipped .card-inner { transform: rotateY(180deg); }
-    
-    .card-front, .card-back { 
-      position: absolute; inset: 0; backface-visibility: hidden; 
-      border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    .card-back { 
+      background: #2c3e50; 
+      border: 2px solid white;
+      z-index: 2; 
     }
 
     .card-front { 
-      background: #fff; color: #000; transform: rotateY(180deg); 
-      display: flex; flex-direction: column; justify-content: space-between; padding: 3px;
-    }
-    
-    .card-back { 
-        background: #2c3e50; 
-        border: 2px solid #fff;
-        background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255,255,255,0.05) 5px, rgba(255,255,255,0.05) 10px);
+      background: #fff; 
+      color: #000; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: space-between; 
+      padding: 3px; 
+      border: 1px solid #999;
+      z-index: 1;
     }
 
-    .in-meld .card-front { border: 2px solid var(--gold); box-shadow: 0 0 8px var(--gold); transform: rotateY(180deg) scale(1.03); }
+    /* Estado Virado */
+    .flipped .card-back { display: none; }
+    .flipped .card-front { z-index: 3; }
+
+    .in-meld { border: 2px solid var(--gold); box-shadow: 0 0 8px var(--gold); }
     .red { color: var(--red); }
-    .suit-main { font-size: 1.4rem; text-align: center; flex: 1; display: flex; align-items: center; justify-content: center; }
-    .card-corner { font-size: 0.75rem; font-weight: 900; line-height: 1; }
+    .suit-main { font-size: 1.5rem; text-align: center; font-weight: bold; flex: 1; display: flex; align-items: center; justify-content: center; }
+    .card-corner { font-size: 0.8rem; font-weight: bold; line-height: 1; }
 
-    /* Ajuste para telas muito pequenas */
-    @media (max-width: 340px) {
-      :root { --card-w: 52px; --card-h: 78px; }
-      .clickable-title { font-size: 0.6rem; }
-    }
+    .purchase-area { display: flex; justify-content: center; min-height: 95px; }
   </style>
 </head>
 <body>
-  <header class="top-bar">
-    <button onclick="init()">Novo Jogo</button>
-    <div class="stats">MELDS: <span id="stat-melds" style="color:var(--success)">0</span> | DECK: <span id="stat-deck" style="color:var(--gold)">0</span></div>
-  </header>
-  
-  <main class="board">
-    <section class="container purchase-area"><div id="deck-top"></div></section>
-    
+
+  <div class="top-bar">
+    <button onclick="init()">NOVO JOGO</button>
+    <div style="font-size: 12px;">MELDS: <span id="stat-melds" style="color:var(--gold)">0</span> | DECK: <span id="stat-deck">0</span></div>
+  </div>
+
+  <div class="board">
+    <div class="container purchase-area" id="deck-top"></div>
+
     <div class="columns-grid">
-      <section class="container"><button class="clickable-title" onclick="handleSmartAction('left')">Esquerda</button><div id="deck-left" class="grid-cards"></div></section>
-      <section class="container"><button class="clickable-title" onclick="handleSmartAction('centerLeft')">Centro-E</button><div id="deck-centerLeft" class="grid-cards"></div></section>
-      <section class="container"><div class="clickable-title" style="text-align:center; border-color: #555; color: #aaa;">MESTRE</div><div id="deck-centerRight" class="grid-cards"></div></section>
-      <section class="container"><button class="clickable-title" onclick="handleSmartAction('right')">Direita</button><div id="deck-right" class="grid-cards"></div></section>
+      <div class="container">
+        <button class="btn-action" onclick="handleSmartAction('left')">ESQUERDA</button>
+        <div id="deck-left" class="grid-cards"></div>
+      </div>
+      <div class="container">
+        <button class="btn-action" onclick="handleSmartAction('centerLeft')">CENTRO-E</button>
+        <div id="deck-centerLeft" class="grid-cards"></div>
+      </div>
+      <div class="container">
+        <div class="btn-action" style="text-align:center; opacity:0.5; border-color:#555">MESTRE</div>
+        <div id="deck-centerRight" class="grid-cards"></div>
+      </div>
+      <div class="container">
+        <button class="btn-action" onclick="handleSmartAction('right')">DIREITA</button>
+        <div id="deck-right" class="grid-cards"></div>
+      </div>
     </div>
 
-    <section class="container discard-area"><div id="deck-removed" class="discard-list"></div></section>
-  </main>
+    <div class="container" style="min-height: 60px;">
+      <div id="deck-removed" style="display:flex; flex-wrap:wrap; gap:4px; justify-content:center;"></div>
+    </div>
+  </div>
 
   <script>
-    // Lógica idêntica à original, mantendo a funcionalidade de análise
     const naipes = ['♥', '♦', '♣', '♠'];
     const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
     const vNum = { A: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, J: 11, Q: 12, K: 13 };
@@ -144,84 +159,73 @@
     let randomIdx = null;
     let isGameOver = false;
 
-    function isValidMeld(a, b, c) { 
-      const sameValue = a.v === b.v && b.v === c.v; 
-      if (sameValue) return new Set([a.n, b.n, c.n]).size === 3; 
-      const sameSuit = a.n === b.n && b.n === c.n; 
-      if (!sameSuit) return false; 
-      const vals = [vNum[a.v], vNum[b.v], vNum[c.v]].sort((x, y) => x - y); 
-      return vals[0] + 1 === vals[1] && vals[1] + 1 === vals[2]; 
+    function isValidMeld(a, b, c) {
+      if (a.v === b.v && b.v === c.v) return new Set([a.n, b.n, c.n]).size === 3;
+      if (a.n === b.n && b.n === c.n) {
+        const v = [vNum[a.v], vNum[b.v], vNum[c.v]].sort((x,y)=>x-y);
+        return v[0]+1 === v[1] && v[1]+1 === v[2];
+      }
+      return false;
     }
 
-    function checkMelds(cards) { 
-      cards.forEach(card => card.inMeld = false); 
-      const allMelds = []; 
-      for (let i = 0; i < cards.length - 2; i++) { 
-        for (let j = i + 1; j < cards.length - 1; j++) { 
-          for (let k = j + 1; k < cards.length; k++) { 
-            if (isValidMeld(cards[i], cards[j], cards[k])) allMelds.push({ idxs: [i, j, k] }); 
-          } 
-        } 
-      } 
-      let bestMask = [];
-      function backtrack(start, used) {
-        if (used.size > bestMask.length) bestMask = Array.from(used);
-        for (let i = start; i < allMelds.length; i++) {
-          if (allMelds[i].idxs.some(idx => used.has(idx))) continue;
-          allMelds[i].idxs.forEach(idx => used.add(idx));
-          backtrack(i + 1, used);
-          allMelds[i].idxs.forEach(idx => used.delete(idx));
+    function checkMelds(cards) {
+      cards.forEach(c => c.inMeld = false);
+      let count = 0;
+      for (let i=0; i<cards.length-2; i++) {
+        for (let j=i+1; j<cards.length-1; j++) {
+          for (let k=j+1; k<cards.length; k++) {
+            if (!cards[i].inMeld && !cards[j].inMeld && !cards[k].inMeld && isValidMeld(cards[i], cards[j], cards[k])) {
+              cards[i].inMeld = cards[j].inMeld = cards[k].inMeld = true;
+              count++;
+            }
+          }
         }
       }
-      backtrack(0, new Set());
-      bestMask.forEach(idx => cards[idx].inMeld = true);
-      return bestMask.length / 3;
+      return count;
     }
 
-    function handleSmartAction(sec) {
-      if (isGameOver || randomIdx === null) return;
-      let worstIdx = -1;
-      state[sec].forEach((c, idx) => { if (!c.inMeld) worstIdx = idx; });
-      if (worstIdx !== -1) {
-        const old = state[sec][worstIdx];
-        state[sec][worstIdx] = state.top.splice(randomIdx, 1)[0];
-        state.removed.unshift(old);
-        pickTop();
-        render();
-      }
-    }
-
-    function init() { 
-      isGameOver = false; 
-      const deck = []; 
-      for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false }))); 
-      deck.sort(() => Math.random() - 0.5); 
-      ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => state[s] = deck.splice(0, 9)); 
-      state.top = deck; state.removed = []; pickTop(); render(); 
+    function init() {
+      isGameOver = false;
+      const deck = [];
+      for (let i=0; i<2; i++) naipes.forEach(n => valores.forEach(v => deck.push({v, n, isRed: '♥♦'.includes(n), inMeld: false})));
+      deck.sort(() => Math.random() - 0.5);
+      ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => state[s] = deck.splice(0, 9));
+      state.top = deck; state.removed = [];
+      pickTop(); render();
     }
 
     function pickTop() { randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; }
 
-    function createCard(card, sec, idx, show) { 
-      const wrap = document.createElement('div'); 
-      wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''}`; 
-      const valDisplay = card.v;
+    function handleSmartAction(sec) {
+      if (isGameOver || randomIdx === null) return;
+      let targetIdx = state[sec].findIndex(c => !c.inMeld);
+      if (targetIdx !== -1) {
+        state.removed.unshift(state[sec][targetIdx]);
+        state[sec][targetIdx] = state.top.splice(randomIdx, 1)[0];
+        pickTop(); render();
+      }
+    }
+
+    function createCard(card, sec, idx, show) {
+      const wrap = document.createElement('div');
+      wrap.className = `card-wrapper ${show ? 'flipped' : ''}`;
+      
       wrap.innerHTML = `
-        <div class="card-inner">
-          <div class="card-back"></div>
-          <div class="card-front ${card.isRed ? 'red' : ''}">
-            <div class="card-corner">${valDisplay}<br>${card.n}</div>
-            <div class="suit-main">${card.n}</div>
-            <div class="card-corner" style="transform:rotate(180deg)">${valDisplay}<br>${card.n}</div>
-          </div>
-        </div>`;
+        <div class="card-back"></div>
+        <div class="card-front ${card.isRed ? 'red' : ''} ${card.inMeld ? 'in-meld' : ''}">
+          <div class="card-corner">${card.v}<br>${card.n}</div>
+          <div class="suit-main">${card.n}</div>
+          <div class="card-corner" style="transform:rotate(180deg)">${card.v}<br>${card.n}</div>
+        </div>
+      `;
+      
       wrap.onclick = () => {
         if (isGameOver) return;
         if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) {
           const old = state[sec][idx];
-          const newCard = state.removed[0] ? state.removed.shift() : state.top.splice(randomIdx, 1)[0];
-          if (!newCard) return;
-          state[sec][idx] = newCard;
+          const next = state.removed.length > 0 ? state.removed.shift() : state.top.splice(randomIdx, 1)[0];
+          if (!next) return;
+          state[sec][idx] = next;
           state.removed.unshift(old);
           if (state.removed[0] === old) pickTop();
         } else if (sec === 'top') {
@@ -230,29 +234,36 @@
         }
         render();
       };
-      return wrap; 
+      return wrap;
     }
 
-    function render() { 
-      let total = 0; let win = false; 
-      ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => { 
-        total += checkMelds(state[s]); 
-        if (state[s].every(c => c.inMeld)) win = true; 
-      }); 
-      if (win) isGameOver = true;
-      document.getElementById('stat-melds').innerText = total; 
-      document.getElementById('stat-deck').innerText = state.top.length; 
-      const topDiv = document.getElementById('deck-top'); topDiv.innerHTML = ''; 
-      if (randomIdx !== null && state.top[randomIdx]) topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver)); 
-      const areas = { 'deck-left': 'left', 'deck-centerLeft': 'centerLeft', 'deck-centerRight': 'centerRight', 'deck-right': 'right', 'deck-removed': 'removed' }; 
-      for (const id in areas) { 
-        const el = document.getElementById(id); el.innerHTML = ''; 
-        state[areas[id]].forEach((c, i) => {
-          if(id === 'deck-removed' && i > 5) return; 
-          el.appendChild(createCard(c, areas[id], i, areas[id] === 'centerRight' || areas[id] === 'removed' || isGameOver));
-        }); 
-      } 
+    function render() {
+      let total = 0;
+      ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => {
+        total += checkMelds(state[s]);
+        if (state[s].length > 0 && state[s].every(c => c.inMeld)) isGameOver = true;
+      });
+
+      document.getElementById('stat-melds').innerText = total;
+      document.getElementById('stat-deck').innerText = state.top.length;
+      
+      const topArea = document.getElementById('deck-top');
+      topArea.innerHTML = '';
+      if (randomIdx !== null && state.top[randomIdx]) {
+        topArea.appendChild(createCard(state.top[randomIdx], 'top', 0, isGameOver));
+      }
+
+      ['left', 'centerLeft', 'centerRight', 'right', 'removed'].forEach(s => {
+        const el = document.getElementById('deck-' + s);
+        el.innerHTML = '';
+        state[s].forEach((c, i) => {
+          if (s === 'removed' && i > 5) return; // Limita visualização do descarte
+          const isVisible = (s === 'centerRight' || s === 'removed' || isGameOver);
+          el.appendChild(createCard(c, s, i, isVisible));
+        });
+      });
     }
+
     window.onload = init;
   </script>
 </body>

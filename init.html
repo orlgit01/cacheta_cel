@@ -2,95 +2,126 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Baralho Mobile - Versão Final</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Baralho Mobile Pro</title>
   <style>
     :root { 
       --bg-table: #1a4a32; 
-      --card-w: 60px; 
-      --card-h: 88px; 
+      --card-w: 65px; /* Ligeiramente maior para o iPhone 7 Plus */
+      --card-h: 92px; 
       --gold: #fbc531; 
       --red: #d63031; 
     }
     
-    /* Reset básico para evitar scroll lateral */
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+    * { 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent; 
+      margin: 0; 
+      padding: 0; 
+      user-select: none; /* Evita seleção de texto durante o jogo */
+      -webkit-user-select: none;
+    }
     
     body { 
       background-color: var(--bg-table);
       background-image: radial-gradient(circle, #1a4a32 0%, #0d2e1a 100%);
-      font-family: sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 10px;
+      padding: 15px 10px;
       min-height: 100vh;
       color: white;
+      overflow-x: hidden;
     }
 
-    /* Top Bar */
+    /* Barra Superior Otimizada */
     .top-bar { 
       width: 100%; 
-      max-width: 400px; 
+      max-width: 414px; /* Largura exata do iPhone 7 Plus */
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 10px; 
-      margin-bottom: 10px; 
-      background: rgba(0,0,0,0.8); 
+      padding: 12px; 
+      margin-bottom: 15px; 
+      background: rgba(0,0,0,0.85); 
       border: 1px solid var(--gold); 
-      border-radius: 12px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
     button { 
       background: var(--gold); 
       color: #000; 
       border: none; 
-      padding: 8px 12px; 
-      border-radius: 8px; 
+      padding: 10px 16px; 
+      border-radius: 10px; 
       font-weight: bold; 
-      font-size: 12px;
+      font-size: 13px;
+      active: opacity 0.7;
     }
 
     /* Tabuleiro */
-    .board { width: 100%; max-width: 400px; }
+    .board { width: 100%; max-width: 414px; }
+    
     .container { 
-      background: rgba(255,255,255,0.1); 
-      border-radius: 8px; 
-      padding: 8px; 
-      margin-bottom: 8px;
+      background: rgba(255,255,255,0.08); 
+      border-radius: 12px; 
+      padding: 10px; 
+      margin-bottom: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .columns-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .grid-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; justify-items: center; }
+    .columns-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 10px; 
+    }
+    
+    .grid-cards { 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 6px; 
+      justify-items: center; 
+    }
 
     .btn-action { 
-      width: 100%; margin-bottom: 6px; padding: 6px; 
-      background: #222; border: 1px solid var(--gold); 
-      color: var(--gold); font-size: 10px; font-weight: bold; border-radius: 4px;
+      width: 100%; 
+      margin-bottom: 8px; 
+      padding: 8px; 
+      background: #222; 
+      border: 1px solid var(--gold); 
+      color: var(--gold); 
+      font-size: 11px; 
+      font-weight: bold; 
+      border-radius: 6px;
+      text-transform: uppercase;
     }
 
-    /* CARTAS - Versão Sem Erros de Render */
+    /* CARTAS - Design Mobile Clean */
     .card-wrapper { 
       width: var(--card-w); 
       height: var(--card-h); 
       position: relative; 
-      display: inline-block;
+      cursor: pointer;
+      transition: transform 0.1s ease;
     }
+    
+    .card-wrapper:active { transform: scale(0.95); }
 
-    /* Em vez de 3D, usamos visibilidade simples */
     .card-back, .card-front {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      border-radius: 5px;
+      border-radius: 6px;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
     }
 
     .card-back { 
       background: #2c3e50; 
-      border: 2px solid white;
+      border: 2px solid #fff;
+      background-image: repeating-linear-gradient(45deg, #34495e, #34495e 5px, #2c3e50 5px, #2c3e50 10px);
       z-index: 2; 
     }
 
@@ -100,28 +131,58 @@
       display: flex; 
       flex-direction: column; 
       justify-content: space-between; 
-      padding: 3px; 
-      border: 1px solid #999;
+      padding: 4px; 
+      border: 1px solid #777;
       z-index: 1;
     }
 
-    /* Estado Virado */
     .flipped .card-back { display: none; }
     .flipped .card-front { z-index: 3; }
 
-    .in-meld { border: 2px solid var(--gold); box-shadow: 0 0 8px var(--gold); }
+    .in-meld { 
+      border: 3px solid var(--gold) !important; 
+      box-shadow: 0 0 10px var(--gold); 
+    }
+    
     .red { color: var(--red); }
-    .suit-main { font-size: 1.5rem; text-align: center; font-weight: bold; flex: 1; display: flex; align-items: center; justify-content: center; }
-    .card-corner { font-size: 0.8rem; font-weight: bold; line-height: 1; }
+    
+    .suit-main { 
+      font-size: 1.8rem; 
+      text-align: center; 
+      font-weight: bold; 
+      flex: 1; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+    }
+    
+    .card-corner { 
+      font-size: 0.9rem; 
+      font-weight: bold; 
+      line-height: 1.1; 
+    }
 
-    .purchase-area { display: flex; justify-content: center; min-height: 95px; }
+    .purchase-area { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      min-height: 110px; 
+      border: 2px dashed rgba(251, 197, 49, 0.3);
+    }
+
+    #deck-removed {
+      min-height: 95px;
+    }
   </style>
 </head>
 <body>
 
   <div class="top-bar">
     <button onclick="init()">NOVO JOGO</button>
-    <div style="font-size: 12px;">MELDS: <span id="stat-melds" style="color:var(--gold)">0</span> | DECK: <span id="stat-deck">0</span></div>
+    <div style="font-size: 13px; font-weight: bold;">
+      JOGOS: <span id="stat-melds" style="color:var(--gold)">0</span> | 
+      RESTO: <span id="stat-deck">0</span>
+    </div>
   </div>
 
   <div class="board">
@@ -137,7 +198,7 @@
         <div id="deck-centerLeft" class="grid-cards"></div>
       </div>
       <div class="container">
-        <div class="btn-action" style="text-align:center; opacity:0.5; border-color:#555">MESTRE</div>
+        <div class="btn-action" style="text-align:center; opacity:0.6; border-color:#555">MESTRE (VISÍVEL)</div>
         <div id="deck-centerRight" class="grid-cards"></div>
       </div>
       <div class="container">
@@ -146,8 +207,9 @@
       </div>
     </div>
 
-    <div class="container" style="min-height: 60px;">
-      <div id="deck-removed" style="display:flex; flex-wrap:wrap; gap:4px; justify-content:center;"></div>
+    <div class="container">
+      <p style="font-size: 10px; text-align: center; margin-bottom: 5px; color: var(--gold); font-weight: bold;">DESCARTE (ÚLTIMAS 6)</p>
+      <div id="deck-removed" style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;"></div>
     </div>
   </div>
 
@@ -160,7 +222,9 @@
     let isGameOver = false;
 
     function isValidMeld(a, b, c) {
+      // Mesma carta (trinca de naipes diferentes)
       if (a.v === b.v && b.v === c.v) return new Set([a.n, b.n, c.n]).size === 3;
+      // Sequência (mesmo naipe)
       if (a.n === b.n && b.n === c.n) {
         const v = [vNum[a.v], vNum[b.v], vNum[c.v]].sort((x,y)=>x-y);
         return v[0]+1 === v[1] && v[1]+1 === v[2];
@@ -187,14 +251,26 @@
     function init() {
       isGameOver = false;
       const deck = [];
-      for (let i=0; i<2; i++) naipes.forEach(n => valores.forEach(v => deck.push({v, n, isRed: '♥♦'.includes(n), inMeld: false})));
+      // 2 Baralhos
+      for (let i=0; i<2; i++) {
+        naipes.forEach(n => {
+          valores.forEach(v => {
+            deck.push({v, n, isRed: '♥♦'.includes(n), inMeld: false});
+          });
+        });
+      }
       deck.sort(() => Math.random() - 0.5);
+      
       ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => state[s] = deck.splice(0, 9));
-      state.top = deck; state.removed = [];
-      pickTop(); render();
+      state.top = deck; 
+      state.removed = [];
+      pickTop(); 
+      render();
     }
 
-    function pickTop() { randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; }
+    function pickTop() { 
+      randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; 
+    }
 
     function handleSmartAction(sec) {
       if (isGameOver || randomIdx === null) return;
@@ -202,7 +278,8 @@
       if (targetIdx !== -1) {
         state.removed.unshift(state[sec][targetIdx]);
         state[sec][targetIdx] = state.top.splice(randomIdx, 1)[0];
-        pickTop(); render();
+        pickTop(); 
+        render();
       }
     }
 
@@ -219,8 +296,10 @@
         </div>
       `;
       
-      wrap.onclick = () => {
+      wrap.onclick = (e) => {
+        e.preventDefault(); // Evita zoom de duplo clique no iOS
         if (isGameOver) return;
+        
         if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) {
           const old = state[sec][idx];
           const next = state.removed.length > 0 ? state.removed.shift() : state.top.splice(randomIdx, 1)[0];
@@ -238,13 +317,17 @@
     }
 
     function render() {
-      let total = 0;
+      let totalMelds = 0;
       ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => {
-        total += checkMelds(state[s]);
-        if (state[s].length > 0 && state[s].every(c => c.inMeld)) isGameOver = true;
+        totalMelds += checkMelds(state[s]);
+        // Vitória: Se todas as 9 cartas de um setor formarem jogos (3 jogos de 3)
+        if (state[s].length > 0 && state[s].every(c => c.inMeld)) {
+            isGameOver = true;
+            setTimeout(() => alert("VITÓRIA NO SETOR " + s.toUpperCase() + "!"), 100);
+        }
       });
 
-      document.getElementById('stat-melds').innerText = total;
+      document.getElementById('stat-melds').innerText = totalMelds;
       document.getElementById('stat-deck').innerText = state.top.length;
       
       const topArea = document.getElementById('deck-top');
@@ -257,7 +340,7 @@
         const el = document.getElementById('deck-' + s);
         el.innerHTML = '';
         state[s].forEach((c, i) => {
-          if (s === 'removed' && i > 5) return; // Limita visualização do descarte
+          if (s === 'removed' && i > 5) return; 
           const isVisible = (s === 'centerRight' || s === 'removed' || isGameOver);
           el.appendChild(createCard(c, s, i, isVisible));
         });

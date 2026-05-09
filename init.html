@@ -1,353 +1,229 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Baralho Mobile Pro</title>
-  <style>
-    :root { 
-      --bg-table: #1a4a32; 
-      --card-w: 65px; /* Ligeiramente maior para o iPhone 7 Plus */
-      --card-h: 92px; 
-      --gold: #fbc531; 
-      --red: #d63031; 
-    }
-    
-    * { 
-      box-sizing: border-box; 
-      -webkit-tap-highlight-color: transparent; 
-      margin: 0; 
-      padding: 0; 
-      user-select: none; /* Evita seleção de texto durante o jogo */
-      -webkit-user-select: none;
-    }
-    
-    body { 
-      background-color: var(--bg-table);
-      background-image: radial-gradient(circle, #1a4a32 0%, #0d2e1a 100%);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 15px 10px;
-      min-height: 100vh;
-      color: white;
-      overflow-x: hidden;
-    }
-
-    /* Barra Superior Otimizada */
-    .top-bar { 
-      width: 100%; 
-      max-width: 414px; /* Largura exata do iPhone 7 Plus */
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      padding: 12px; 
-      margin-bottom: 15px; 
-      background: rgba(0,0,0,0.85); 
-      border: 1px solid var(--gold); 
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    button { 
-      background: var(--gold); 
-      color: #000; 
-      border: none; 
-      padding: 10px 16px; 
-      border-radius: 10px; 
-      font-weight: bold; 
-      font-size: 13px;
-      active: opacity 0.7;
-    }
-
-    /* Tabuleiro */
-    .board { width: 100%; max-width: 414px; }
-    
-    .container { 
-      background: rgba(255,255,255,0.08); 
-      border-radius: 12px; 
-      padding: 10px; 
-      margin-bottom: 10px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .columns-grid { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 10px; 
-    }
-    
-    .grid-cards { 
-      display: grid; 
-      grid-template-columns: repeat(3, 1fr); 
-      gap: 6px; 
-      justify-items: center; 
-    }
-
-    .btn-action { 
-      width: 100%; 
-      margin-bottom: 8px; 
-      padding: 8px; 
-      background: #222; 
-      border: 1px solid var(--gold); 
-      color: var(--gold); 
-      font-size: 11px; 
-      font-weight: bold; 
-      border-radius: 6px;
-      text-transform: uppercase;
-    }
-
-    /* CARTAS - Design Mobile Clean */
-    .card-wrapper { 
-      width: var(--card-w); 
-      height: var(--card-h); 
-      position: relative; 
-      cursor: pointer;
-      transition: transform 0.1s ease;
-    }
-    
-    .card-wrapper:active { transform: scale(0.95); }
-
-    .card-back, .card-front {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      border-radius: 6px;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-    }
-
-    .card-back { 
-      background: #2c3e50; 
-      border: 2px solid #fff;
-      background-image: repeating-linear-gradient(45deg, #34495e, #34495e 5px, #2c3e50 5px, #2c3e50 10px);
-      z-index: 2; 
-    }
-
-    .card-front { 
-      background: #fff; 
-      color: #000; 
-      display: flex; 
-      flex-direction: column; 
-      justify-content: space-between; 
-      padding: 4px; 
-      border: 1px solid #777;
-      z-index: 1;
-    }
-
-    .flipped .card-back { display: none; }
-    .flipped .card-front { z-index: 3; }
-
-    .in-meld { 
-      border: 3px solid var(--gold) !important; 
-      box-shadow: 0 0 10px var(--gold); 
-    }
-    
-    .red { color: var(--red); }
-    
-    .suit-main { 
-      font-size: 1.8rem; 
-      text-align: center; 
-      font-weight: bold; 
-      flex: 1; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-    }
-    
-    .card-corner { 
-      font-size: 0.9rem; 
-      font-weight: bold; 
-      line-height: 1.1; 
-    }
-
-    .purchase-area { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center;
-      min-height: 110px; 
-      border: 2px dashed rgba(251, 197, 49, 0.3);
-    }
-
-    #deck-removed {
-      min-height: 95px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Cacheta Mobile</title>
+    <style>
+        body { margin: 0; padding: 10px; font-family: Arial; background: #228B22; color: white; text-align: center; }
+        canvas { border: 2px solid #000; background: #0A450A; touch-action: none; }
+        button { font-size: 18px; margin: 5px; padding: 10px; width: 45%; }
+        #info { font-size: 16px; margin: 10px 0; }
+    </style>
 </head>
 <body>
+    <h1>🂡 Cacheta Mobile</h1>
+    <div id="info">Seus pontos: <span id="playerScore">10</span> | IA: <span id="aiScore">10</span> | Vira: <span id="vira"></span> | Coringa: <span id="coringa"></span></div>
+    <canvas id="canvas" width="100%" height="400" style="max-width: 600px; height: 400px;"></canvas>
+    <button onclick="buyMonte()">Comprar Monte</button>
+    <button onclick="buyDescartes()">Comprar Descarte</button>
+    <button onclick="descartarSelecionada()">Descartar Selecionada</button>
+    <button onclick="bater()">Bater (9 cartas)</button>
 
-  <div class="top-bar">
-    <button onclick="init()">NOVO JOGO</button>
-    <div style="font-size: 13px; font-weight: bold;">
-      JOGOS: <span id="stat-melds" style="color:var(--gold)">0</span> | 
-      RESTO: <span id="stat-deck">0</span>
-    </div>
-  </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 600; canvas.height = 400; // Fixo para responsivo
 
-  <div class="board">
-    <div class="container purchase-area" id="deck-top"></div>
+        // Ajusta canvas para mobile
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            ctx.scale(rect.width / 600, rect.height / 400);
+        }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
 
-    <div class="columns-grid">
-      <div class="container">
-        <button class="btn-action" onclick="handleSmartAction('left')">ESQUERDA</button>
-        <div id="deck-left" class="grid-cards"></div>
-      </div>
-      <div class="container">
-        <button class="btn-action" onclick="handleSmartAction('centerLeft')">CENTRO-E</button>
-        <div id="deck-centerLeft" class="grid-cards"></div>
-      </div>
-      <div class="container">
-        <div class="btn-action" style="text-align:center; opacity:0.6; border-color:#555">MESTRE (VISÍVEL)</div>
-        <div id="deck-centerRight" class="grid-cards"></div>
-      </div>
-      <div class="container">
-        <button class="btn-action" onclick="handleSmartAction('right')">DIREITA</button>
-        <div id="deck-right" class="grid-cards"></div>
-      </div>
-    </div>
+        // Naipes e ranks (simplificado para texto)
+        const suits = ['♠', '♥', '♦', '♣'];
+        const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+        const suitNames = ['espadas', 'copas', 'ouros', 'paus'];
 
-    <div class="container">
-      <p style="font-size: 10px; text-align: center; margin-bottom: 5px; color: var(--gold); font-weight: bold;">DESCARTE (ÚLTIMAS 6)</p>
-      <div id="deck-removed" style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;"></div>
-    </div>
-  </div>
-
-  <script>
-    const naipes = ['♥', '♦', '♣', '♠'];
-    const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-    const vNum = { A: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, J: 11, Q: 12, K: 13 };
-    let state = { top: [], left: [], centerLeft: [], centerRight: [], right: [], removed: [] };
-    let randomIdx = null;
-    let isGameOver = false;
-
-    function isValidMeld(a, b, c) {
-      // Mesma carta (trinca de naipes diferentes)
-      if (a.v === b.v && b.v === c.v) return new Set([a.n, b.n, c.n]).size === 3;
-      // Sequência (mesmo naipe)
-      if (a.n === b.n && b.n === c.n) {
-        const v = [vNum[a.v], vNum[b.v], vNum[c.v]].sort((x,y)=>x-y);
-        return v[0]+1 === v[1] && v[1]+1 === v[2];
-      }
-      return false;
-    }
-
-    function checkMelds(cards) {
-      cards.forEach(c => c.inMeld = false);
-      let count = 0;
-      for (let i=0; i<cards.length-2; i++) {
-        for (let j=i+1; j<cards.length-1; j++) {
-          for (let k=j+1; k<cards.length; k++) {
-            if (!cards[i].inMeld && !cards[j].inMeld && !cards[k].inMeld && isValidMeld(cards[i], cards[j], cards[k])) {
-              cards[i].inMeld = cards[j].inMeld = cards[k].inMeld = true;
-              count++;
+        // Baralho duplo
+        let deck = [];
+        function createDeck() {
+            deck = [];
+            for (let i = 0; i < 2; i++) {
+                for (let s = 0; s < 4; s++) {
+                    for (let r = 0; r < 13; r++) {
+                        deck.push({rank: r, suit: s});
+                    }
+                }
             }
-          }
+            shuffle(deck);
         }
-      }
-      return count;
-    }
+        function shuffle(array) { for (let i = array.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
 
-    function init() {
-      isGameOver = false;
-      const deck = [];
-      // 2 Baralhos
-      for (let i=0; i<2; i++) {
-        naipes.forEach(n => {
-          valores.forEach(v => {
-            deck.push({v, n, isRed: '♥♦'.includes(n), inMeld: false});
-          });
-        });
-      }
-      deck.sort(() => Math.random() - 0.5);
-      
-      ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => state[s] = deck.splice(0, 9));
-      state.top = deck; 
-      state.removed = [];
-      pickTop(); 
-      render();
-    }
+        // Estado do jogo
+        let playerHand = [], aiHand = [], discardPile = [], vira = null, coringaRank = null, playerScore = 10, aiScore = 10;
+        let selectedCard = -1; // Índice na mão do jogador
 
-    function pickTop() { 
-      randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; 
-    }
-
-    function handleSmartAction(sec) {
-      if (isGameOver || randomIdx === null) return;
-      let targetIdx = state[sec].findIndex(c => !c.inMeld);
-      if (targetIdx !== -1) {
-        state.removed.unshift(state[sec][targetIdx]);
-        state[sec][targetIdx] = state.top.splice(randomIdx, 1)[0];
-        pickTop(); 
-        render();
-      }
-    }
-
-    function createCard(card, sec, idx, show) {
-      const wrap = document.createElement('div');
-      wrap.className = `card-wrapper ${show ? 'flipped' : ''}`;
-      
-      wrap.innerHTML = `
-        <div class="card-back"></div>
-        <div class="card-front ${card.isRed ? 'red' : ''} ${card.inMeld ? 'in-meld' : ''}">
-          <div class="card-corner">${card.v}<br>${card.n}</div>
-          <div class="suit-main">${card.n}</div>
-          <div class="card-corner" style="transform:rotate(180deg)">${card.v}<br>${card.n}</div>
-        </div>
-      `;
-      
-      wrap.onclick = (e) => {
-        e.preventDefault(); // Evita zoom de duplo clique no iOS
-        if (isGameOver) return;
-        
-        if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) {
-          const old = state[sec][idx];
-          const next = state.removed.length > 0 ? state.removed.shift() : state.top.splice(randomIdx, 1)[0];
-          if (!next) return;
-          state[sec][idx] = next;
-          state.removed.unshift(old);
-          if (state.removed[0] === old) pickTop();
-        } else if (sec === 'top') {
-          state.removed.unshift(state.top.splice(randomIdx, 1)[0]);
-          pickTop();
+        // Inicializar jogo
+        function initGame() {
+            createDeck();
+            playerHand = deck.splice(0, 9);
+            aiHand = deck.splice(0, 9);
+            vira = deck.pop();
+            coringaRank = (vira.rank + 1) % 13;
+            discardPile = [deck.pop()];
+            updateInfo();
+            draw();
         }
-        render();
-      };
-      return wrap;
-    }
 
-    function render() {
-      let totalMelds = 0;
-      ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => {
-        totalMelds += checkMelds(state[s]);
-        // Vitória: Se todas as 9 cartas de um setor formarem jogos (3 jogos de 3)
-        if (state[s].length > 0 && state[s].every(c => c.inMeld)) {
-            isGameOver = true;
-            setTimeout(() => alert("VITÓRIA NO SETOR " + s.toUpperCase() + "!"), 100);
+        function updateInfo() {
+            document.getElementById('playerScore').textContent = playerScore;
+            document.getElementById('aiScore').textContent = aiScore;
+            document.getElementById('vira').textContent = ranks[vira.rank] + suits[vira.suit];
+            document.getElementById('coringa').textContent = ranks[coringaRank] + ' de qualquer naipe';
         }
-      });
 
-      document.getElementById('stat-melds').innerText = totalMelds;
-      document.getElementById('stat-deck').innerText = state.top.length;
-      
-      const topArea = document.getElementById('deck-top');
-      topArea.innerHTML = '';
-      if (randomIdx !== null && state.top[randomIdx]) {
-        topArea.appendChild(createCard(state.top[randomIdx], 'top', 0, isGameOver));
-      }
+        // Desenhar
+        function draw() {
+            ctx.clearRect(0, 0, 600, 400);
+            const cardW = 50, cardH = 70, margin = 10;
 
-      ['left', 'centerLeft', 'centerRight', 'right', 'removed'].forEach(s => {
-        const el = document.getElementById('deck-' + s);
-        el.innerHTML = '';
-        state[s].forEach((c, i) => {
-          if (s === 'removed' && i > 5) return; 
-          const isVisible = (s === 'centerRight' || s === 'removed' || isGameOver);
-          el.appendChild(createCard(c, s, i, isVisible));
-        });
-      });
-    }
+            // IA mão (costas)
+            ctx.fillStyle = '#8B4513';
+            for (let i = 0; i < aiHand.length; i++) {
+                ctx.fillRect(50 + i * (cardW + margin), 20, cardW, cardH);
+                ctx.fillStyle = '#000'; ctx.fillText('?', 65 + i * (cardW + margin), 50);
+            }
+            ctx.fillStyle = '#fff';
 
-    window.onload = init;
-  </script>
+            // Vira e descarte
+            drawCard(500, 20, vira, false);
+            if (discardPile.length) drawCard(500, 100, discardPile[discardPile.length - 1], false);
+
+            // Mão do jogador
+            for (let i = 0; i < playerHand.length; i++) {
+                drawCard(20 + i * (cardW + 5), 300, playerHand[i], i === selectedCard);
+            }
+        }
+
+        function drawCard(x, y, card, selected) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.fillStyle = selected ? '#FFD700' : '#4169E1';
+            ctx.fillRect(0, 0, 50, 70);
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(ranks[card.rank] + suits[card.suit], 25, 35);
+            if (card.rank === coringaRank) ctx.fillText('🤡', 25, 55);
+            ctx.restore();
+        }
+
+        // Touch/mouse
+        function getTouchPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = 600 / rect.width;
+            const scaleY = 400 / rect.height;
+            let clientX, clientY;
+            if (e.touches) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
+            else { clientX = e.clientX; clientY = e.clientY; }
+            return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+        }
+        canvas.addEventListener('touchstart', handleClick);
+        canvas.addEventListener('click', handleClick);
+        function handleClick(e) {
+            e.preventDefault();
+            const pos = getTouchPos(e);
+            const cardW = 50, cardH = 70, margin = 10;
+            for (let i = 0; i < playerHand.length; i++) {
+                if (pos.x >= 20 + i * (cardW + 5) && pos.x <= 70 + i * (cardW + 5) &&
+                    pos.y >= 300 && pos.y <= 370) {
+                    selectedCard = i;
+                    draw();
+                    return;
+                }
+            }
+        }
+
+        // Ações
+        function buyMonte() {
+            if (playerHand.length < 13 && deck.length) {
+                playerHand.push(deck.pop());
+            } else if (deck.length === 0) alert('Monte vazio!');
+            selectedCard = -1;
+            draw();
+            aiTurn();
+        }
+
+        function buyDescartes() {
+            if (discardPile.length && playerHand.length < 13) {
+                playerHand.push(discardPile.pop());
+            }
+            selectedCard = -1;
+            draw();
+            aiTurn();
+        }
+
+        function descartarSelecionada() {
+            if (selectedCard >= 0) {
+                discardPile.push(playerHand.splice(selectedCard, 1)[0]);
+                selectedCard = -1;
+                draw();
+                aiTurn();
+            } else alert('Selecione uma carta!');
+        }
+
+        function bater() {
+            if (canBat(playerHand)) {
+                playerScoreWinRound(9);
+                alert('Você bateu! IA perde 1 ponto.');
+                resetRound();
+            } else alert('Não pode bater! Forme 3 trincas/sequências.');
+        }
+
+        // Verifica se pode bater (simplificado: conta trincas básicas)
+        function canBat(hand) {
+            // Lógica simples: agrupa por rank, verifica coringas
+            const groups = {};
+            hand.forEach((card, i) => {
+                const r = card.rank === coringaRank ? '*' : card.rank;
+                groups[r] = groups[r] || [];
+                groups[r].push(card.suit);
+            });
+            let validGroups = 0;
+            for (let g in groups) {
+                if (groups[g].length >= 3) validGroups++; // Trinca
+            }
+            return validGroups >= 3 && hand.length === 9;
+        }
+
+        function aiTurn() {
+            // IA simples: compra monte se <9, tenta descartar "ruim"
+            if (aiHand.length < 9 && deck.length) aiHand.push(deck.pop());
+            if (aiHand.length > 9) {
+                aiHand.splice(Math.floor(Math.random() * aiHand.length), 1);
+            }
+            if (canBat(aiHand)) {
+                alert('IA bateu! Você perde 1 ponto.');
+                aiScoreWinRound(9);
+                resetRound();
+            }
+            draw();
+        }
+
+        function playerScoreWinRound(cards) {
+            if (cards === 10) aiScore -= 2; else aiScore -= 1;
+            if (aiScore <= 0) { alert('Você venceu o jogo!'); playerScore = 10; aiScore = 10; }
+            updateInfo();
+        }
+
+        function aiScoreWinRound(cards) {
+            if (cards === 10) playerScore -= 2; else playerScore -= 1;
+            if (playerScore <= 0) { alert('IA venceu! Reiniciando.'); playerScore = 10; aiScore = 10; }
+            updateInfo();
+        }
+
+        function resetRound() {
+            playerHand = deck.splice(0, 9);
+            aiHand = deck.splice(0, 9);
+            if (deck.length < 18) initGame();
+            selectedCard = -1;
+            draw();
+        }
+
+        initGame();
+    </script>
 </body>
 </html>

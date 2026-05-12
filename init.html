@@ -2,359 +2,210 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Cacheta Pro - iOS Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baralho Realista - IA Ultra Análise</title>
   <style>
-    :root { 
-      --bg-table: radial-gradient(circle at center, #2e7d32 0%, #1b5e20 100%); 
-      --card-w: 85px; 
-      --card-h: 120px; 
-      --gold: #ffcf33; 
-      --ios-blue: #007AFF;
-      --glass: rgba(255, 255, 255, 0.15);
-      --card-radius: 8px; 
-    }
-    
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
-    body { 
-      margin: 0; 
-      padding: 10px; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-      background: var(--bg-table); 
-      color: white; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Top Bar Estilo iOS Control Center */
-    .top-bar { 
-      width: 100%; 
-      max-width: 500px; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      padding: 15px 20px; 
-      margin-bottom: 20px; 
-      background: rgba(0,0,0,0.4); 
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border-radius: 20px; 
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-
-    button { 
-      border: 0; 
-      border-radius: 12px; 
-      padding: 10px 20px; 
-      font-weight: 600;
-      background: #fff;
-      color: #000;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      transition: all 0.1s active;
-    }
-    button:active { transform: scale(0.95); opacity: 0.8; }
-
-    .stats { font-size: 0.85rem; letter-spacing: 0.5px; opacity: 0.9; }
-    .stats strong { color: var(--gold); font-size: 1.1rem; }
-
-    /* Layout para Telas Maiores (iPhone Plus) */
-    .board { 
-      width: 100%; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 12px; 
-      padding-bottom: 40px;
-    }
-
-    .container { 
-      background: var(--glass); 
-      border-radius: 18px; 
-      padding: 15px; 
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
-    }
-
-    .purchase-area { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-
-    .grid-cards { 
-      display: grid; 
-      grid-template-columns: repeat(3, 1fr); 
-      gap: 10px; 
-      justify-items: center; 
-    }
-
-    .clickable-title { 
-      width: 100%; 
-      margin-bottom: 12px; 
-      padding: 12px; 
-      border-radius: 10px; 
-      background: var(--ios-blue); 
-      color: white; 
-      border: none;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-    }
-
-    .is-static { background: rgba(255,255,255,0.1); color: #ccc; cursor: default; }
-
-    /* Cartas Realistas */
-    .card-wrapper { 
-      width: var(--card-w); 
-      height: var(--card-h); 
-      perspective: 1000px; 
-    }
-    .card-inner { 
-      position: relative; width: 100%; height: 100%; 
-      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-      transform-style: preserve-3d; 
-    }
+    :root { --bg-table: radial-gradient(circle, #1a4a32 0%, #0d2e1a 100%); --card-w: 75px; --card-h: 110px; --gold: #fbc531; --gold-dark: #e1b12c; --success: #4cd137; --red: #d63031; --card-radius: 6px; --panel-bg: rgba(255,255,255,0.05); --panel-border: rgba(255,255,255,0.1); --text-light: #fff; --text-dark: #1a1a1a; }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body { margin: 0; padding: 16px; font-family: Georgia, serif; background: var(--bg-table); color: var(--text-light); display: flex; flex-direction: column; align-items: center; user-select: none; }
+    button { border: 0; border-radius: 25px; padding: 12px 24px; cursor: pointer; font: 700 0.95rem/1 "Segoe UI", sans-serif; color: #000; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s ease, filter 0.2s ease; }
+    button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    button:focus-visible, .clickable-title:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    .top-bar { width: 100%; max-width: 850px; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 20px; margin-bottom: 15px; background: rgba(0,0,0,0.8); border: 2px solid var(--gold); border-radius: 50px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); backdrop-filter: blur(10px); flex-wrap: wrap; }
+    .stats { font-family: "Segoe UI", sans-serif; font-weight: 700; font-size: 0.9rem; text-align: center; }
+    .stats strong { font-weight: 800; }
+    .stats .melds { color: var(--success); }
+    .stats .deck { color: var(--gold); }
+    .board { width: 100%; max-width: 1000px; display: grid; grid-template-areas: "compra compra compra compra" "col1 col2 col3 col4" "desc desc desc desc"; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+    .container { min-height: 160px; padding: 12px; background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; transition: transform 0.2s ease; }
+    .container:hover { transform: translateY(-1px); }
+    .purchase-area { grid-area: compra; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .board-col-1 { grid-area: col1; } .board-col-2 { grid-area: col2; } .board-col-3 { grid-area: col3; } .board-col-4 { grid-area: col4; }
+    .discard-area { grid-area: desc; min-height: 120px; }
+    .grid-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; justify-items: center; }
+    .discard-list { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .clickable-title { width: 100%; margin: 0 0 12px; padding: 8px; border: 1px solid var(--gold-dark); border-radius: 8px; background: rgba(0,0,0,0.4); color: var(--gold); cursor: pointer; text-transform: uppercase; letter-spacing: 1.5px; font: 900 0.7rem/1.2 "Segoe UI", sans-serif; text-align: center; transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease; }
+    .clickable-title:hover { background: var(--gold); color: #000; transform: scale(1.03); }
+    .clickable-title.is-static { cursor: default; background: rgba(255,255,255,0.08); color: #fff; border-color: rgba(255,255,255,0.2); }
+    .card-wrapper { width: var(--card-w); height: var(--card-h); perspective: 1000px; position: relative; transition: transform 0.3s ease; }
+    .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); transform-style: preserve-3d; }
     .flipped .card-inner { transform: rotateY(180deg); }
-
-    .card-front, .card-back { 
-      position: absolute; inset: 0; backface-visibility: hidden; 
-      border-radius: var(--card-radius); box-shadow: 0 6px 12px rgba(0,0,0,0.3); 
-    }
-
-    .card-back { 
-      background: #1e3799;
-      background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255,255,255,0.05) 5px, rgba(255,255,255,0.05) 10px);
-      border: 3px solid white;
-    }
-
-    .card-front { 
-      background: #fff; color: #1a1a1a; 
-      transform: rotateY(180deg); padding: 5px;
-    }
-
-    .in-meld .card-front { 
-      border: 3px solid #4cd137; 
-      box-shadow: 0 0 15px rgba(76, 209, 55, 0.5);
-    }
-    
-    .was-replaced .card-back { background: #e67e22 !important; }
-
-    .red { color: #d63031; }
-    .suit-main { font-size: 2.5rem; text-align: center; margin-top: 15px; }
-
-    .discard-list { display: flex; overflow-x: auto; gap: 8px; padding: 10px 0; min-height: 140px; }
-
-    @media (max-width: 380px) {
-        :root { --card-w: 70px; --card-h: 100px; }
-    }
+    .card-front, .card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--card-radius); display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+    .card-front { padding: 4px; color: var(--text-dark); background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%); border: 1px solid #999; transform: rotateY(180deg); }
+    .card-back { background-color: #2c3e50; background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(45deg, transparent 48%, #1e272e 50%, transparent 52%); background-size: 10px 10px; border: 4px solid white; outline: 1px solid rgba(0,0,0,0.2); }
+    .was-replaced .card-back { background-color: #fbc531 !important; background-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.1) 1px, transparent 1px) !important; border-color: #fff !important; }
+    .card-corner { position: absolute; display: flex; flex-direction: column; align-items: center; font-weight: 700; line-height: 0.9; font-size: 1.1rem; letter-spacing: -1px; }
+    .corner-top { top: 5px; left: 5px; } .corner-bottom { bottom: 5px; right: 5px; transform: rotate(180deg); }
+    .suit-main { flex-grow: 1; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.5)); }
+    .in-meld { z-index: 10; transform: scale(1.05); }
+    .in-meld .card-front { background: #fffdf0 !important; border: 3px solid var(--gold) !important; box-shadow: 0 0 20px var(--gold), inset 0 0 5px rgba(251,197,49,0.2) !important; }
+    .last-active .card-front { border: 2px solid var(--gold) !important; box-shadow: 0 0 15px var(--gold); }
+    .red { color: var(--red); }
+    @media (max-width: 900px) { .board { grid-template-areas: "compra compra" "col1 col2" "col3 col4" "desc desc"; grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { body { padding: 10px; } .top-bar { border-radius: 20px; padding: 12px 14px; } .board { grid-template-areas: "compra" "col1" "col2" "col3" "col4" "desc"; grid-template-columns: 1fr; } .grid-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } .container { min-height: auto; } .card-wrapper { width: 68px; height: 100px; } }
   </style>
 </head>
 <body>
 
+  <audio id="snd-card" src="https://assets.mixkit.co/active_storage/sfx/2016/2016-preview.mp3" preload="auto"></audio>
+  <audio id="snd-shuffle" src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3" preload="auto"></audio>
+  <audio id="snd-meld" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
+  <audio id="snd-win" src="https://assets.mixkit.co/active_storage/sfx/1437/1437-preview.mp3" preload="auto"></audio>
+
   <header class="top-bar">
-    <button onclick="playSound('shuffle'); init()">NOVO JOGO</button>
-    <div class="stats">
-      JOGOS: <strong id="stat-melds">0</strong> | DECK: <strong id="stat-deck">0</strong>
-    </div>
+    <button type="button" onclick="init()">Novo Jogo</button>
+    <div class="stats" aria-live="polite">JOGOS: <strong id="stat-melds" class="melds">0</strong> <span style="margin: 0 12px; opacity: 0.3;">|</span> DECK: <strong id="stat-deck" class="deck">0</strong></div>
   </header>
-
-  <main class="board">
-    <section class="container purchase-area">
-      <span style="font-size: 0.7rem; font-weight: bold; opacity: 0.7;">COMPRA</span>
-      <div id="deck-top"></div>
-    </section>
-
-    <section class="container">
-      <button class="clickable-title" onclick="handleSmartAction('left')">Trocar Esquerda</button>
-      <div id="deck-left" class="grid-cards"></div>
-    </section>
-
-    <section class="container">
-      <button class="clickable-title" onclick="handleSmartAction('centerLeft')">Trocar Centro</button>
-      <div id="deck-centerLeft" class="grid-cards"></div>
-    </section>
-
-    <section class="container">
-      <div class="clickable-title is-static">MESTRE (PC)</div>
-      <div id="deck-centerRight" class="grid-cards"></div>
-    </section>
-
-    <section class="container">
-      <button class="clickable-title" onclick="handleSmartAction('right')">Trocar Direita</button>
-      <div id="deck-right" class="grid-cards"></div>
-    </section>
-
-    <section class="container">
-      <span style="font-size: 0.7rem; font-weight: bold; opacity: 0.7;">LIXO (DESCARTE)</span>
-      <div id="deck-removed" class="discard-list"></div>
-    </section>
+  <main class="board" aria-label="Tabuleiro do jogo">
+    <section class="container purchase-area" aria-label="Compra"><div id="deck-top" aria-label="Carta atual do topo"></div></section>
+    <section class="container board-col-1" aria-label="Coluna esquerda"><button type="button" class="clickable-title" onclick="handleSmartAction('left')">Esquerda</button><div id="deck-left" class="grid-cards" aria-label="Cartas da coluna esquerda"></div></section>
+    <section class="container board-col-2" aria-label="Coluna centro-esquerda"><button type="button" class="clickable-title" onclick="handleSmartAction('centerLeft')">Centro-E</button><div id="deck-centerLeft" class="grid-cards" aria-label="Cartas da coluna centro-esquerda"></div></section>
+    <section class="container board-col-3" aria-label="Coluna mestre"><h3 class="clickable-title is-static">MESTRE</h3><div id="deck-centerRight" class="grid-cards" aria-label="Cartas da coluna mestre"></div></section>
+    <section class="container board-col-4" aria-label="Coluna direita"><button type="button" class="clickable-title" onclick="handleSmartAction('right')">Direita</button><div id="deck-right" class="grid-cards" aria-label="Cartas da coluna direita"></div></section>
+    <section class="container discard-area" aria-label="Cartas descartadas"><div id="deck-removed" class="discard-list"></div></section>
   </main>
-
   <script>
-    // Sistema de Sons (Web Audio API simples)
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playSound(type) {
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-      oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-
-      if (type === 'card') {
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-      } else if (type === 'shuffle') {
-        oscillator.type = 'sawtooth';
-        oscillator.frequency.setValueAtTime(100, audioCtx.currentTime);
-        gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
-        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
-      }
-      oscillator.start();
-      oscillator.stop(audioCtx.currentTime + 0.3);
-    }
-
     const naipes = ['♥', '♦', '♣', '♠'];
     const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
     const vNum = { A: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, J: 11, Q: 12, K: 13 };
     let state = { top: [], left: [], centerLeft: [], centerRight: [], right: [], removed: [] };
     let randomIdx = null;
     let isGameOver = false;
+    let lastMeldCount = 0;
 
-    // Funções de Lógica (Mantidas conforme original)
-    function isValidMeld(a, b, c) { 
-      const sameValue = a.v === b.v && b.v === c.v; 
-      if (sameValue) return new Set([a.n, b.n, c.n]).size === 3; 
-      const sameSuit = a.n === b.n && b.n === c.n; 
-      if (!sameSuit) return false; 
-      const values = [vNum[a.v], vNum[b.v], vNum[c.v]].sort((x, y) => x - y); 
-      return values[0] + 1 === values[1] && values[1] + 1 === values[2]; 
-    }
-
-    function checkMelds(cards) { 
-      cards.forEach(card => card.inMeld = false); 
-      const allMelds = []; 
-      for (let i = 0; i < cards.length - 2; i++) { 
-        for (let j = i + 1; j < cards.length - 1; j++) { 
-          for (let k = j + 1; k < cards.length; k++) { 
-            if (isValidMeld(cards[i], cards[j], cards[k])) 
-              allMelds.push({ idxs: [i, j, k], type: cards[i].v === cards[j].v ? 'set' : 'run' }); 
-          } 
-        } 
-      } 
-      let bestMask = []; 
-      let bestCount = 0; 
-      function backtrack(start, chosen, used) { 
-        if (used.size > bestCount) { bestCount = used.size; bestMask = [...used]; } 
-        for (let i = start; i < allMelds.length; i++) { 
-          if (allMelds[i].idxs.some(idx => used.has(idx))) continue; 
-          allMelds[i].idxs.forEach(idx => used.add(idx)); 
-          backtrack(i + 1, chosen, used); 
-          allMelds[i].idxs.forEach(idx => used.delete(idx)); 
-        } 
-      } 
-      backtrack(0, [], new Set()); 
-      bestMask.forEach(idx => cards[idx].inMeld = true); 
-      return bestMask.length / 3; 
-    }
-
-    function calculateEV(card, column) {
-      if (!card) return -1;
-      const free = column.filter(c => !c.inMeld);
-      if (free.length === 0) return 0;
-      for (let i = 0; i < free.length; i++) {
-        for (let j = i + 1; j < free.length; j++) {
-          if (isValidMeld(card, free[i], free[j])) return 10000;
+    // Função auxiliar para tocar sons
+    function playSound(id) {
+        const sound = document.getElementById(id);
+        if (sound) {
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log("Audio play blocked by browser"));
         }
-      }
-      return 0; // Simplificado para performance mobile
     }
+
+    function isValidMeld(a, b, c) { const sameValue = a.v === b.v && b.v === c.v; if (sameValue) return new Set([a.n, b.n, c.n]).size === 3; const sameSuit = a.n === b.n && b.n === c.n; if (!sameSuit) return false; const values = [vNum[a.v], vNum[b.v], vNum[c.v]].sort((x, y) => x - y); return values[0] + 1 === values[1] && values[1] + 1 === values[2]; }
+    
+    function checkMelds(cards) { 
+        cards.forEach(card => card.inMeld = false); 
+        const allMelds = []; 
+        for (let i = 0; i < cards.length - 2; i++) { 
+            for (let j = i + 1; j < cards.length - 1; j++) { 
+                for (let k = j + 1; k < cards.length; k++) { 
+                    if (isValidMeld(cards[i], cards[j], cards[k])) allMelds.push({ idxs: [i, j, k], type: cards[i].v === cards[j].v && cards[j].v === cards[k].v ? 'set' : 'run' }); 
+                } 
+            } 
+        } 
+        let bestMask = []; let bestCount = 0; let bestScore = -1; 
+        function backtrack(start, chosen, used) { 
+            const covered = used.size; const score = covered * 10 + chosen.filter(m => m.type === 'run').length * 2 + chosen.filter(m => m.type === 'set').length; 
+            if (covered > bestCount || (covered === bestCount && score > bestScore)) { bestCount = covered; bestScore = score; bestMask = chosen.flatMap(m => m.idxs); } 
+            for (let i = start; i < allMelds.length; i++) { 
+                const meld = allMelds[i]; if (meld.idxs.some(idx => used.has(idx))) continue; 
+                meld.idxs.forEach(idx => used.add(idx)); chosen.push(meld); backtrack(i + 1, chosen, used); 
+                chosen.pop(); meld.idxs.forEach(idx => used.delete(idx)); 
+            } 
+        } 
+        backtrack(0, [], new Set()); 
+        bestMask.forEach(idx => cards[idx].inMeld = true); 
+        return bestMask.length / 3; 
+    }
+
+    function calculateEV(card, column) { if (!card) return -1; const free = column.filter(c => !c.inMeld); if (free.length === 0) return 0; for (let i = 0; i < free.length; i++) { for (let j = i + 1; j < free.length; j++) { if (isValidMeld(card, free[i], free[j])) return 10000; } } let ev = 0; const seen = [...state.left, ...state.centerLeft, ...state.centerRight, ...state.right, ...state.removed]; free.forEach(c => { if (c.v === card.v && c.n !== card.n) { const diffSuits = naipes.filter(n => n !== card.n && n !== c.n); diffSuits.forEach(n => { const copiesOut = seen.filter(s => s.v === card.v && s.n === n).length; ev += (2 - copiesOut) * 25; }); } if (c.n === card.n) { const dist = Math.abs(vNum[c.v] - vNum[card.v]); if (dist === 1 || dist === 2) { const targetVal = dist === 1 ? (vNum[c.v] > vNum[card.v] ? vNum[card.v] - 1 : vNum[c.v] + 1) : (vNum[c.v] + vNum[card.v]) / 2; const targetCard = valores[targetVal - 1]; if (targetCard) { const copiesOut = seen.filter(s => s.v === targetCard && s.n === card.n).length; ev += (2 - copiesOut) * (dist === 1 ? 40 : 15); } } } }); return ev; }
 
     function handleSmartAction(sec) { 
-      if (isGameOver) return; 
-      playSound('card');
-      let worstIdx = -1; let minEV = Infinity; 
-      state[sec].forEach((c, idx) => { 
-        if (!c.inMeld) { worstIdx = idx; } // Simplificado: pega o primeiro fora de jogo
-      }); 
-      if (worstIdx === -1) return; 
-      
-      const old = state[sec][worstIdx];
-      state[sec][worstIdx] = state.top.splice(randomIdx, 1)[0]; 
-      state[sec][worstIdx].replaced = true; 
-      state.removed.unshift(old); 
-      pickTop(); render(); 
+        if (isGameOver) return; 
+        let worstIdx = -1; let minEV = Infinity; 
+        state[sec].forEach((c, idx) => { if (!c.inMeld) { const ev = calculateEV(c, state[sec].filter((_, i) => i !== idx)); if (ev < minEV) { minEV = ev; worstIdx = idx; } } }); 
+        if (worstIdx === -1) return; 
+        const discEV = calculateEV(state.removed[0], state[sec]); 
+        const drawEV = calculateEV(state.top[randomIdx], state[sec]); 
+        if (state.removed[0] && discEV > drawEV && discEV > minEV) { 
+            const old = state[sec][worstIdx]; state[sec][worstIdx] = state.removed.shift(); state[sec][worstIdx].replaced = true; state.removed.unshift(old); 
+            playSound('snd-card');
+        } else if (state.top[randomIdx] && drawEV > minEV) { 
+            const old = state[sec][worstIdx]; state[sec][worstIdx] = state.top.splice(randomIdx, 1)[0]; state[sec][worstIdx].replaced = true; state.removed.unshift(old); 
+            playSound('snd-card');
+            pickTop(); 
+        } else if (randomIdx !== null) { 
+            state.removed.unshift(state.top.splice(randomIdx, 1)[0]); 
+            playSound('snd-card');
+            pickTop(); 
+        } 
+        render(); 
     }
 
     function init() { 
-      isGameOver = false; 
-      const deck = []; 
-      for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false, replaced: false }))); 
-      deck.sort(() => Math.random() - 0.5); 
-      ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => state[s] = deck.splice(0, 9)); 
-      state.top = deck; state.removed = []; pickTop(); render(); 
+        isGameOver = false; 
+        lastMeldCount = 0;
+        playSound('snd-shuffle');
+        const deck = []; 
+        for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false, replaced: false }))); 
+        deck.sort(() => Math.random() - 0.5); 
+        ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => state[s] = deck.splice(0, 9)); 
+        state.top = deck; state.removed = []; pickTop(); render(); 
     }
 
     function pickTop() { randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; }
 
     function createCard(card, sec, idx, show) { 
-      const wrap = document.createElement('div'); 
-      wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''} ${card.replaced ? 'was-replaced' : ''}`; 
-      wrap.innerHTML = `
-        <div class="card-inner">
-          <div class="card-back"></div>
-          <div class="card-front ${card.isRed ? 'red' : ''}">
-            <div style="font-size:0.8rem; font-weight:bold">${card.v}${card.n}</div>
-            <div class="suit-main">${card.n}</div>
-          </div>
-        </div>`;
-      
-      wrap.onclick = () => {
-        if (isGameOver) return;
-        playSound('card');
-        if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) {
-          const old = state[sec][idx];
-          const newCard = state.removed.shift() || state.top.splice(randomIdx, 1)[0];
-          state[sec][idx] = newCard;
-          state.removed.unshift(old);
-          pickTop();
-        } else if (sec === 'top') {
-          state.removed.unshift(state.top.splice(randomIdx, 1)[0]);
-          pickTop();
-        }
-        render();
-      };
-      return wrap; 
+        const isReplaced = card.replaced && sec !== 'centerRight'; 
+        const wrap = document.createElement('div'); 
+        wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''} ${sec === 'removed' && idx === 0 ? 'last-active' : ''} ${isReplaced ? 'was-replaced' : ''}`; 
+        wrap.setAttribute('role', 'button'); wrap.setAttribute('tabindex', '0'); 
+        const displayVal = card.v === '10' ? '<span style="letter-spacing:-2px">10</span>' : card.v; 
+        wrap.innerHTML = `<div class="card-inner"><div class="card-back"></div><div class="card-front ${card.isRed ? 'red' : ''}"><div class="card-corner corner-top"><span>${displayVal}</span><span style="font-size: 0.8rem; margin-top: 2px">${card.n}</span></div><div class="suit-main">${card.n}</div><div class="card-corner corner-bottom"><span>${displayVal}</span><span style="font-size: 0.8rem; margin-top: 2px">${card.n}</span></div></div></div>`; 
+        const activate = () => { 
+            if (isGameOver) return; 
+            if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) { 
+                const old = state[sec][idx]; 
+                const newCard = state.removed[0] ? state.removed.shift() : state.top.splice(randomIdx, 1)[0]; 
+                if (!newCard) return; 
+                playSound('snd-card');
+                newCard.replaced = true; state[sec][idx] = newCard; state.removed.unshift(old); 
+                if (state.removed.length > 1 && state.removed[0] === old) pickTop(); 
+            } else if (sec === 'top') { 
+                const picked = state.top.splice(randomIdx, 1)[0]; if (!picked) return; 
+                playSound('snd-card');
+                state.removed.unshift(picked); pickTop(); 
+            } 
+            render(); 
+        }; 
+        wrap.onclick = activate; 
+        wrap.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } }; 
+        return wrap; 
     }
 
     function render() { 
-      let total = 0; let win = false; 
-      ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => { 
-        total += checkMelds(state[s]); 
-        if (state[s].every(c => c.inMeld)) win = true; 
-      }); 
-      if (win) { isGameOver = true; alert("VOCÊ GANHOU!"); }
-      document.getElementById('stat-melds').innerText = total; 
-      document.getElementById('stat-deck').innerText = state.top.length; 
-      const topDiv = document.getElementById('deck-top'); 
-      topDiv.innerHTML = ''; 
-      if (randomIdx !== null && state.top[randomIdx]) topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver)); 
-      
-      const areas = { 'deck-left': 'left', 'deck-centerLeft': 'centerLeft', 'deck-centerRight': 'centerRight', 'deck-right': 'right', 'deck-removed': 'removed' }; 
-      for (const id in areas) { 
-        const el = document.getElementById(id); el.innerHTML = ''; 
-        state[areas[id]].forEach((c, i) => el.appendChild(createCard(c, areas[id], i, areas[id] === 'centerRight' || areas[id] === 'removed' || isGameOver))); 
-      } 
-    }
+        let total = 0; let win = false; 
+        ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => { 
+            total += checkMelds(state[s]); 
+            if (state[s].every(c => c.inMeld)) win = true; 
+        }); 
 
-    window.onload = () => {
-      // Desbloqueia áudio no iOS após primeiro clique
-      document.body.addEventListener('click', () => {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-      }, { once: true });
-      init();
-    };
+        // Tocar som de trinca se o total de jogos aumentou
+        if (total > lastMeldCount && !isGameOver) {
+            playSound('snd-meld');
+        }
+        lastMeldCount = total;
+
+        if (win && !isGameOver) {
+            isGameOver = true;
+            playSound('snd-win');
+            setTimeout(() => alert("CACHETA! Você venceu!"), 500);
+        }
+
+        document.getElementById('stat-melds').innerText = total; 
+        document.getElementById('stat-deck').innerText = state.top.length; 
+        const topDiv = document.getElementById('deck-top'); 
+        topDiv.innerHTML = ''; 
+        if (randomIdx !== null && state.top[randomIdx]) topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver)); 
+        const areas = { 'deck-left': 'left', 'deck-centerLeft': 'centerLeft', 'deck-centerRight': 'centerRight', 'deck-right': 'right', 'deck-removed': 'removed' }; 
+        for (const id in areas) { 
+            const el = document.getElementById(id); el.innerHTML = ''; 
+            state[areas[id]].forEach((c, i) => el.appendChild(createCard(c, areas[id], i, areas[id] === 'centerRight' || areas[id] === 'removed' || isGameOver))); 
+        } 
+    }
+    window.onload = init;
   </script>
 </body>
 </html>

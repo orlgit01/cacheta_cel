@@ -7,16 +7,16 @@
     <style>
         :root {
             --bg-table: radial-gradient(circle at center, #1a4a32 0%, #0d2e1a 100%);
-            /* Otimizado para telas horizontais 16:9 (como o iPhone 7 Plus) */
-            --card-h: 13.5vh; 
-            --card-w: calc(var(--card-h) * 0.72);
+            /* Tamanho ideal para as cartas em modo horizontal fixo */
+            --card-h: 15vh;
+            --card-w: calc(var(--card-h) * 0.68);
             --gold: #fbc531;
             --gold-dark: #e1b12c;
             --red: #d63031;
             --dark: #1a1a1a;
-            --card-radius: 4px;
+            --card-radius: 5px;
             --panel-bg: rgba(255,255,255,0.08);
-            --shadow-card: 0 2px 5px rgba(0,0,0,0.4);
+            --shadow-card: 0 2px 6px rgba(0,0,0,0.4);
         }
 
         * { 
@@ -29,7 +29,7 @@
             height: 100vh;
             width: 100vw;
             margin: 0; 
-            padding: 3px calc(5px + env(safe-area-inset-right)) 3px calc(5px + env(safe-area-inset-left));
+            padding: 5px calc(5px + env(safe-area-inset-right)) 5px calc(5px + env(safe-area-inset-left));
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: var(--bg-table); 
             color: #fff;
@@ -38,29 +38,30 @@
             align-items: center;
             overflow: hidden;
             overscroll-behavior: none; 
-            touch-action: none;
+            /* Modificado para 'manipulation' para evitar zoom duplo/triplo de toque */
+            touch-action: manipulation; 
         }
 
         .top-bar {
             width: 100%; 
-            max-width: 99%;
+            max-width: 98%;
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            padding: 0 12px; 
-            margin-bottom: 3px;
+            padding: 0 15px; 
+            margin-bottom: 4px;
             background: rgba(0,0,0,0.85); 
             border: 1.5px solid var(--gold);
             border-radius: 50px; 
             backdrop-filter: blur(10px);
             box-shadow: 0 3px 10px rgba(0,0,0,0.5);
-            height: 8vh;
+            height: 7vh;
         }
 
         button {
             border: 0; 
-            border-radius: 12px; 
-            padding: 3px 10px;
+            border-radius: 15px; 
+            padding: 4px 12px;
             font-weight: 900; 
             font-size: 0.65rem; 
             text-transform: uppercase;
@@ -71,20 +72,20 @@
 
         .board {
             width: 100%;
-            height: 89vh;
+            height: 90vh;
             display: grid;
             grid-template-areas: "compra col1 col2 col3 col4 desc";
             grid-template-columns: 0.8fr 1.6fr 1.6fr 1.6fr 1.6fr 1.6fr; 
-            gap: 3px;
+            gap: 4px;
             align-items: stretch;
         }
 
         .container {
             background: var(--panel-bg); 
             border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 6px; 
-            padding: 3px; 
-            box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+            border-radius: 8px; 
+            padding: 4px; 
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
             display: flex; 
             flex-direction: column;
             justify-content: space-between;
@@ -96,7 +97,7 @@
             flex-direction: column-reverse; 
             align-items: center;
             justify-content: flex-start;
-            gap: 2px;
+            gap: 4px;
         }
 
         .purchase-area { grid-area: compra; justify-content: center; align-items: center; }
@@ -107,42 +108,43 @@
         .board > section:nth-of-type(4) { grid-area: col3; }
         .board > section:nth-of-type(5) { grid-area: col4; }
 
-        /* Ajuste do container das colunas para melhor aproveitamento vertical */
+        /* CORREÇÃO CRÍTICA: Transforma as colunas num leque/cascata vertical compacta */
         .grid-cards {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            height: 78vh;
+            height: 75vh;
             position: relative;
-            margin-top: 1px;
+            margin-top: 2px;
         }
 
-        /* Compactação do leque vertical para não estourar a tela inferior do iOS */
+        /* Faz com que cada carta subsequente suba e se sobreponha à anterior de forma limpa */
         .grid-cards .card-wrapper {
             position: relative;
-            margin-bottom: calc(var(--card-h) * -0.76); 
+            margin-bottom: calc(var(--card-h) * -0.58); /* Cria a cascata vertical perfeita */
         }
         
+        /* A última carta não precisa de margem negativa para manter o alinhamento */
         .grid-cards .card-wrapper:last-child {
             margin-bottom: 0;
         }
 
         .clickable-title {
             width: 100%; 
-            padding: 2px 0;
+            padding: 4px 0;
             background: linear-gradient(135deg, rgba(251,197,49,0.2), rgba(0,0,0,0.6));
             border: 1px solid var(--gold-dark);
             color: var(--gold); 
             border-radius: 4px; 
             font-weight: 900;
-            font-size: 0.52rem; 
+            font-size: 0.55rem; 
             text-align: center; 
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
             text-transform: uppercase; 
             cursor: pointer;
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-            height: 5vh;
+            box-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+            height: 4vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -163,8 +165,9 @@
             transition: transform 0.2s;
         }
 
+        /* Efeito de destaque ao passar o dedo/clicar nas cartas ocultas da cascata */
         .card-wrapper:active {
-            transform: translateZ(20px) translateY(-3px);
+            transform: translateZ(20px) translateY(-5px);
             z-index: 99 !important;
         }
 
@@ -189,10 +192,10 @@
 
         .card-back {
             background: #2c3e50; 
-            border: 1px solid #fff;
+            border: 1.5px solid #fff;
             background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
                               repeating-linear-gradient(45deg, transparent 0, transparent 3px, rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 6px);
-            background-size: 4px 4px;
+            background-size: 5px 5px;
         }
 
         .card-front {
@@ -200,7 +203,7 @@
             transform: rotateY(180deg);
             display: flex; 
             flex-direction: column; 
-            padding: 1px;
+            padding: 2px;
             color: var(--dark);
         }
 
@@ -211,12 +214,12 @@
             display: flex; 
             flex-direction: column;
             align-items: center; 
-            line-height: 0.7; 
+            line-height: 0.75; 
             font-weight: 900;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
         }
-        .corner-top { top: 1px; left: 1px; }
-        .corner-bottom { bottom: 1px; right: 1px; transform: rotate(180deg); }
+        .corner-top { top: 2px; left: 2px; }
+        .corner-bottom { bottom: 2px; right: 2px; transform: rotate(180deg); }
         
         .val-10 { letter-spacing: -1px; margin-right: 1px; }
 
@@ -225,21 +228,21 @@
             display: flex; 
             align-items: center; 
             justify-content: center;
-            font-size: 0.95rem; 
+            font-size: 1.1rem; 
             filter: drop-shadow(0.5px 0.5px 0px rgba(255,255,255,1));
-            margin-top: 2px;
+            margin-top: 4px;
         }
 
         .in-meld .card-front {
-            border: 1.2px solid #4cd137 !important;
+            border: 1.5px solid #4cd137 !important;
             background: #f0fff0 !important;
-            box-shadow: 0 0 5px rgba(76, 209, 55, 0.5);
+            box-shadow: 0 0 6px rgba(76, 209, 55, 0.5);
             transform: rotateY(180deg) scale(1.01);
         }
 
         .last-active .card-front {
-            border: 1.2px solid var(--gold) !important;
-            box-shadow: 0 0 6px var(--gold);
+            border: 1.5px solid var(--gold) !important;
+            box-shadow: 0 0 8px var(--gold);
             animation: pulse 1.5s infinite alternate;
         }
 
@@ -251,8 +254,8 @@
         .card-stack::after {
             content: ''; 
             position: absolute; 
-            top: 1px; 
-            left: 1px;
+            top: 2px; 
+            left: 2px;
             width: 100%; 
             height: 100%; 
             background: #ccc;
@@ -266,16 +269,16 @@
 
     <header class="top-bar">
         <button onclick="init()">Novo Jogo</button>
-        <div style="font-weight: 900; font-size: 0.75rem;">
+        <div style="font-weight: 900; font-size: 0.8rem;">
             JOGOS: <span id="stat-melds" style="color: #4cd137;">0</span>
-            <span style="margin:0 8px; opacity:0.3">|</span>
+            <span style="margin:0 10px; opacity:0.3">|</span>
             DECK: <span id="stat-deck" style="color: var(--gold);">0</span>
         </div>
     </header>
 
     <main class="board">
         <section class="container purchase-area">
-            <div class="clickable-title is-static" style="border:none; opacity:0.6; margin-bottom: 2px;">COMPRA</div>
+            <div class="clickable-title is-static" style="border:none; opacity:0.6; margin-bottom: 4px;">COMPRA</div>
             <div id="deck-top" class="card-stack"></div>
         </section>
 
@@ -306,6 +309,25 @@
     </main>
 
     <script>
+        // --- PREVENÇÃO ULTRA DE TRÊS CLIQUES / CONGELAMENTO DE TELA ---
+        let lastTouchTime = 0;
+        document.addEventListener('touchstart', function (event) {
+            const now = Date.now();
+            // Se o intervalo entre os toques for menor que 300ms, cancelamos a ação nativa de zoom/redirecionamento do browser
+            if (now - lastTouchTime < 300) {
+                if (event.touches.length <= 1) {
+                    // Impede o comportamento de zoom triplo do sistema sem travar o clique do jogo
+                    event.preventDefault(); 
+                }
+            }
+            lastTouchTime = now;
+        }, { passive: false });
+
+        // Evita zoom de pinça (dois dedos) para blindar totalmente a viewport
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+
         // --- MOTOR DE ÁUDIO PROCEDURAL ---
         const AudioFX = {
             ctx: null,
@@ -491,16 +513,16 @@
                     <div class="card-back"></div>
                     <div class="card-front ${card.isRed ? 'red' : ''}">
                         <div class="card-corner corner-top">
-                            <span>${displayVal}</span><span style="font-size: 0.45rem; margin-top: 1px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.5rem; margin-top: 1px">${card.n}</span>
                         </div>
                         <div class="suit-main">${card.n}</div>
                         <div class="card-corner corner-bottom">
-                            <span>${displayVal}</span><span style="font-size: 0.45rem; margin-top: 1px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.5rem; margin-top: 1px">${card.n}</span>
                         </div>
                     </div>
                 </div>`; 
 
-            wrap.onclick = () => { 
+            wrap.onclick = (e) => { 
                 if (isGameOver) return; 
                 AudioFX.playCardSound();
                 if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) { 

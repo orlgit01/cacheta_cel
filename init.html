@@ -7,25 +7,16 @@
     <style>
         :root {
             --bg-table: radial-gradient(circle at center, #1a4a32 0%, #0d2e1a 100%);
-            /* Tamanho base otimizado para caber perfeitamente na horizontal do iPhone 7 Plus */
-            --card-h: 14vh;
-            --card-w: calc(var(--card-h) * 0.68);
+            /* Otimizado para telas horizontais 16:9 (como o iPhone 7 Plus) */
+            --card-h: 13.5vh; 
+            --card-w: calc(var(--card-h) * 0.72);
             --gold: #fbc531;
             --gold-dark: #e1b12c;
             --red: #d63031;
             --dark: #1a1a1a;
-            --card-radius: 5px;
+            --card-radius: 4px;
             --panel-bg: rgba(255,255,255,0.08);
-            --shadow-card: 0 2px 6px rgba(0,0,0,0.4);
-            
-            /* Fator de empilhamento vertical (cascata) */
-            --overlap: calc(var(--card-h) * -0.62);
-        }
-
-        /* Modificadores dinâmicos acionados por 3 toques (Aumento controlado das cartas) */
-        body.zoom-active {
-            --card-h: 17.5vh;
-            --overlap: calc(var(--card-h) * -0.68);
+            --shadow-card: 0 2px 5px rgba(0,0,0,0.4);
         }
 
         * { 
@@ -38,7 +29,7 @@
             height: 100vh;
             width: 100vw;
             margin: 0; 
-            padding: 5px calc(5px + env(safe-area-inset-right)) 5px calc(5px + env(safe-area-inset-left));
+            padding: 3px calc(5px + env(safe-area-inset-right)) 3px calc(5px + env(safe-area-inset-left));
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: var(--bg-table); 
             color: #fff;
@@ -48,29 +39,28 @@
             overflow: hidden;
             overscroll-behavior: none; 
             touch-action: none;
-            transition: --card-h 0.25s ease, --overlap 0.25s ease;
         }
 
         .top-bar {
             width: 100%; 
-            max-width: 98%;
+            max-width: 99%;
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            padding: 0 15px; 
-            margin-bottom: 4px;
+            padding: 0 12px; 
+            margin-bottom: 3px;
             background: rgba(0,0,0,0.85); 
             border: 1.5px solid var(--gold);
             border-radius: 50px; 
             backdrop-filter: blur(10px);
             box-shadow: 0 3px 10px rgba(0,0,0,0.5);
-            height: 7vh;
+            height: 8vh;
         }
 
         button {
             border: 0; 
-            border-radius: 15px; 
-            padding: 4px 12px;
+            border-radius: 12px; 
+            padding: 3px 10px;
             font-weight: 900; 
             font-size: 0.65rem; 
             text-transform: uppercase;
@@ -81,20 +71,20 @@
 
         .board {
             width: 100%;
-            height: 91vh;
+            height: 89vh;
             display: grid;
             grid-template-areas: "compra col1 col2 col3 col4 desc";
             grid-template-columns: 0.8fr 1.6fr 1.6fr 1.6fr 1.6fr 1.6fr; 
-            gap: 4px;
+            gap: 3px;
             align-items: stretch;
         }
 
         .container {
             background: var(--panel-bg); 
             border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 8px; 
-            padding: 4px; 
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            border-radius: 6px; 
+            padding: 3px; 
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
             display: flex; 
             flex-direction: column;
             justify-content: space-between;
@@ -106,7 +96,7 @@
             flex-direction: column-reverse; 
             align-items: center;
             justify-content: flex-start;
-            gap: 4px;
+            gap: 2px;
         }
 
         .purchase-area { grid-area: compra; justify-content: center; align-items: center; }
@@ -117,52 +107,45 @@
         .board > section:nth-of-type(4) { grid-area: col3; }
         .board > section:nth-of-type(5) { grid-area: col4; }
 
-        /* Ajuste do container de cartas para receber o efeito de cascata perfeita */
+        /* Ajuste do container das colunas para melhor aproveitamento vertical */
         .grid-cards {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            height: 76vh;
+            height: 78vh;
             position: relative;
-            margin-top: 2px;
+            margin-top: 1px;
         }
 
-        /* Aplicação do recuo negativo para criar o efeito leque vertical onde as 9 cartas aparecem */
+        /* Compactação do leque vertical para não estourar a tela inferior do iOS */
         .grid-cards .card-wrapper {
             position: relative;
-            margin-bottom: var(--overlap);
-            transition: margin-bottom 0.25s ease, width 0.25s ease, height 0.25s ease;
+            margin-bottom: calc(var(--card-h) * -0.76); 
         }
         
         .grid-cards .card-wrapper:last-child {
             margin-bottom: 0;
         }
 
-        /* Manter a área de compra estática sem sofrer o efeito de cascata longa */
-        .purchase-area .card-stack .card-wrapper {
-            margin-bottom: 0 !important;
-        }
-
         .clickable-title {
             width: 100%; 
-            padding: 4px 0;
+            padding: 2px 0;
             background: linear-gradient(135deg, rgba(251,197,49,0.2), rgba(0,0,0,0.6));
             border: 1px solid var(--gold-dark);
             color: var(--gold); 
             border-radius: 4px; 
             font-weight: 900;
-            font-size: 0.55rem; 
+            font-size: 0.52rem; 
             text-align: center; 
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             text-transform: uppercase; 
             cursor: pointer;
-            box-shadow: 1px 1px 4px rgba(0,0,0,0.3);
-            height: 4vh;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            height: 5vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 150; /* Garante que o botão fique sempre clicável acima do leque */
         }
         
         .is-static { 
@@ -177,11 +160,12 @@
             height: var(--card-h);
             perspective: 1000px; 
             position: relative;
+            transition: transform 0.2s;
         }
 
         .card-wrapper:active {
-            transform: translateZ(30px) translateY(-4px);
-            z-index: 120 !important;
+            transform: translateZ(20px) translateY(-3px);
+            z-index: 99 !important;
         }
 
         .card-inner {
@@ -205,10 +189,10 @@
 
         .card-back {
             background: #2c3e50; 
-            border: 1.5px solid #fff;
+            border: 1px solid #fff;
             background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
                               repeating-linear-gradient(45deg, transparent 0, transparent 3px, rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 6px);
-            background-size: 5px 5px;
+            background-size: 4px 4px;
         }
 
         .card-front {
@@ -216,7 +200,7 @@
             transform: rotateY(180deg);
             display: flex; 
             flex-direction: column; 
-            padding: 2px;
+            padding: 1px;
             color: var(--dark);
         }
 
@@ -227,12 +211,12 @@
             display: flex; 
             flex-direction: column;
             align-items: center; 
-            line-height: 0.75; 
+            line-height: 0.7; 
             font-weight: 900;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
         }
-        .corner-top { top: 2px; left: 2px; }
-        .corner-bottom { bottom: 2px; right: 2px; transform: rotate(180deg); }
+        .corner-top { top: 1px; left: 1px; }
+        .corner-bottom { bottom: 1px; right: 1px; transform: rotate(180deg); }
         
         .val-10 { letter-spacing: -1px; margin-right: 1px; }
 
@@ -241,21 +225,21 @@
             display: flex; 
             align-items: center; 
             justify-content: center;
-            font-size: 1.1rem; 
+            font-size: 0.95rem; 
             filter: drop-shadow(0.5px 0.5px 0px rgba(255,255,255,1));
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .in-meld .card-front {
-            border: 1.5px solid #4cd137 !important;
+            border: 1.2px solid #4cd137 !important;
             background: #f0fff0 !important;
-            box-shadow: 0 0 6px rgba(76, 209, 55, 0.5);
+            box-shadow: 0 0 5px rgba(76, 209, 55, 0.5);
             transform: rotateY(180deg) scale(1.01);
         }
 
         .last-active .card-front {
-            border: 1.5px solid var(--gold) !important;
-            box-shadow: 0 0 8px var(--gold);
+            border: 1.2px solid var(--gold) !important;
+            box-shadow: 0 0 6px var(--gold);
             animation: pulse 1.5s infinite alternate;
         }
 
@@ -267,8 +251,8 @@
         .card-stack::after {
             content: ''; 
             position: absolute; 
-            top: 2px; 
-            left: 2px;
+            top: 1px; 
+            left: 1px;
             width: 100%; 
             height: 100%; 
             background: #ccc;
@@ -282,16 +266,16 @@
 
     <header class="top-bar">
         <button onclick="init()">Novo Jogo</button>
-        <div style="font-weight: 900; font-size: 0.8rem;">
+        <div style="font-weight: 900; font-size: 0.75rem;">
             JOGOS: <span id="stat-melds" style="color: #4cd137;">0</span>
-            <span style="margin:0 10px; opacity:0.3">|</span>
+            <span style="margin:0 8px; opacity:0.3">|</span>
             DECK: <span id="stat-deck" style="color: var(--gold);">0</span>
         </div>
     </header>
 
     <main class="board">
         <section class="container purchase-area">
-            <div class="clickable-title is-static" style="border:none; opacity:0.6; margin-bottom: 4px;">COMPRA</div>
+            <div class="clickable-title is-static" style="border:none; opacity:0.6; margin-bottom: 2px;">COMPRA</div>
             <div id="deck-top" class="card-stack"></div>
         </section>
 
@@ -322,29 +306,6 @@
     </main>
 
     <script>
-        // --- GESTOR DE TRÊS TOQUES (TRIPLE TAP SYSTEM) ---
-        let lastTap = 0;
-        let tapCount = 0;
-        
-        document.body.addEventListener('touchend', function (e) {
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTap;
-            
-            if (tapLength < 300 && tapLength > 0) {
-                tapCount++;
-            } else {
-                tapCount = 1;
-            }
-            
-            lastTap = currentTime;
-            
-            if (tapCount === 3) {
-                // Alterna liga/desliga o modo ampliado das cartas solicitado
-                document.body.classList.toggle('zoom-active');
-                tapCount = 0; // Reseta o contador
-            }
-        });
-
         // --- MOTOR DE ÁUDIO PROCEDURAL ---
         const AudioFX = {
             ctx: null,
@@ -522,7 +483,6 @@
             const isTopDiscard = (sec === 'removed' && idx === 0);
             wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''} ${isTopDiscard ? 'last-active' : ''}`; 
             
-            // Atribui a ordenação correta das camadas de empilhamento de cima para baixo
             wrap.style.zIndex = idx + 1;
             
             const displayVal = card.v === '10' ? '<span class="val-10">10</span>' : card.v; 
@@ -531,11 +491,11 @@
                     <div class="card-back"></div>
                     <div class="card-front ${card.isRed ? 'red' : ''}">
                         <div class="card-corner corner-top">
-                            <span>${displayVal}</span><span style="font-size: 0.5rem; margin-top: 1px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.45rem; margin-top: 1px">${card.n}</span>
                         </div>
                         <div class="suit-main">${card.n}</div>
                         <div class="card-corner corner-bottom">
-                            <span>${displayVal}</span><span style="font-size: 0.5rem; margin-top: 1px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.45rem; margin-top: 1px">${card.n}</span>
                         </div>
                     </div>
                 </div>`; 

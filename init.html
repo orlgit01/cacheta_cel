@@ -373,17 +373,15 @@
     </main>
 
     <script>
-        // --- SEÇÃO ULTRA PROTEÇÃO CONTRA 3 CLIQUES / PRODUÇÃO DE TELA ESTÁTICA ---
+        // --- SEÇÃO ULTRA PROTEÇÃO CONTRA CLIQUES TRIPLOS DE ZOOOM MÓVEL ---
         let lastTouchTime = 0;
         document.addEventListener('touchstart', function (event) {
             const now = Date.now();
             if (now - lastTouchTime < 300) {
-                if (event.touches.length <= 1) {
-                    event.preventDefault(); 
-                }
+                // Removemos preventDefault geral para não bloquear o gatilho customizado de duplo clique estruturado
             }
             lastTouchTime = now;
-        }, { passive: false });
+        }, { passive: true });
 
         document.addEventListener('gesturestart', function (e) {
             e.preventDefault();
@@ -435,8 +433,15 @@
         const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
         const vNum = { A: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, J: 11, Q: 12, K: 13 };
         let state = { top: [], left: [], centerLeft: [], centerRight: [], right: [], removed: [] };
+        
+        // Memória auxiliar para o processo de sobreposição Mestre -> Centro-E
+        let overlayBackup = null; 
+        
         let randomIdx = null;
         let isGameOver = false;
+
+        // Controle manual de duplo clique para mobile nativo estável
+        let lastTopClickTime = 0;
 
         function isValidMeld(a, b, c) { 
             const sameValue = a.v === b.v && b.v === c.v; 
@@ -549,6 +554,7 @@
         function init() { 
             AudioFX.playShuffle();
             isGameOver = false; 
+            overlayBackup = null;
             const deck = []; 
             for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false }))); 
             deck.sort(() => Math.random() - 0.5); 
@@ -560,6 +566,26 @@
         }
 
         function pickTop() { randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; }
+
+        // Nova função interna para processar alternância via Duplo Clique no Deck de Compra
+        function toggleMestreOverlay() {
+            AudioFX.playShuffle();
+            if (!overlayBackup) {
+                // Guarda o estado original do Centro-E e faz o Mestre sobrepor/substituir o conteúdo visual
+                overlayBackup = {
+                    centerLeft: [...state.centerLeft],
+                    centerRight: [...state.centerRight]
+                };
+                // Mestre utiliza e sobrepõe o card Centro-E
+                state.centerLeft = [...state.centerRight];
+            } else {
+                // Desfaz o processo retornando aos valores guardados em memória
+                state.centerLeft = [...overlayBackup.centerLeft];
+                state.centerRight = [...overlayBackup.centerRight];
+                overlayBackup = null;
+            }
+            render();
+        }
 
         function createCard(card, sec, idx, show) { 
             const wrap = document.createElement('div'); 
@@ -585,6 +611,19 @@
 
             wrap.onclick = (e) => { 
                 if (isGameOver) return; 
+
+                // Interceção de clique específico para a pilha "top" (Compra) para detetar duplo clique estável
+                if (sec === 'top') {
+                    const now = Date.now();
+                    if (now - lastTopClickTime < 280) {
+                        // DETETADO DUPLO CLIQUE no card de compras
+                        toggleMestreOverlay();
+                        lastTopClickTime = 0;
+                        return;
+                    }
+                    lastTopClickTime = now;
+                }
+
                 AudioFX.playCardSound();
                 if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) { 
                     const old = state[sec][idx]; 
@@ -595,11 +634,16 @@
                     if (state.removed.length > 1 && state.removed[0] === old) pickTop(); 
                     render();
                 } else if (sec === 'top') { 
-                    const picked = state.top.splice(randomIdx, 1)[0]; 
-                    if (!picked) return; 
-                    state.removed.unshift(picked); 
-                    pickTop(); 
-                    render();
+                    // Executado apenas se não for interceptado pelo duplo clique logo acima
+                    setTimeout(() => {
+                        if (lastTopClickTime !== 0) {
+                            const picked = state.top.splice(randomIdx, 1)[0]; 
+                            if (!picked) return; 
+                            state.removed.unshift(picked); 
+                            pickTop(); 
+                            render();
+                        }
+                    }, 280);
                 } 
             }; 
             return wrap; 

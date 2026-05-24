@@ -3,20 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Cacheta Realista Pro - IA Ultra</title>
+    <title>Cacheta Realista Pro - IA Ultra Premium</title>
     <style>
         :root {
-            --bg-table: radial-gradient(circle at center, #1a4a32 0%, #0d2e1a 100%);
-            /* Tamanho ideal para as cartas em modo horizontal fixo */
+            /* Feltro de mesa profissional com iluminação radial dramática */
+            --bg-table: radial-gradient(circle at 50% 40%, #1b5e3a 0%, #103b23 60%, #06180e 100%);
+            /* Proporções perfeitas para as cartas */
             --card-h: 15vh;
             --card-w: calc(var(--card-h) * 0.68);
-            --gold: #fbc531;
-            --gold-dark: #e1b12c;
-            --red: #d63031;
-            --dark: #1a1a1a;
-            --card-radius: 5px;
-            --panel-bg: rgba(255,255,255,0.08);
-            --shadow-card: 0 2px 6px rgba(0,0,0,0.4);
+            
+            /* Paleta de Cores Luxuosa */
+            --gold-light: #ffeaa7;
+            --gold-bright: #ffd32a;
+            --gold-dark: #ffa801;
+            --red: #ff4d4d;
+            --dark: #1e272e;
+            --card-radius: 8px;
+            
+            /* Glassmorphism Efeitos */
+            --panel-bg: rgba(255, 255, 255, 0.03);
+            --panel-border: rgba(255, 255, 255, 0.07);
+            --glass-topbar: rgba(10, 28, 18, 0.92);
+            
+            /* Sombras 3D Complexas */
+            --shadow-card: 0 6px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+            --shadow-card-hover: 0 20px 35px rgba(0,0,0,0.6), 0 10px 15px rgba(0,0,0,0.4);
         }
 
         * { 
@@ -29,8 +40,8 @@
             height: 100vh;
             width: 100vw;
             margin: 0; 
-            padding: 5px calc(5px + env(safe-area-inset-right)) 5px calc(5px + env(safe-area-inset-left));
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            padding: 8px calc(8px + env(safe-area-inset-right)) 8px calc(8px + env(safe-area-inset-left));
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg-table); 
             color: #fff;
             display: flex; 
@@ -38,58 +49,95 @@
             align-items: center;
             overflow: hidden;
             overscroll-behavior: none; 
-            /* Modificado para 'manipulation' para evitar zoom duplo/triplo de toque */
             touch-action: manipulation; 
         }
 
+        /* Topbar Futurista e Polida */
         .top-bar {
             width: 100%; 
             max-width: 98%;
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            padding: 0 15px; 
-            margin-bottom: 4px;
-            background: rgba(0,0,0,0.85); 
-            border: 1.5px solid var(--gold);
-            border-radius: 50px; 
-            backdrop-filter: blur(10px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+            padding: 0 24px; 
+            margin-bottom: 8px;
+            background: var(--glass-topbar); 
+            border: 1px solid rgba(255, 211, 42, 0.25);
+            border-radius: 16px; 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.1);
             height: 7vh;
         }
 
+        /* Botão com efeito Glossy de Casino */
         button {
             border: 0; 
-            border-radius: 15px; 
-            padding: 4px 12px;
-            font-weight: 900; 
-            font-size: 0.65rem; 
+            border-radius: 10px; 
+            padding: 7px 20px;
+            font-weight: 800; 
+            font-size: 0.7rem; 
             text-transform: uppercase;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: #000; 
+            letter-spacing: 0.8px;
+            background: linear-gradient(135deg, #fff200 0%, var(--gold-dark) 100%);
+            color: #05140b; 
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 168, 1, 0.4), inset 0 1px 0 rgba(255,255,255,0.4);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -60%;
+            width: 30%; height: 200%;
+            background: rgba(255,255,255,0.4);
+            transform: rotate(35deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(255, 168, 1, 0.2);
+        }
+        button:active::after {
+            left: 130%;
+            opacity: 1;
         }
 
         .board {
             width: 100%;
-            height: 90vh;
+            height: 88vh;
             display: grid;
             grid-template-areas: "compra col1 col2 col3 col4 desc";
             grid-template-columns: 0.8fr 1.6fr 1.6fr 1.6fr 1.6fr 1.6fr; 
-            gap: 4px;
+            gap: 8px;
             align-items: stretch;
         }
 
+        /* Contentores Estilo Nicho de Profundidade */
         .container {
             background: var(--panel-bg); 
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 8px; 
-            padding: 4px; 
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px; 
+            padding: 8px; 
+            box-shadow: inset 0 10px 30px rgba(0,0,0,0.7), 0 4px 10px rgba(0,0,0,0.3);
             display: flex; 
             flex-direction: column;
             justify-content: space-between;
             overflow: hidden;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            position: relative;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
+            pointer-events: none;
         }
 
         .row-layout {
@@ -97,7 +145,7 @@
             flex-direction: column-reverse; 
             align-items: center;
             justify-content: flex-start;
-            gap: 4px;
+            gap: 8px;
         }
 
         .purchase-area { grid-area: compra; justify-content: center; align-items: center; }
@@ -108,7 +156,6 @@
         .board > section:nth-of-type(4) { grid-area: col3; }
         .board > section:nth-of-type(5) { grid-area: col4; }
 
-        /* CORREÇÃO CRÍTICA: Transforma as colunas num leque/cascata vertical compacta */
         .grid-cards {
             display: flex;
             flex-direction: column;
@@ -119,55 +166,63 @@
             margin-top: 2px;
         }
 
-        /* Faz com que cada carta subsequente suba e se sobreponha à anterior de forma limpa */
+        /* Efeito Cascata de Empilhamento Fluido */
         .grid-cards .card-wrapper {
             position: relative;
-            margin-bottom: calc(var(--card-h) * -0.58); /* Cria a cascata vertical perfeita */
+            margin-bottom: calc(var(--card-h) * -0.58); 
         }
         
-        /* A última carta não precisa de margem negativa para manter o alinhamento */
         .grid-cards .card-wrapper:last-child {
             margin-bottom: 0;
         }
 
+        /* Títulos de Ações com Design Elegante */
         .clickable-title {
             width: 100%; 
-            padding: 4px 0;
-            background: linear-gradient(135deg, rgba(251,197,49,0.2), rgba(0,0,0,0.6));
-            border: 1px solid var(--gold-dark);
-            color: var(--gold); 
-            border-radius: 4px; 
-            font-weight: 900;
+            padding: 6px 0;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 211, 42, 0.15);
+            color: var(--gold-light); 
+            border-radius: 8px; 
+            font-weight: 800;
             font-size: 0.55rem; 
             text-align: center; 
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             text-transform: uppercase; 
             cursor: pointer;
-            box-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
             height: 4vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .clickable-title:not(.is-static):active {
+            background: linear-gradient(135deg, rgba(255, 211, 42, 0.2), rgba(0,0,0,0.6));
+            border-color: var(--gold-bright);
+            text-shadow: 0 0 5px var(--gold-bright);
         }
         
         .is-static { 
             cursor: default; 
-            border-color: rgba(255,255,255,0.2); 
-            color: #fff; 
-            background: rgba(0,0,0,0.4); 
+            border-color: rgba(255,255,255,0.03); 
+            color: rgba(255,255,255,0.3); 
+            background: rgba(0,0,0,0.25); 
+            box-shadow: none;
         }
 
+        /* Efeitos Ultra Realistas nas Cartas (Giro 3D Mecânico) */
         .card-wrapper {
             width: var(--card-w); 
             height: var(--card-h);
-            perspective: 1000px; 
+            perspective: 1200px; 
             position: relative;
-            transition: transform 0.2s;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Efeito de destaque ao passar o dedo/clicar nas cartas ocultas da cascata */
+        /* Resposta tátil ao clique nas cartas na pilha */
         .card-wrapper:active {
-            transform: translateZ(20px) translateY(-5px);
+            transform: translateZ(40px) translateY(-12px) scale(1.05);
             z-index: 99 !important;
         }
 
@@ -175,7 +230,7 @@
             position: relative; 
             width: 100%; 
             height: 100%;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
             transform-style: preserve-3d;
         }
 
@@ -186,25 +241,30 @@
             inset: 0; 
             backface-visibility: hidden;
             border-radius: var(--card-radius); 
-            border: 1px solid #aaa;
             box-shadow: var(--shadow-card);
         }
 
+        /* Verso Luxuoso de Baralho Premium */
         .card-back {
-            background: #2c3e50; 
-            border: 1.5px solid #fff;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
-                              repeating-linear-gradient(45deg, transparent 0, transparent 3px, rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 6px);
-            background-size: 5px 5px;
+            background: #111a22; 
+            border: 2px solid #ffffff;
+            background-image: 
+                radial-gradient(circle, rgba(255, 211, 42, 0.25) 1.5px, transparent 1.5px),
+                repeating-linear-gradient(45deg, transparent 0, transparent 5px, rgba(0,0,0,0.4) 5px, rgba(0,0,0,0.4) 10px);
+            background-size: 8px 8px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8), var(--shadow-card);
         }
 
+        /* Frente com Textura Suave e Brilho Interno */
         .card-front {
-            background: linear-gradient(135deg, #ffffff 0%, #f4f4f4 100%); 
+            background: linear-gradient(135deg, #ffffff 0%, #f1f2f6 100%); 
+            border: 1px solid #dcdde1;
             transform: rotateY(180deg);
             display: flex; 
             flex-direction: column; 
-            padding: 2px;
+            padding: 5px;
             color: var(--dark);
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.05), var(--shadow-card);
         }
 
         .red { color: var(--red); }
@@ -214,12 +274,12 @@
             display: flex; 
             flex-direction: column;
             align-items: center; 
-            line-height: 0.75; 
-            font-weight: 900;
-            font-size: 0.65rem;
+            line-height: 0.8; 
+            font-weight: 800;
+            font-size: 0.75rem;
         }
-        .corner-top { top: 2px; left: 2px; }
-        .corner-bottom { bottom: 2px; right: 2px; transform: rotate(180deg); }
+        .corner-top { top: 4px; left: 4px; }
+        .corner-bottom { bottom: 4px; right: 4px; transform: rotate(180deg); }
         
         .val-10 { letter-spacing: -1px; margin-right: 1px; }
 
@@ -228,40 +288,44 @@
             display: flex; 
             align-items: center; 
             justify-content: center;
-            font-size: 1.1rem; 
-            filter: drop-shadow(0.5px 0.5px 0px rgba(255,255,255,1));
-            margin-top: 4px;
+            font-size: 1.5rem; 
+            filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.15));
+            margin-top: 6px;
         }
 
+        /* Brilho de Partículas Verdes para Jogos Prontos (MELDS) */
         .in-meld .card-front {
-            border: 1.5px solid #4cd137 !important;
-            background: #f0fff0 !important;
-            box-shadow: 0 0 6px rgba(76, 209, 55, 0.5);
-            transform: rotateY(180deg) scale(1.01);
+            border: 2px solid #2ed573 !important;
+            background: linear-gradient(135deg, #f0fff4 0%, #d4edd9 100%) !important;
+            box-shadow: 0 0 15px rgba(46, 213, 115, 0.6), inset 0 0 10px rgba(46, 213, 115, 0.2);
+            transform: rotateY(180deg) scale(1.03);
         }
 
+        /* Efeito de Destaque Pulsante Dourado (Carta Ativa/Topo Descarte) */
         .last-active .card-front {
-            border: 1.5px solid var(--gold) !important;
-            box-shadow: 0 0 8px var(--gold);
-            animation: pulse 1.5s infinite alternate;
+            border: 2px solid var(--gold-bright) !important;
+            box-shadow: 0 0 20px var(--gold-bright), inset 0 0 10px rgba(255,211,42,0.3);
+            animation: superPulse 1.4s infinite alternate cubic-bezier(0.4, 0, 0.6, 1);
         }
 
-        @keyframes pulse {
-            from { transform: rotateY(180deg) scale(1); }
-            to { transform: rotateY(180deg) scale(1.02); }
+        @keyframes superPulse {
+            from { transform: rotateY(180deg) scale(1) translateY(0); filter: brightness(1); }
+            to { transform: rotateY(180deg) scale(1.04) translateY(-3px); filter: brightness(1.1); }
         }
 
+        /* Sombra Traseira Falsa Dinâmica na Pilha de Compra */
         .card-stack::after {
             content: ''; 
             position: absolute; 
-            top: 2px; 
-            left: 2px;
+            top: 4px; 
+            left: 4px;
             width: 100%; 
             height: 100%; 
-            background: #ccc;
+            background: #cbd5e1;
             border-radius: var(--card-radius); 
             z-index: -1; 
-            border: 1px solid #999;
+            border: 1px solid #94a3b8;
+            box-shadow: var(--shadow-card);
         }
     </style>
 </head>
@@ -269,16 +333,16 @@
 
     <header class="top-bar">
         <button onclick="init()">Novo Jogo</button>
-        <div style="font-weight: 900; font-size: 0.8rem;">
-            JOGOS: <span id="stat-melds" style="color: #4cd137;">0</span>
-            <span style="margin:0 10px; opacity:0.3">|</span>
-            DECK: <span id="stat-deck" style="color: var(--gold);">0</span>
+        <div style="font-weight: 800; font-size: 0.75rem; letter-spacing: 0.8px; color: rgba(255,255,255,0.9)">
+            JOGOS: <span id="stat-melds" style="color: #2ed573; font-weight: 900; text-shadow: 0 0 8px rgba(46,213,115,0.4);">0</span>
+            <span style="margin:0 12px; opacity:0.15">|</span>
+            DECK: <span id="stat-deck" style="color: var(--gold-bright); font-weight: 900; text-shadow: 0 0 8px rgba(255,211,42,0.4);">0</span>
         </div>
     </header>
 
     <main class="board">
         <section class="container purchase-area">
-            <div class="clickable-title is-static" style="border:none; opacity:0.6; margin-bottom: 4px;">COMPRA</div>
+            <div class="clickable-title is-static" style="border:none; margin-bottom: 6px;">COMPRA</div>
             <div id="deck-top" class="card-stack"></div>
         </section>
 
@@ -303,27 +367,24 @@
         </section>
 
         <section class="container discard-area row-layout">
-            <div class="clickable-title is-static" style="border:none; opacity:0.4;">DESCARTE</div>
+            <div class="clickable-title is-static" style="border:none;">DESCARTE</div>
             <div id="deck-removed" class="grid-cards"></div>
         </section>
     </main>
 
     <script>
-        // --- PREVENÇÃO ULTRA DE TRÊS CLIQUES / CONGELAMENTO DE TELA ---
+        // --- SEÇÃO ULTRA PROTEÇÃO CONTRA 3 CLIQUES / PRODUÇÃO DE TELA ESTÁTICA ---
         let lastTouchTime = 0;
         document.addEventListener('touchstart', function (event) {
             const now = Date.now();
-            // Se o intervalo entre os toques for menor que 300ms, cancelamos a ação nativa de zoom/redirecionamento do browser
             if (now - lastTouchTime < 300) {
                 if (event.touches.length <= 1) {
-                    // Impede o comportamento de zoom triplo do sistema sem travar o clique do jogo
                     event.preventDefault(); 
                 }
             }
             lastTouchTime = now;
         }, { passive: false });
 
-        // Evita zoom de pinça (dois dedos) para blindar totalmente a viewport
         document.addEventListener('gesturestart', function (e) {
             e.preventDefault();
         });
@@ -513,11 +574,11 @@
                     <div class="card-back"></div>
                     <div class="card-front ${card.isRed ? 'red' : ''}">
                         <div class="card-corner corner-top">
-                            <span>${displayVal}</span><span style="font-size: 0.5rem; margin-top: 1px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 2px">${card.n}</span>
                         </div>
                         <div class="suit-main">${card.n}</div>
                         <div class="card-corner corner-bottom">
-                            <span>${displayVal}</span><span style="font-size: 0.5rem; margin-top: 1px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 2px">${card.n}</span>
                         </div>
                     </div>
                 </div>`; 

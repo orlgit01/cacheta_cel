@@ -3,31 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Cacheta Realista Pro - IA Ultra Premium</title>
+    <title>Cacheta Realista Pro - IA Ultra</title>
     <style>
         :root {
-            /* Feltro de mesa profissional com iluminação radial dramática */
-            --bg-table: radial-gradient(circle at 50% 40%, #1b5e3a 0%, #103b23 60%, #06180e 100%);
-            /* Proporções perfeitas para as cartas */
-            --card-h: 15vh;
-            --card-w: calc(var(--card-h) * 0.68);
-            
-            /* Paleta de Cores Luxuosa */
-            --gold-light: #ffeaa7;
-            --gold-bright: #ffd32a;
-            --gold-dark: #ffa801;
-            --red: #ff4d4d;
-            --dark: #1e272e;
-            --card-radius: 8px;
-            
-            /* Glassmorphism Efeitos */
-            --panel-bg: rgba(255, 255, 255, 0.03);
-            --panel-border: rgba(255, 255, 255, 0.07);
-            --glass-topbar: rgba(10, 28, 18, 0.92);
-            
-            /* Sombras 3D Complexas */
-            --shadow-card: 0 6px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
-            --shadow-card-hover: 0 20px 35px rgba(0,0,0,0.6), 0 10px 15px rgba(0,0,0,0.4);
+            --bg-table: radial-gradient(circle at center, #1a4a32 0%, #0d2e1a 100%);
+            /* Dimensionamento dinâmico baseado na altura para encaixe perfeito em Landscape */
+            --card-h: 18vh;
+            --card-w: calc(var(--card-h) * 0.67);
+            --gold: #fbc531;
+            --gold-dark: #e1b12c;
+            --red: #d63031;
+            --dark: #1a1a1a;
+            --card-radius: 6px;
+            --panel-bg: rgba(255,255,255,0.08);
+            --shadow-card: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         * { 
@@ -40,114 +29,89 @@
             height: 100vh;
             width: 100vw;
             margin: 0; 
-            padding: 8px calc(8px + env(safe-area-inset-right)) 8px calc(8px + env(safe-area-inset-left));
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 10px calc(10px + env(safe-area-inset-right)) 10px calc(10px + env(safe-area-inset-left));
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: var(--bg-table); 
             color: #fff;
             display: flex; 
             flex-direction: column; 
             align-items: center;
-            overflow: hidden;
+            overflow: hidden; /* Garante que nenhuma aba ou rolagem apareça */
             overscroll-behavior: none; 
-            touch-action: manipulation; 
+            touch-action: none;
         }
 
-        /* Topbar Futurista e Polida */
         .top-bar {
             width: 100%; 
-            max-width: 98%;
+            max-width: 95%;
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            padding: 0 24px; 
+            padding: 6px 20px; 
             margin-bottom: 8px;
-            background: var(--glass-topbar); 
-            border: 1px solid rgba(255, 211, 42, 0.25);
-            border-radius: 16px; 
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.1);
-            height: 7vh;
+            background: rgba(0,0,0,0.85); 
+            border: 2px solid var(--gold);
+            border-radius: 50px; 
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            height: 8vh;
         }
 
-        /* Botão com efeito Glossy de Casino */
         button {
             border: 0; 
-            border-radius: 10px; 
-            padding: 7px 20px;
-            font-weight: 800; 
+            border-radius: 20px; 
+            padding: 6px 14px;
+            font-weight: 900; 
             font-size: 0.7rem; 
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            background: linear-gradient(135deg, #fff200 0%, var(--gold-dark) 100%);
-            color: #05140b; 
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 168, 1, 0.4), inset 0 1px 0 rgba(255,255,255,0.4);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #000; 
+            cursor: pointer; 
+            transition: transform 0.1s;
         }
-        button::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -60%;
-            width: 30%; height: 200%;
-            background: rgba(255,255,255,0.4);
-            transform: rotate(35deg);
-            transition: all 0.5s ease;
-            opacity: 0;
-        }
-        button:active {
-            transform: scale(0.95);
-            box-shadow: 0 2px 5px rgba(255, 168, 1, 0.2);
-        }
-        button:active::after {
-            left: 130%;
-            opacity: 1;
-        }
+        button:active { transform: scale(0.95); }
 
+        /* Board refatorado para distribuição Horizontal (Landscape) */
         .board {
             width: 100%;
-            height: 88vh;
+            height: 80vh;
             display: grid;
-            grid-template-areas: "compra col1 col2 col3 col4 desc";
-            grid-template-columns: 0.8fr 1.6fr 1.6fr 1.6fr 1.6fr 1.6fr; 
+            grid-template-areas: 
+                "compra col1 col2 col3 col4 desc";
+            grid-template-columns: 1.1fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr; 
             gap: 8px;
             align-items: stretch;
         }
 
-        /* Contentores Estilo Nicho de Profundidade */
         .container {
             background: var(--panel-bg); 
-            border: 1px solid var(--panel-border);
-            border-radius: 14px; 
-            padding: 8px; 
-            box-shadow: inset 0 10px 30px rgba(0,0,0,0.7), 0 4px 10px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px; 
+            padding: 6px; 
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
             display: flex; 
             flex-direction: column;
             justify-content: space-between;
             overflow: hidden;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            position: relative;
-        }
-        .container::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 14px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
-            pointer-events: none;
         }
 
+        /* Alinhamento das áreas de jogo verticais */
         .row-layout {
             display: flex;
             flex-direction: column-reverse; 
             align-items: center;
-            justify-content: flex-start;
-            gap: 8px;
+            gap: 4px;
         }
 
+        /* Modificação para esconder as cartas aproveitando ao máximo o espaço da tela */
+        .row-layout.hide-cards {
+            justify-content: center;
+        }
+        .row-layout.hide-cards .grid-cards {
+            display: none !important;
+        }
+
+        /* Mapeamento das áreas do Grid */
         .purchase-area { grid-area: compra; justify-content: center; align-items: center; }
         .discard-area { grid-area: desc; }
         
@@ -156,81 +120,60 @@
         .board > section:nth-of-type(4) { grid-area: col3; }
         .board > section:nth-of-type(5) { grid-area: col4; }
 
+        /* Grid interno das cartas adaptado para o fluxo vertical da coluna horizontal */
         .grid-cards {
-            display: flex;
-            flex-direction: column;
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px; 
+            justify-items: center;
             align-items: center;
             width: 100%;
-            height: 75vh;
-            position: relative;
-            margin-top: 2px;
         }
 
-        /* Efeito Cascata de Empilhamento Fluido */
-        .grid-cards .card-wrapper {
-            position: relative;
-            margin-bottom: calc(var(--card-h) * -0.58); 
-        }
-        
-        .grid-cards .card-wrapper:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Títulos de Ações com Design Elegante */
+        /* Título de ação adaptado para a base/topo das colunas horizontais */
         .clickable-title {
             width: 100%; 
-            padding: 6px 0;
-            background: rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(255, 211, 42, 0.15);
-            color: var(--gold-light); 
-            border-radius: 8px; 
-            font-weight: 800;
-            font-size: 0.55rem; 
+            min-height: auto; 
+            margin: 0; 
+            padding: 6px 2px;
+            background: linear-gradient(135deg, rgba(251,197,49,0.2), rgba(0,0,0,0.6));
+            border: 1px solid var(--gold-dark);
+            color: var(--gold); 
+            border-radius: 6px; 
+            font-weight: 900;
+            font-size: 0.6rem; 
             text-align: center; 
             letter-spacing: 1px;
+            writing-mode: horizontal-tb; 
             text-transform: uppercase; 
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-            height: 4vh;
-            display: flex;
-            align-items: center;
+            display: flex; 
+            align-items: center; 
             justify-content: center;
-            transition: all 0.2s ease;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
         }
-        .clickable-title:not(.is-static):active {
-            background: linear-gradient(135deg, rgba(255, 211, 42, 0.2), rgba(0,0,0,0.6));
-            border-color: var(--gold-bright);
-            text-shadow: 0 0 5px var(--gold-bright);
-        }
+        .clickable-title:active { transform: scale(0.95); background: var(--gold); color: #000; }
         
         .is-static { 
             cursor: default; 
-            border-color: rgba(255,255,255,0.03); 
-            color: rgba(255,255,255,0.3); 
-            background: rgba(0,0,0,0.25); 
-            box-shadow: none;
+            border-color: rgba(255,255,255,0.3); 
+            color: #fff; 
+            background: rgba(0,0,0,0.4); 
+            width: 100%; 
         }
 
-        /* Efeitos Ultra Realistas nas Cartas (Giro 3D Mecânico) */
         .card-wrapper {
             width: var(--card-w); 
             height: var(--card-h);
-            perspective: 1200px; 
+            perspective: 1000px; 
             position: relative;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        /* Resposta tátil ao clique nas cartas na pilha */
-        .card-wrapper:active {
-            transform: translateZ(40px) translateY(-12px) scale(1.05);
-            z-index: 99 !important;
         }
 
         .card-inner {
             position: relative; 
             width: 100%; 
             height: 100%;
-            transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             transform-style: preserve-3d;
         }
 
@@ -241,30 +184,25 @@
             inset: 0; 
             backface-visibility: hidden;
             border-radius: var(--card-radius); 
+            border: 1px solid #bbb;
             box-shadow: var(--shadow-card);
         }
 
-        /* Verso Luxuoso de Baralho Premium */
         .card-back {
-            background: #111a22; 
-            border: 2px solid #ffffff;
-            background-image: 
-                radial-gradient(circle, rgba(255, 211, 42, 0.25) 1.5px, transparent 1.5px),
-                repeating-linear-gradient(45deg, transparent 0, transparent 5px, rgba(0,0,0,0.4) 5px, rgba(0,0,0,0.4) 10px);
-            background-size: 8px 8px;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.8), var(--shadow-card);
+            background: #2c3e50; 
+            border: 2px solid #fff;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
+                              repeating-linear-gradient(45deg, transparent 0, transparent 4px, rgba(0,0,0,0.1) 4px, rgba(0,0,0,0.1) 8px);
+            background-size: 6px 6px;
         }
 
-        /* Frente com Textura Suave e Brilho Interno */
         .card-front {
-            background: linear-gradient(135deg, #ffffff 0%, #f1f2f6 100%); 
-            border: 1px solid #dcdde1;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%); 
             transform: rotateY(180deg);
             display: flex; 
             flex-direction: column; 
-            padding: 5px;
+            padding: 2px;
             color: var(--dark);
-            box-shadow: inset 0 0 8px rgba(0,0,0,0.05), var(--shadow-card);
         }
 
         .red { color: var(--red); }
@@ -275,11 +213,11 @@
             flex-direction: column;
             align-items: center; 
             line-height: 0.8; 
-            font-weight: 800;
+            font-weight: 900;
             font-size: 0.75rem;
         }
-        .corner-top { top: 4px; left: 4px; }
-        .corner-bottom { bottom: 4px; right: 4px; transform: rotate(180deg); }
+        .corner-top { top: 2px; left: 2px; }
+        .corner-bottom { bottom: 2px; right: 2px; transform: rotate(180deg); }
         
         .val-10 { letter-spacing: -1px; margin-right: 1px; }
 
@@ -288,44 +226,40 @@
             display: flex; 
             align-items: center; 
             justify-content: center;
-            font-size: 1.5rem; 
-            filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.15));
-            margin-top: 6px;
+            font-size: 1.4rem; 
+            filter: drop-shadow(1px 1px 0px rgba(255,255,255,1));
         }
 
-        /* Brilho de Partículas Verdes para Jogos Prontos (MELDS) */
         .in-meld .card-front {
-            border: 2px solid #2ed573 !important;
-            background: linear-gradient(135deg, #f0fff4 0%, #d4edd9 100%) !important;
-            box-shadow: 0 0 15px rgba(46, 213, 115, 0.6), inset 0 0 10px rgba(46, 213, 115, 0.2);
-            transform: rotateY(180deg) scale(1.03);
+            border: 2px solid #4cd137 !important;
+            background: #f0fff0 !important;
+            box-shadow: 0 0 8px rgba(76, 209, 55, 0.4), inset 0 0 6px rgba(76, 209, 55, 0.1);
+            transform: rotateY(180deg) scale(1.02);
+            z-index: 10;
         }
 
-        /* Efeito de Destaque Pulsante Dourado (Carta Ativa/Topo Descarte) */
         .last-active .card-front {
-            border: 2px solid var(--gold-bright) !important;
-            box-shadow: 0 0 20px var(--gold-bright), inset 0 0 10px rgba(255,211,42,0.3);
-            animation: superPulse 1.4s infinite alternate cubic-bezier(0.4, 0, 0.6, 1);
+            border: 2px solid var(--gold) !important;
+            box-shadow: 0 0 10px var(--gold), 0 0 20px rgba(251,197,49,0.4);
+            animation: pulse 1.5s infinite alternate;
         }
 
-        @keyframes superPulse {
-            from { transform: rotateY(180deg) scale(1) translateY(0); filter: brightness(1); }
-            to { transform: rotateY(180deg) scale(1.04) translateY(-3px); filter: brightness(1.1); }
+        @keyframes pulse {
+            from { transform: rotateY(180deg) scale(1); }
+            to { transform: rotateY(180deg) scale(1.02); }
         }
 
-        /* Sombra Traseira Falsa Dinâmica na Pilha de Compra */
         .card-stack::after {
             content: ''; 
             position: absolute; 
-            top: 4px; 
-            left: 4px;
+            top: 2px; 
+            left: 2px;
             width: 100%; 
             height: 100%; 
-            background: #cbd5e1;
+            background: #ccc;
             border-radius: var(--card-radius); 
             z-index: -1; 
-            border: 1px solid #94a3b8;
-            box-shadow: var(--shadow-card);
+            border: 1px solid #999;
         }
     </style>
 </head>
@@ -333,60 +267,46 @@
 
     <header class="top-bar">
         <button onclick="init()">Novo Jogo</button>
-        <div style="font-weight: 800; font-size: 0.75rem; letter-spacing: 0.8px; color: rgba(255,255,255,0.9)">
-            JOGOS: <span id="stat-melds" style="color: #2ed573; font-weight: 900; text-shadow: 0 0 8px rgba(46,213,115,0.4);">0</span>
-            <span style="margin:0 12px; opacity:0.15">|</span>
-            DECK: <span id="stat-deck" style="color: var(--gold-bright); font-weight: 900; text-shadow: 0 0 8px rgba(255,211,42,0.4);">0</span>
+        <div style="font-weight: 900; font-size: 0.85rem;">
+            JOGOS: <span id="stat-melds" style="color: #4cd137;">0</span>
+            <span style="margin:0 12px; opacity:0.3">|</span>
+            DECK: <span id="stat-deck" style="color: var(--gold);">0</span>
         </div>
     </header>
 
     <main class="board">
         <section class="container purchase-area">
-            <div class="clickable-title is-static" style="border:none; margin-bottom: 6px;">COMPRA</div>
+            <div class="clickable-title is-static" style="border:none; opacity:0.6; margin-bottom: 4px;">COMPRA</div>
             <div id="deck-top" class="card-stack"></div>
         </section>
 
-        <section class="container row-layout">
+        <section id="sec-left" class="container row-layout">
             <div class="clickable-title" onclick="handleSmartAction('left')">ESQUERDA</div>
             <div id="deck-left" class="grid-cards"></div>
         </section>
 
-        <section class="container row-layout">
+        <section id="sec-centerLeft" class="container row-layout">
             <div class="clickable-title" onclick="handleSmartAction('centerLeft')">CENTRO-E</div>
             <div id="deck-centerLeft" class="grid-cards"></div>
         </section>
 
-        <section class="container row-layout">
+        <section id="sec-centerRight" class="container row-layout">
             <div class="clickable-title is-static">MESTRE</div>
             <div id="deck-centerRight" class="grid-cards"></div>
         </section>
 
-        <section class="container row-layout">
+        <section id="sec-right" class="container row-layout">
             <div class="clickable-title" onclick="handleSmartAction('right')">DIREITA</div>
             <div id="deck-right" class="grid-cards"></div>
         </section>
 
         <section class="container discard-area row-layout">
-            <div class="clickable-title is-static" style="border:none;">DESCARTE</div>
+            <div class="clickable-title is-static" style="border:none; opacity:0.4;">DESCARTE</div>
             <div id="deck-removed" class="grid-cards"></div>
         </section>
     </main>
 
     <script>
-        // --- SEÇÃO ULTRA PROTEÇÃO CONTRA CLIQUES TRIPLOS DE ZOOOM MÓVEL ---
-        let lastTouchTime = 0;
-        document.addEventListener('touchstart', function (event) {
-            const now = Date.now();
-            if (now - lastTouchTime < 300) {
-                // Removemos preventDefault geral para não bloquear o gatilho customizado de duplo clique estruturado
-            }
-            lastTouchTime = now;
-        }, { passive: true });
-
-        document.addEventListener('gesturestart', function (e) {
-            e.preventDefault();
-        });
-
         // --- MOTOR DE ÁUDIO PROCEDURAL ---
         const AudioFX = {
             ctx: null,
@@ -433,15 +353,8 @@
         const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
         const vNum = { A: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, J: 11, Q: 12, K: 13 };
         let state = { top: [], left: [], centerLeft: [], centerRight: [], right: [], removed: [] };
-        
-        // Memória auxiliar para o processo de sobreposição Mestre -> Centro-E
-        let overlayBackup = null; 
-        
         let randomIdx = null;
         let isGameOver = false;
-
-        // Controle manual de duplo clique para mobile nativo estável
-        let lastTopClickTime = 0;
 
         function isValidMeld(a, b, c) { 
             const sameValue = a.v === b.v && b.v === c.v; 
@@ -554,7 +467,6 @@
         function init() { 
             AudioFX.playShuffle();
             isGameOver = false; 
-            overlayBackup = null;
             const deck = []; 
             for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false }))); 
             deck.sort(() => Math.random() - 0.5); 
@@ -567,32 +479,10 @@
 
         function pickTop() { randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; }
 
-        // Nova função interna para processar alternância via Duplo Clique no Deck de Compra
-        function toggleMestreOverlay() {
-            AudioFX.playShuffle();
-            if (!overlayBackup) {
-                // Guarda o estado original do Centro-E e faz o Mestre sobrepor/substituir o conteúdo visual
-                overlayBackup = {
-                    centerLeft: [...state.centerLeft],
-                    centerRight: [...state.centerRight]
-                };
-                // Mestre utiliza e sobrepõe o card Centro-E
-                state.centerLeft = [...state.centerRight];
-            } else {
-                // Desfaz o processo retornando aos valores guardados em memória
-                state.centerLeft = [...overlayBackup.centerLeft];
-                state.centerRight = [...overlayBackup.centerRight];
-                overlayBackup = null;
-            }
-            render();
-        }
-
         function createCard(card, sec, idx, show) { 
             const wrap = document.createElement('div'); 
             const isTopDiscard = (sec === 'removed' && idx === 0);
             wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''} ${isTopDiscard ? 'last-active' : ''}`; 
-            
-            wrap.style.zIndex = idx + 1;
             
             const displayVal = card.v === '10' ? '<span class="val-10">10</span>' : card.v; 
             wrap.innerHTML = `
@@ -600,30 +490,17 @@
                     <div class="card-back"></div>
                     <div class="card-front ${card.isRed ? 'red' : ''}">
                         <div class="card-corner corner-top">
-                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 2px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 1px">${card.n}</span>
                         </div>
                         <div class="suit-main">${card.n}</div>
                         <div class="card-corner corner-bottom">
-                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 2px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 1px">${card.n}</span>
                         </div>
                     </div>
                 </div>`; 
 
-            wrap.onclick = (e) => { 
+            wrap.onclick = () => { 
                 if (isGameOver) return; 
-
-                // Interceção de clique específico para a pilha "top" (Compra) para detetar duplo clique estável
-                if (sec === 'top') {
-                    const now = Date.now();
-                    if (now - lastTopClickTime < 280) {
-                        // DETETADO DUPLO CLIQUE no card de compras
-                        toggleMestreOverlay();
-                        lastTopClickTime = 0;
-                        return;
-                    }
-                    lastTopClickTime = now;
-                }
-
                 AudioFX.playCardSound();
                 if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) { 
                     const old = state[sec][idx]; 
@@ -634,16 +511,11 @@
                     if (state.removed.length > 1 && state.removed[0] === old) pickTop(); 
                     render();
                 } else if (sec === 'top') { 
-                    // Executado apenas se não for interceptado pelo duplo clique logo acima
-                    setTimeout(() => {
-                        if (lastTopClickTime !== 0) {
-                            const picked = state.top.splice(randomIdx, 1)[0]; 
-                            if (!picked) return; 
-                            state.removed.unshift(picked); 
-                            pickTop(); 
-                            render();
-                        }
-                    }, 280);
+                    const picked = state.top.splice(randomIdx, 1)[0]; 
+                    if (!picked) return; 
+                    state.removed.unshift(picked); 
+                    pickTop(); 
+                    render();
                 } 
             }; 
             return wrap; 
@@ -652,10 +524,26 @@
         function render() { 
             let total = 0; 
             let win = false; 
+            
+            // Dicionário mapeando a chave interna ao id HTML da seção
+            const sectionMap = { 'left': 'sec-left', 'centerLeft': 'sec-centerLeft', 'right': 'sec-right' };
+
             ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => { 
                 total += checkMelds(state[s]); 
-                if (state[s].every(c => c.inMeld)) win = true; 
+                const hasAllMelds = state[s].every(c => c.inMeld);
+                if (hasAllMelds) win = true; 
+
+                // Lógica de Ocultação/Exibição: aplica a classe de esconder somente se não for o card mestre
+                if (sectionMap[s]) {
+                    const sectionEl = document.getElementById(sectionMap[s]);
+                    if (hasAllMelds || isGameOver) {
+                        sectionEl.classList.remove('hide-cards');
+                    } else {
+                        sectionEl.classList.add('hide-cards');
+                    }
+                }
             }); 
+            
             if (win) isGameOver = true; 
             document.getElementById('stat-melds').innerText = total; 
             document.getElementById('stat-deck').innerText = state.top.length; 
@@ -667,9 +555,19 @@
             for (const id in areas) { 
                 const el = document.getElementById(id); 
                 el.innerHTML = ''; 
-                const isVisible = (areas[id] === 'centerRight' || areas[id] === 'removed' || isGameOver);
+                
+                // As cartas viradas para cima obedecem à regra do jogo original (mestre, descarte e gameover visíveis)
+                // Além de revelar as cartas se a própria coluna completou as trincas.
+                const isVisible = (areas[id] === 'centerRight' || areas[id] === 'removed' || isGameOver || state[areas[id]].every(c => c.inMeld));
                 state[areas[id]].forEach((c, i) => el.appendChild(createCard(c, areas[id], i, isVisible))); 
             } 
+
+            // Se o jogo acabou, limpa as travas de todas as seções para exibir tudo de forma limpa
+            if (isGameOver) {
+                for (const k in sectionMap) {
+                    document.getElementById(sectionMap[k]).classList.remove('hide-cards');
+                }
+            }
         }
 
         window.onload = init;

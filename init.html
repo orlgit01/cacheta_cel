@@ -5,358 +5,284 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <title>Cacheta Realista Pro - IA Ultra</title>
     <style>
-:root{
-  --bg-table: radial-gradient(circle at center, #214d34 0%, #0c2316 100%);
-  --gold: #fbc531;
-  --gold-dark: #d4a017;
-  --red: #d63031;
-  --dark: #1a1a1a;
-  --card-radius: 6px;
-  --panel-bg: rgba(255,255,255,0.08);
-  --panel-strong: rgba(0,0,0,0.42);
-  --line: rgba(255,255,255,0.14);
-  --shadow-card: 0 4px 10px rgba(0,0,0,0.42);
-}
+        :root {
+            --bg-table: radial-gradient(circle at center, #1a4a32 0%, #0d2e1a 100%);
+            /* Dimensionamento compacto para perfeita visibilidade em Landscape */
+            --card-h: 20vh;
+            --card-w: calc(var(--card-h) * 0.67);
+            --gold: #fbc531;
+            --gold-dark: #e1b12c;
+            --red: #d63031;
+            --dark: #1a1a1a;
+            --card-radius: 6px;
+            --panel-bg: rgba(255,255,255,0.08);
+            --shadow-card: 0 5px 12px rgba(0,0,0,0.5);
+        }
 
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-  user-select:none;
-}
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            user-select: none;
+        }
+        
+        body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0; 
+            padding: 8px calc(10px + env(safe-area-inset-right)) 8px calc(10px + env(safe-area-inset-left));
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg-table); 
+            color: #fff;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            overflow: hidden;
+            overscroll-behavior: none; 
+            touch-action: none;
+        }
 
-html, body{
-  width:100%;
-  height:100%;
-  margin:0;
-  overflow:hidden;
-  background:var(--bg-table);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:#fff;
-}
+        .top-bar {
+            width: 100%; 
+            max-width: 95%;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 4px 20px; 
+            margin-bottom: 6px;
+            background: rgba(0,0,0,0.85); 
+            border: 2px solid var(--gold);
+            border-radius: 50px; 
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            height: 7vh;
+        }
 
-body{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  padding:
-    calc(4px + env(safe-area-inset-top))
-    calc(8px + env(safe-area-inset-right))
-    calc(4px + env(safe-area-inset-bottom))
-    calc(8px + env(safe-area-inset-left));
-  overscroll-behavior:none;
-  touch-action:none;
-}
+        button {
+            border: 0; 
+            border-radius: 20px; 
+            padding: 5px 12px;
+            font-weight: 900; 
+            font-size: 0.65rem; 
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #000; 
+            cursor: pointer; 
+            transition: transform 0.1s;
+        }
+        button:active { transform: scale(0.95); }
 
-.top-bar{
-  width:100%;
-  max-width:980px;
-  height:clamp(36px, 8vh, 48px);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:0 12px;
-  margin-bottom:6px;
-  background:linear-gradient(180deg, rgba(0,0,0,0.76), rgba(0,0,0,0.50));
-  border:1px solid var(--line);
-  border-radius:999px;
-  box-shadow:0 6px 14px rgba(0,0,0,0.32);
-  backdrop-filter:blur(10px);
-}
+        .board {
+            width: 100%;
+            height: 82vh;
+            display: grid;
+            grid-template-areas: 
+                "compra mestre desc"
+                "controles controles controles";
+            grid-template-columns: 1fr 2.4fr 1fr; 
+            grid-template-rows: 1fr auto;
+            gap: 8px;
+            align-items: stretch;
+        }
 
-.top-bar > div{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:nowrap;
-  min-width:0;
-}
+        .container {
+            background: var(--panel-bg); 
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px; 
+            padding: 8px; 
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
+            display: flex; 
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
 
-.top-bar button{
-  border:0;
-  border-radius:999px;
-  padding:5px 12px;
-  font-weight:900;
-  font-size:0.68rem;
-  letter-spacing:0.4px;
-  text-transform:uppercase;
-  background:linear-gradient(135deg, var(--gold), var(--gold-dark));
-  color:#111;
-  cursor:pointer;
-  box-shadow:0 3px 8px rgba(0,0,0,0.24);
-}
+        .purchase-area { grid-area: compra; }
+        .master-area { grid-area: mestre; }
+        .discard-area { grid-area: desc; }
+        
+        .control-panel {
+            grid-area: controles;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: rgba(0,0,0,0.5);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
 
-.top-bar button:active{
-  transform:scale(0.97);
-}
+        .control-row {
+            display: flex;
+            gap: 6px;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.board{
-  width:100%;
-  max-width:980px;
-  height:calc(100vh - 64px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-  display:grid;
-  grid-template-columns:0.85fr 2.3fr 0.85fr 1.4fr;
-  gap:6px;
-  align-items:stretch;
-}
+        .row-label {
+            font-size: 0.55rem;
+            font-weight: 900;
+            color: #aaa;
+            text-transform: uppercase;
+            min-width: 65px;
+            letter-spacing: 0.5px;
+        }
 
-.container{
-  background:var(--panel-bg);
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:6px;
-  box-shadow:inset 0 0 12px rgba(0,0,0,0.18), 0 6px 14px rgba(0,0,0,0.22);
-  backdrop-filter:blur(8px);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-}
+        .grid-cards {
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px; 
+            justify-items: center;
+            align-items: center;
+            width: 100%;
+        }
 
-.clickable-title{
-  width:100%;
-  padding:4px 6px;
-  border-radius:6px;
-  background:linear-gradient(135deg, rgba(251,197,49,0.16), rgba(0,0,0,0.42));
-  border:1px solid rgba(251,197,49,0.45);
-  color:var(--gold);
-  font-weight:900;
-  font-size:0.6rem;
-  text-align:center;
-  letter-spacing:0.3px;
-  text-transform:uppercase;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  white-space: nowrap;
-}
+        .clickable-title {
+            width: 100%; 
+            padding: 5px 8px;
+            background: linear-gradient(135deg, rgba(251,197,49,0.2), rgba(0,0,0,0.6));
+            border: 1px solid var(--gold-dark);
+            color: var(--gold); 
+            border-radius: 6px; 
+            font-weight: 900;
+            font-size: 0.65rem; 
+            text-align: center; 
+            letter-spacing: 0.5px;
+            text-transform: uppercase; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            flex: 1;
+        }
+        .clickable-title:active { transform: scale(0.97); background: var(--gold); color: #000; }
+        
+        .clickable-title.active-view {
+            background: linear-gradient(135deg, #4cd137, #44bd32);
+            border-color: #4cd137;
+            color: #fff;
+        }
 
-.clickable-title:active{
-  transform:scale(0.98);
-}
+        .is-static { 
+            cursor: default; 
+            border-color: rgba(255,255,255,0.3); 
+            color: #fff; 
+            background: rgba(0,0,0,0.4); 
+            width: auto;
+            margin-bottom: 5px;
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
 
-.clickable-title.active-view{
-  background:linear-gradient(135deg, #4cd137, #2e9e2f);
-  border-color:#4cd137;
-  color:#fff;
-}
+        .card-wrapper {
+            width: var(--card-w); 
+            height: var(--card-h);
+            perspective: 1000px; 
+            position: relative;
+        }
 
-.is-static{
-  cursor:default;
-  opacity:0.9;
-  width:auto;
-  margin-bottom:4px;
-  padding:3px 7px;
-}
+        .card-inner {
+            position: relative; 
+            width: 100%; 
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+        }
 
-.control-panel{
-  grid-area:controles;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:5px;
-  background:var(--panel-strong);
-  padding:6px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.08);
-  min-height:0;
-}
+        .flipped .card-inner { transform: rotateY(180deg); }
 
-.control-row{
-  display:flex;
-  gap:4px;
-  align-items:center;
-  justify-content:space-between;
-}
+        .card-front, .card-back {
+            position: absolute; 
+            inset: 0; 
+            backface-visibility: hidden;
+            border-radius: var(--card-radius); 
+            border: 1px solid #bbb;
+            box-shadow: var(--shadow-card);
+        }
 
-.row-label{
-  min-width:48px;
-  font-size:0.52rem;
-  font-weight:900;
-  color:#bdbdbd;
-  text-transform:uppercase;
-  letter-spacing:0.3px;
-}
+        .card-back {
+            background: #2c3e50; 
+            border: 2px solid #fff;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
+                              repeating-linear-gradient(45deg, transparent 0, transparent 4px, rgba(0,0,0,0.1) 4px, rgba(0,0,0,0.1) 8px);
+            background-size: 6px 6px;
+        }
 
-.grid-cards{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:4px;
-  justify-items:center;
-  align-items:center;
-  width:100%;
-}
+        .card-front {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%); 
+            transform: rotateY(180deg);
+            display: flex; 
+            flex-direction: column; 
+            padding: 4px;
+            color: var(--dark);
+        }
 
-.card-wrapper{
-  width:clamp(30px, 5.5vw, 52px);
-  height:clamp(45px, 8.2vw, 78px);
-  perspective:1000px;
-  position:relative;
-}
+        .red { color: var(--red); }
 
-.card-inner{
-  position:relative;
-  width:100%;
-  height:100%;
-  transition:transform 0.55s cubic-bezier(0.23, 1, 0.32, 1);
-  transform-style:preserve-3d;
-}
+        .card-corner {
+            position: absolute; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            line-height: 0.8; 
+            font-weight: 900;
+            font-size: 0.8rem;
+        }
+        .corner-top { top: 2px; left: 2px; }
+        .corner-bottom { bottom: 2px; right: 2px; transform: rotate(180deg); }
+        
+        .val-10 { letter-spacing: -1px; margin-right: 1px; }
 
-.flipped .card-inner{
-  transform:rotateY(180deg);
-}
+        .suit-main {
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 1.4rem; 
+            filter: drop-shadow(1px 1px 0px rgba(255,255,255,1));
+        }
 
-.card-front,
-.card-back{
-  position:absolute;
-  inset:0;
-  backface-visibility:hidden;
-  border-radius:var(--card-radius);
-  border:1px solid rgba(255,255,255,0.45);
-  box-shadow:var(--shadow-card);
-}
+        .in-meld .card-front {
+            border: 2px solid #4cd137 !important;
+            background: #f0fff0 !important;
+            box-shadow: 0 0 6px rgba(76, 209, 55, 0.4), inset 0 0 4px rgba(76, 209, 55, 0.1);
+            transform: rotateY(180deg) scale(1.02);
+            z-index: 10;
+        }
 
-.card-back{
-  background:
-    radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
-    repeating-linear-gradient(45deg, transparent 0, transparent 4px, rgba(0,0,0,0.10) 4px, rgba(0,0,0,0.10) 8px),
-    #2c3e50;
-  background-size:6px 6px;
-  border:1.5px solid rgba(255,255,255,0.85);
-}
+        .last-active .card-front {
+            border: 2px solid var(--gold) !important;
+            box-shadow: 0 0 10px var(--gold), 0 0 20px rgba(251,197,49,0.4);
+            animation: pulse 1.5s infinite alternate;
+        }
 
-.card-front{
-  background:linear-gradient(135deg, #ffffff 0%, #f4f4f4 100%);
-  transform:rotateY(180deg);
-  display:flex;
-  flex-direction:column;
-  padding:3px;
-  color:var(--dark);
-}
+        @keyframes pulse {
+            from { transform: rotateY(180deg) scale(1); }
+            to { transform: rotateY(180deg) scale(1.02); }
+        }
 
-.red{
-  color:var(--red);
-}
-
-.card-corner{
-  position:absolute;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  line-height:0.75;
-  font-weight:900;
-  font-size:0.65rem;
-}
-
-.corner-top{
-  top:2px;
-  left:2px;
-}
-
-.corner-bottom{
-  bottom:2px;
-  right:2px;
-  transform:rotate(180deg);
-}
-
-.val-10{
-  letter-spacing:-1px;
-  margin-right:1px;
-}
-
-.suit-main{
-  flex:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1rem;
-  filter:drop-shadow(1px 1px 0 rgba(255,255,255,1));
-}
-
-.in-meld .card-front{
-  border:1.5px solid #4cd137 !important;
-  background:#f0fff0 !important;
-  box-shadow:0 0 6px rgba(76,209,55,0.35), inset 0 0 3px rgba(76,209,55,0.10);
-}
-
-.last-active .card-front{
-  border:1.5px solid var(--gold) !important;
-  box-shadow:0 0 8px rgba(251,197,49,0.45), 0 0 15px rgba(251,197,49,0.18);
-  animation:pulse 1.5s infinite alternate;
-}
-
-@keyframes pulse{
-  from{ transform:rotateY(180deg) scale(1); }
-  to{ transform:rotateY(180deg) scale(1.02); }
-}
-
-.card-stack::after{
-  content:"";
-  position:absolute;
-  top:2px;
-  left:2px;
-  width:100%;
-  height:100%;
-  background:#cfcfcf;
-  border-radius:var(--card-radius);
-  z-index:-1;
-  border:1px solid #999;
-}
-
-/* Otimizações exclusivas para telas horizontais mais baixas (como iPhone 6s/7/8 Plus) */
-@media screen and (orientation: landscape) and (max-height: 414px){
-  body {
-    padding: 2px 8px;
-  }
-  .top-bar {
-    height: 34px;
-    margin-bottom: 4px;
-  }
-  .board {
-    height: calc(100vh - 44px);
-    grid-template-columns: 0.8fr 2.5fr 0.8fr 1.3fr;
-    gap: 4px;
-  }
-  .container {
-    padding: 4px;
-    border-radius: 8px;
-  }
-  .control-panel {
-    gap: 4px;
-    padding: 4px;
-    border-radius: 8px;
-  }
-  .clickable-title {
-    font-size: 0.55rem;
-    padding: 3px 4px;
-  }
-  .row-label {
-    min-width: 42px;
-    font-size: 0.48rem;
-  }
-  .card-wrapper {
-    width: clamp(26px, 5.2vw, 44px);
-    height: clamp(39px, 7.8vw, 66px);
-  }
-  .suit-main {
-    font-size: 0.85rem;
-  }
-  .card-corner {
-    font-size: 0.58rem;
-  }
-}
-</style>
+        .card-stack::after {
+            content: ''; 
+            position: absolute; 
+            top: 2px; 
+            left: 2px;
+            width: 100%; 
+            height: 100%; 
+            background: #ccc;
+            border-radius: var(--card-radius); 
+            z-index: -1; 
+            border: 1px solid #999;
+        }
+    </style>
 </head>
 <body>
 
     <header class="top-bar">
         <button onclick="init()">Novo Jogo</button>
-        <div style="font-weight: 900; font-size: 0.75rem;">
+        <div style="font-weight: 900; font-size: 0.8rem;">
             JOGOS: <span id="stat-melds" style="color: #4cd137;">0</span>
-            <span style="margin:0 8px; opacity:0.3">|</span>
+            <span style="margin:0 10px; opacity:0.3">|</span>
             DECK: <span id="stat-deck" style="color: var(--gold);">0</span>
         </div>
     </header>
@@ -380,16 +306,16 @@ body{
         <div class="control-panel">
             <div class="control-row">
                 <div class="row-label">Jogar IA:</div>
-                <div class="clickable-title" onclick="handleSmartAction('left')">Esq</div>
-                <div class="clickable-title" onclick="handleSmartAction('centerLeft')">C-Esq</div>
-                <div class="clickable-title" onclick="handleSmartAction('right')">Dir</div>
+                <div class="clickable-title" onclick="handleSmartAction('left')">Esquerda</div>
+                <div class="clickable-title" onclick="handleSmartAction('centerLeft')">Centro-E</div>
+                <div class="clickable-title" onclick="handleSmartAction('right')">Direita</div>
             </div>
             <div class="control-row">
-                <div class="row-label">Ver:</div>
-                <div id="btn-view-left" class="clickable-title" onclick="changePresentation('left')">Esq</div>
-                <div id="btn-view-centerLeft" class="clickable-title" onclick="changePresentation('centerLeft')">C-Esq</div>
+                <div class="row-label">Ver na Tela:</div>
+                <div id="btn-view-left" class="clickable-title" onclick="changePresentation('left')">Esquerda</div>
+                <div id="btn-view-centerLeft" class="clickable-title" onclick="changePresentation('centerLeft')">Centro-E</div>
                 <div id="btn-view-centerRight" class="clickable-title active-view" onclick="changePresentation('centerRight')">Mestre</div>
-                <div id="btn-view-right" class="clickable-title" onclick="changePresentation('right')">Dir</div>
+                <div id="btn-view-right" class="clickable-title" onclick="changePresentation('right')">Direita</div>
             </div>
         </div>
     </main>
@@ -449,7 +375,7 @@ body{
         let isGameOver = false;
         let currentPresentationDeck = 'centerRight'; 
 
-        const namesMap = { 'left': 'ESQ', 'centerLeft': 'C-ESQ', 'centerRight': 'MESTRE', 'right': 'DIR' };
+        const namesMap = { 'left': 'ESQUERDA', 'centerLeft': 'CENTRO-E', 'centerRight': 'MESTRE', 'right': 'DIREITA' };
 
         function isValidMeld(a, b, c) { 
             const sameValue = a.v === b.v && b.v === c.v; 
@@ -603,11 +529,11 @@ body{
                     <div class="card-back"></div>
                     <div class="card-front ${card.isRed ? 'red' : ''}">
                         <div class="card-corner corner-top">
-                            <span>${displayVal}</span><span style="font-size: 0.52rem; margin-top: 1px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 1px">${card.n}</span>
                         </div>
                         <div class="suit-main">${card.n}</div>
                         <div class="card-corner corner-bottom">
-                            <span>${displayVal}</span><span style="font-size: 0.52rem; margin-top: 1px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 1px">${card.n}</span>
                         </div>
                     </div>
                 </div>`; 
@@ -650,7 +576,7 @@ body{
                 currentPresentationDeck = winnerDeck;
                 document.getElementById('center-title').innerText = `GANHOU: ${namesMap[winnerDeck]}! 🎉`;
             } else {
-                document.getElementById('center-title').innerText = `VER: ${namesMap[currentPresentationDeck]}`;
+                document.getElementById('center-title').innerText = `VISUALIZANDO: ${namesMap[currentPresentationDeck]}`;
             }
 
             updateActiveButtonStyles();

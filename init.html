@@ -36,7 +36,7 @@
             display: flex; 
             flex-direction: column; 
             align-items: center;
-            overflow: hidden;
+            overflow: visible;
             overscroll-behavior: none; 
             touch-action: none;
         }
@@ -98,7 +98,7 @@
         }
 
         .purchase-area { grid-area: compra; }
-        .master-area { grid-area: mestre; }
+        .master-area { grid-area: mestre; overflow: visible; }
         .discard-area { grid-area: desc; }
         
         .control-panel {
@@ -294,7 +294,7 @@
         </section>
 
         <section class="container master-area">
-            <div id="center-title" class="clickable-title is-static">MESTRE</div>
+            <div id="center-title" style="display:none"></div>
             <div id="deck-centerRight" class="grid-cards"></div>
         </section>
 

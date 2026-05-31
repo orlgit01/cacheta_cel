@@ -3,20 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Cacheta Realista Pro - IA Ultra</title>
+    <title>Cacheta Realista Pro - iOS 7</title>
     <style>
         :root {
-            --bg-table: radial-gradient(circle at center, #1a4a32 0%, #0d2e1a 100%);
-            /* Dimensionamento compacto para perfeita visibilidade em Landscape */
-            --card-h: 20vh;
-            --card-w: calc(var(--card-h) * 0.67);
-            --gold: #fbc531;
-            --gold-dark: #e1b12c;
-            --red: #d63031;
-            --dark: #1a1a1a;
-            --card-radius: 6px;
-            --panel-bg: rgba(255,255,255,0.08);
-            --shadow-card: 0 5px 12px rgba(0,0,0,0.5);
+            --ios7-blue: #007aff;
+            --gold: #f4c430;
+            --dark: #1c1c1e;
+            --card-h: 108px;
+            --card-w: 72px;
         }
 
         * { 
@@ -28,163 +22,175 @@
         body {
             height: 100vh;
             width: 100vw;
-            margin: 0; 
-            padding: 8px calc(10px + env(safe-area-inset-right)) 8px calc(10px + env(safe-area-inset-left));
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: var(--bg-table); 
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, Helvetica Neue, Helvetica, sans-serif;
+            background: #000;
             color: #fff;
-            display: flex; 
-            flex-direction: column; 
+            overflow: hidden;
+        }
+
+        .iphone-frame {
+            width: 100%;
+            max-width: 736px;
+            margin: 0 auto;
+            height: 100vh;
+            background: #000;
+            border: 14px solid #111;
+            border-radius: 58px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 20px;
+            background: rgba(255,255,255,0.95);
+            color: #000;
+            font-size: 13px;
+            display: flex;
             align-items: center;
-            overflow: visible;
-            overscroll-behavior: none; 
-            touch-action: none;
+            justify-content: space-between;
+            padding: 0 22px;
+            font-weight: 600;
+        }
+
+        .nav-bar {
+            height: 44px;
+            background: rgba(255,255,255,0.95);
+            border-bottom: 1px solid #b2b2b2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: #000;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .nav-bar button {
+            position: absolute;
+            left: 16px;
+            color: var(--ios7-blue);
+            font-size: 17px;
+            background: none;
+            border: none;
+        }
+
+        .game-content {
+            flex: 1;
+            background: radial-gradient(circle at center, #1a4a32 0%, #0d2e1a 100%);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .top-bar {
-            width: 100%; 
-            max-width: 95%;
-            display: flex; 
-            justify-content: space-between; 
+            background: rgba(255,255,255,0.92);
+            color: #000;
+            border-radius: 10px;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 4px 20px; 
-            margin-bottom: 6px;
-            background: rgba(0,0,0,0.85); 
-            border: 2px solid var(--gold);
-            border-radius: 50px; 
-            backdrop-filter: blur(15px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            height: 7vh;
+            font-size: 15px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
         }
-
-        button {
-            border: 0; 
-            border-radius: 20px; 
-            padding: 5px 12px;
-            font-weight: 900; 
-            font-size: 0.65rem; 
-            text-transform: uppercase;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: #000; 
-            cursor: pointer; 
-            transition: transform 0.1s;
-        }
-        button:active { transform: scale(0.95); }
 
         .board {
-            width: 100%;
-            height: 82vh;
+            flex: 1;
             display: grid;
             grid-template-areas: 
                 "compra mestre desc"
                 "controles controles controles";
-            grid-template-columns: 1fr 2.4fr 1fr; 
-            grid-template-rows: 1fr auto;
-            gap: 8px;
-            align-items: stretch;
+            grid-template-columns: 1fr 2.35fr 1fr;
+            gap: 10px;
         }
 
         .container {
-            background: var(--panel-bg); 
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 12px; 
-            padding: 8px; 
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
-            display: flex; 
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .purchase-area { grid-area: compra; }
-        .master-area { grid-area: mestre; overflow: visible; }
-        .discard-area { grid-area: desc; }
-        
-        .control-panel {
-            grid-area: controles;
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 14px;
+            padding: 10px;
+            backdrop-filter: blur(12px);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            background: rgba(0,0,0,0.5);
-            padding: 6px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
+            align-items: center;
+        }
+
+        .clickable-title {
+            width: 100%;
+            background: linear-gradient(#f8f8f8, #e0e0e0);
+            color: #000;
+            border: 1px solid #8e8e93;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .clickable-title:active { background: #d0d0d0; transform: scale(0.96); }
+        .clickable-title.active-view {
+            background: linear-gradient(#4cd137, #34a12c);
+            color: white;
+            border-color: #2e8b2e;
+        }
+
+        button {
+            background: linear-gradient(#f8f8f8, #e0e0e0);
+            color: #000;
+            border: 1px solid #8e8e93;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        button:active { background: #c8c8c8; }
+
+        .control-panel {
+            background: rgba(255,255,255,0.15);
+            border-radius: 14px;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .control-row {
             display: flex;
             gap: 6px;
-            justify-content: space-between;
-            align-items: center;
+            margin-bottom: 10px;
         }
 
         .row-label {
-            font-size: 0.55rem;
-            font-weight: 900;
-            color: #aaa;
-            text-transform: uppercase;
-            min-width: 65px;
-            letter-spacing: 0.5px;
+            font-size: 13px;
+            color: #ddd;
+            min-width: 70px;
+            align-self: center;
         }
 
         .grid-cards {
-            display: grid; 
+            display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 5px; 
-            justify-items: center;
-            align-items: center;
+            gap: 6px;
             width: 100%;
         }
 
-        .clickable-title {
-            width: 100%; 
-            padding: 5px 8px;
-            background: linear-gradient(135deg, rgba(251,197,49,0.2), rgba(0,0,0,0.6));
-            border: 1px solid var(--gold-dark);
-            color: var(--gold); 
-            border-radius: 6px; 
-            font-weight: 900;
-            font-size: 0.65rem; 
-            text-align: center; 
-            letter-spacing: 0.5px;
-            text-transform: uppercase; 
-            cursor: pointer;
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-            flex: 1;
-        }
-        .clickable-title:active { transform: scale(0.97); background: var(--gold); color: #000; }
-        
-        .clickable-title.active-view {
-            background: linear-gradient(135deg, #4cd137, #44bd32);
-            border-color: #4cd137;
-            color: #fff;
-        }
-
-        .is-static { 
-            cursor: default; 
-            border-color: rgba(255,255,255,0.3); 
-            color: #fff; 
-            background: rgba(0,0,0,0.4); 
-            width: auto;
-            margin-bottom: 5px;
-            padding: 3px 8px;
-            font-size: 0.65rem;
-        }
-
+        /* Cards */
         .card-wrapper {
-            width: var(--card-w); 
+            width: var(--card-w);
             height: var(--card-h);
-            perspective: 1000px; 
-            position: relative;
+            perspective: 1000px;
+            cursor: pointer;
         }
 
         .card-inner {
-            position: relative; 
-            width: 100%; 
+            position: relative;
+            width: 100%;
             height: 100%;
             transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             transform-style: preserve-3d;
@@ -193,418 +199,379 @@
         .flipped .card-inner { transform: rotateY(180deg); }
 
         .card-front, .card-back {
-            position: absolute; 
-            inset: 0; 
+            position: absolute;
+            inset: 0;
             backface-visibility: hidden;
-            border-radius: var(--card-radius); 
-            border: 1px solid #bbb;
-            box-shadow: var(--shadow-card);
+            border-radius: 8px;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.5);
         }
 
         .card-back {
-            background: #2c3e50; 
+            background: #2c3e50;
             border: 2px solid #fff;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
-                              repeating-linear-gradient(45deg, transparent 0, transparent 4px, rgba(0,0,0,0.1) 4px, rgba(0,0,0,0.1) 8px);
-            background-size: 6px 6px;
+            background-image: 
+                radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
+                repeating-linear-gradient(45deg, transparent 0, transparent 5px, rgba(0,0,0,0.15) 5px, rgba(0,0,0,0.15) 10px);
         }
 
         .card-front {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%); 
+            background: linear-gradient(135deg, #fff, #f0f0f0);
             transform: rotateY(180deg);
-            display: flex; 
-            flex-direction: column; 
-            padding: 4px;
-            color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+            color: #000;
+            border: 1px solid #888;
         }
 
-        .red { color: var(--red); }
+        .red { color: #d63031; }
 
         .card-corner {
-            position: absolute; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            line-height: 0.8; 
             font-weight: 900;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            line-height: 1;
         }
-        .corner-top { top: 2px; left: 2px; }
-        .corner-bottom { bottom: 2px; right: 2px; transform: rotate(180deg); }
-        
-        .val-10 { letter-spacing: -1px; margin-right: 1px; }
 
         .suit-main {
-            flex: 1; 
-            display: flex; 
-            align-items: center; 
+            flex: 1;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            font-size: 1.4rem; 
-            filter: drop-shadow(1px 1px 0px rgba(255,255,255,1));
+            font-size: 2.3rem;
         }
 
+        /* Destaques */
         .in-meld .card-front {
-            border: 2px solid #4cd137 !important;
+            border: 3px solid #4cd137 !important;
             background: #f0fff0 !important;
-            box-shadow: 0 0 6px rgba(76, 209, 55, 0.4), inset 0 0 4px rgba(76, 209, 55, 0.1);
-            transform: rotateY(180deg) scale(1.02);
-            z-index: 10;
+            box-shadow: 0 0 10px #4cd137;
         }
 
         .last-active .card-front {
-            border: 2px solid var(--gold) !important;
-            box-shadow: 0 0 10px var(--gold), 0 0 20px rgba(251,197,49,0.4);
-            animation: pulse 1.5s infinite alternate;
-        }
-
-        @keyframes pulse {
-            from { transform: rotateY(180deg) scale(1); }
-            to { transform: rotateY(180deg) scale(1.02); }
-        }
-
-        .card-stack::after {
-            content: ''; 
-            position: absolute; 
-            top: 2px; 
-            left: 2px;
-            width: 100%; 
-            height: 100%; 
-            background: #ccc;
-            border-radius: var(--card-radius); 
-            z-index: -1; 
-            border: 1px solid #999;
+            border: 3px solid #f4c430 !important;
+            box-shadow: 0 0 12px #f4c430;
         }
     </style>
 </head>
 <body>
 
-    <header class="top-bar">
+<div class="iphone-frame">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <span>09:41</span>
+        <span>100% ��</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
         <button onclick="init()">Novo Jogo</button>
-        <div style="font-weight: 900; font-size: 0.8rem;">
-            JOGOS: <span id="stat-melds" style="color: #4cd137;">0</span>
-            <span style="margin:0 10px; opacity:0.3">|</span>
-            DECK: <span id="stat-deck" style="color: var(--gold);">0</span>
+        <span>Cacheta Realista Pro</span>
+    </div>
+
+    <div class="game-content">
+        <div class="top-bar">
+            <div>JOGOS: <span id="stat-melds" style="color:#4cd137;">0</span></div>
+            <div>DECK: <span id="stat-deck" style="color:#f4c430;">0</span></div>
         </div>
-    </header>
 
-    <main class="board">
-        <section class="container purchase-area">
-            <div class="clickable-title is-static">COMPRA</div>
-            <div id="deck-top" class="card-stack"></div>
-        </section>
+        <main class="board">
+            <section class="container purchase-area">
+                <div class="clickable-title is-static">COMPRA</div>
+                <div id="deck-top"></div>
+            </section>
 
-        <section class="container master-area">
-            <div id="center-title" style="display:none"></div>
-            <div id="deck-centerRight" class="grid-cards"></div>
-        </section>
+            <section class="container master-area">
+                <div id="center-title" style="text-align:center; font-weight:600; margin-bottom:8px; color:#fff; font-size:15px;"></div>
+                <div id="deck-centerRight" class="grid-cards"></div>
+            </section>
 
-        <section class="container discard-area">
-            <div class="clickable-title is-static" style="opacity:0.6;">DESCARTE</div>
-            <div id="deck-removed"></div>
-        </section>
+            <section class="container discard-area">
+                <div class="clickable-title is-static">DESCARTE</div>
+                <div id="deck-removed"></div>
+            </section>
 
-        <div class="control-panel">
-            <div class="control-row">
-                <div class="row-label">Jogar IA:</div>
-                <div class="clickable-title" onclick="handleSmartAction('left')">Esquerda</div>
-                <div class="clickable-title" onclick="handleSmartAction('centerLeft')">Centro-E</div>
-                <div class="clickable-title" onclick="handleSmartAction('right')">Direita</div>
+            <div class="control-panel">
+                <div class="control-row">
+                    <div class="row-label">Jogar IA:</div>
+                    <div class="clickable-title" onclick="handleSmartAction('left')">Esquerda</div>
+                    <div class="clickable-title" onclick="handleSmartAction('centerLeft')">Centro-E</div>
+                    <div class="clickable-title" onclick="handleSmartAction('right')">Direita</div>
+                </div>
+                <div class="control-row">
+                    <div class="row-label">Ver na Tela:</div>
+                    <div id="btn-view-left" class="clickable-title" onclick="changePresentation('left')">Esq</div>
+                    <div id="btn-view-centerLeft" class="clickable-title" onclick="changePresentation('centerLeft')">C-E</div>
+                    <div id="btn-view-centerRight" class="clickable-title active-view" onclick="changePresentation('centerRight')">Mestre</div>
+                    <div id="btn-view-right" class="clickable-title" onclick="changePresentation('right')">Dir</div>
+                </div>
             </div>
-            <div class="control-row">
-                <div class="row-label">Ver na Tela:</div>
-                <div id="btn-view-left" class="clickable-title" onclick="changePresentation('left')">Esquerda</div>
-                <div id="btn-view-centerLeft" class="clickable-title" onclick="changePresentation('centerLeft')">Centro-E</div>
-                <div id="btn-view-centerRight" class="clickable-title active-view" onclick="changePresentation('centerRight')">Mestre</div>
-                <div id="btn-view-right" class="clickable-title" onclick="changePresentation('right')">Direita</div>
-            </div>
-        </div>
-    </main>
+        </main>
+    </div>
+</div>
 
-    <div id="deck-left" style="display:none;"></div>
-    <div id="deck-centerLeft" style="display:none;"></div>
-    <div id="deck-right" style="display:none;"></div>
+<div id="deck-left" style="display:none;"></div>
+<div id="deck-centerLeft" style="display:none;"></div>
+<div id="deck-right" style="display:none;"></div>
 
-    <script>
-        // --- MOTOR DE ÁUDIO PROCEDURAL ---
-        const AudioFX = {
-            ctx: null,
-            init() {
-                if (!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-            },
-            playCardSound() {
-                this.init();
-                if (this.ctx.state === 'suspended') this.ctx.resume();
-                
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                const filter = this.ctx.createBiquadFilter();
+<script>
+    const AudioFX = {
+        ctx: null,
+        init() {
+            if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        },
+        playCardSound() {
+            this.init();
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.1);
+        },
+        playShuffle() {
+            this.init();
+            for (let i = 0; i < 6; i++) setTimeout(() => this.playCardSound(), i * 70);
+        }
+    };
 
-                osc.type = 'triangle';
-                filter.type = 'lowpass';
-                
-                osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.1);
+    const naipes = ['♥', '♦', '♣', '♠'];
+    const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+    const vNum = { A: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, J: 11, Q: 12, K: 13 };
 
-                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+    let state = { top: [], left: [], centerLeft: [], centerRight: [], right: [], removed: [] };
+    let randomIdx = null;
+    let isGameOver = false;
+    let currentPresentationDeck = 'centerRight';
 
-                filter.frequency.value = 1000;
+    const namesMap = { 'left': 'ESQUERDA', 'centerLeft': 'CENTRO-E', 'centerRight': 'MESTRE', 'right': 'DIREITA' };
 
-                osc.connect(filter);
-                filter.connect(gain);
-                gain.connect(this.ctx.destination);
+    function isValidMeld(a, b, c) { 
+        const sameValue = a.v === b.v && b.v === c.v;
+        if (sameValue) return new Set([a.n, b.n, c.n]).size === 3;
+        const sameSuit = a.n === b.n && b.n === c.n;
+        if (!sameSuit) return false;
+        const values = [vNum[a.v], vNum[b.v], vNum[c.v]].sort((x,y)=>x-y);
+        return values[0] + 1 === values[1] && values[1] + 1 === values[2];
+    }
 
-                osc.start();
-                osc.stop(this.ctx.currentTime + 0.1);
-            },
-            playShuffle() {
-                this.init();
-                for (let i = 0; i < 6; i++) {
-                    setTimeout(() => this.playCardSound(), i * 70);
-                }
+    function checkMelds(cards) { 
+        cards.forEach(card => card.inMeld = false); 
+        const allMelds = []; 
+        for (let i = 0; i < cards.length - 2; i++) { 
+            for (let j = i + 1; j < cards.length - 1; j++) { 
+                for (let k = j + 1; k < cards.length; k++) { 
+                    if (isValidMeld(cards[i], cards[j], cards[k])) 
+                        allMelds.push({ idxs: [i, j, k], type: cards[i].v === cards[j].v ? 'set' : 'run' }); 
+                } 
+            } 
+        } 
+        let bestMask = []; 
+        let bestCount = 0; 
+        function backtrack(start, chosen, used) { 
+            if (used.size > bestCount) { 
+                bestCount = used.size; 
+                bestMask = chosen.flatMap(m => m.idxs); 
             }
-        };
+            for (let i = start; i < allMelds.length; i++) { 
+                const meld = allMelds[i]; 
+                if (meld.idxs.some(idx => used.has(idx))) continue; 
+                meld.idxs.forEach(idx => used.add(idx)); 
+                chosen.push(meld); 
+                backtrack(i + 1, chosen, used); 
+                chosen.pop(); 
+                meld.idxs.forEach(idx => used.delete(idx)); 
+            } 
+        } 
+        backtrack(0, [], new Set()); 
+        bestMask.forEach(idx => cards[idx].inMeld = true); 
+        return Math.floor(bestMask.length / 3); 
+    }
 
-        const naipes = ['♥', '♦', '♣', '♠'];
-        const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-        const vNum = { A: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, J: 11, Q: 12, K: 13 };
-        let state = { top: [], left: [], centerLeft: [], centerRight: [], right: [], removed: [] };
-        let randomIdx = null;
-        let isGameOver = false;
-        let currentPresentationDeck = 'centerRight'; 
-
-        const namesMap = { 'left': 'ESQUERDA', 'centerLeft': 'CENTRO-E', 'centerRight': 'MESTRE', 'right': 'DIREITA' };
-
-        function isValidMeld(a, b, c) { 
-            const sameValue = a.v === b.v && b.v === c.v; 
-            if (sameValue) return new Set([a.n, b.n, c.n]).size === 3; 
-            const sameSuit = a.n === b.n && b.n === c.n; 
-            if (!sameSuit) return false; 
-            const values = [vNum[a.v], vNum[b.v], vNum[c.v]].sort((x, y) => x - y); 
-            return values[0] + 1 === values[1] && values[1] + 1 === values[2]; 
-        }
-
-        function checkMelds(cards) { 
-            cards.forEach(card => card.inMeld = false); 
-            const allMelds = []; 
-            for (let i = 0; i < cards.length - 2; i++) { 
-                for (let j = i + 1; j < cards.length - 1; j++) { 
-                    for (let k = j + 1; k < cards.length; k++) { 
-                        if (isValidMeld(cards[i], cards[j], cards[k])) 
-                            allMelds.push({ idxs: [i, j, k], type: cards[i].v === cards[j].v ? 'set' : 'run' }); 
+    function calculateEV(card, column) { 
+        if (!card) return -1; 
+        const free = column.filter(c => !c.inMeld); 
+        if (free.length === 0) return 0; 
+        for (let i = 0; i < free.length; i++) { 
+            for (let j = i + 1; j < free.length; j++) { 
+                if (isValidMeld(card, free[i], free[j])) return 10000; 
+            } 
+        } 
+        let ev = 0; 
+        const seen = [...state.left, ...state.centerLeft, ...state.centerRight, ...state.right, ...state.removed]; 
+        free.forEach(c => { 
+            if (c.v === card.v && c.n !== card.n) { 
+                const diffSuits = naipes.filter(n => n !== card.n && n !== c.n); 
+                diffSuits.forEach(n => { 
+                    const copiesOut = seen.filter(s => s.v === card.v && s.n === n).length; 
+                    ev += (2 - copiesOut) * 25; 
+                }); 
+            } 
+            if (c.n === card.n) { 
+                const dist = Math.abs(vNum[c.v] - vNum[card.v]); 
+                if (dist === 1 || dist === 2) { 
+                    const targetVal = dist === 1 ? (vNum[c.v] > vNum[card.v] ? vNum[card.v] - 1 : vNum[c.v] + 1) : Math.floor((vNum[c.v] + vNum[card.v]) / 2); 
+                    const targetCard = valores[targetVal - 1]; 
+                    if (targetCard) { 
+                        const copiesOut = seen.filter(s => s.v === targetCard && s.n === card.n).length; 
+                        ev += (2 - copiesOut) * (dist === 1 ? 40 : 15); 
                     } 
                 } 
             } 
-            let bestMask = []; 
-            let bestCount = 0; 
-            let bestScore = -1; 
-            function backtrack(start, chosen, used) { 
-                const covered = used.size; 
-                const score = covered * 10 + chosen.filter(m => m.type === 'run').length * 2 + chosen.filter(m => m.type === 'set').length; 
-                if (covered > bestCount || (covered === bestCount && score > bestScore)) { 
-                    bestCount = covered; bestScore = score; bestMask = chosen.flatMap(m => m.idxs); 
-                } 
-                for (let i = start; i < allMelds.length; i++) { 
-                    const meld = allMelds[i]; 
-                    if (meld.idxs.some(idx => used.has(idx))) continue; 
-                    meld.idxs.forEach(idx => used.add(idx)); 
-                    chosen.push(meld); 
-                    backtrack(i + 1, chosen, used); 
-                    chosen.pop(); 
-                    meld.idxs.forEach(idx => used.delete(idx)); 
-                } 
-            } 
-            backtrack(0, [], new Set()); 
-            bestMask.forEach(idx => cards[idx].inMeld = true); 
-            return bestMask.length / 3; 
-        }
+        }); 
+        return ev; 
+    }
 
-        function calculateEV(card, column) { 
-            if (!card) return -1; 
-            const free = column.filter(c => !c.inMeld); 
-            if (free.length === 0) return 0; 
-            for (let i = 0; i < free.length; i++) { 
-                for (let j = i + 1; j < free.length; j++) { 
-                    if (isValidMeld(card, free[i], free[j])) return 10000; 
-                } 
+    function handleSmartAction(sec) { 
+        if (isGameOver) return; 
+        AudioFX.playCardSound();
+        let worstIdx = -1; 
+        let minEV = Infinity; 
+        state[sec].forEach((c, idx) => { 
+            if (!c.inMeld) { 
+                const ev = calculateEV(c, state[sec].filter((_, i) => i !== idx)); 
+                if (ev < minEV) { minEV = ev; worstIdx = idx; } 
             } 
-            let ev = 0; 
-            const seen = [...state.left, ...state.centerLeft, ...state.centerRight, ...state.right, ...state.removed]; 
-            free.forEach(c => { 
-                if (c.v === card.v && c.n !== card.n) { 
-                    const diffSuits = naipes.filter(n => n !== card.n && n !== c.n); 
-                    diffSuits.forEach(n => { 
-                        const copiesOut = seen.filter(s => s.v === card.v && s.n === n).length; 
-                        ev += (2 - copiesOut) * 25; 
-                    }); 
-                } 
-                if (c.n === card.n) { 
-                    const dist = Math.abs(vNum[c.v] - vNum[card.v]); 
-                    if (dist === 1 || dist === 2) { 
-                        const targetVal = dist === 1 ? (vNum[c.v] > vNum[card.v] ? vNum[card.v] - 1 : vNum[c.v] + 1) : (vNum[c.v] + vNum[card.v]) / 2; 
-                        const targetCard = valores[targetVal - 1]; 
-                        if (targetCard) { 
-                            const copiesOut = seen.filter(s => s.v === targetCard && s.n === card.n).length; 
-                            ev += (2 - copiesOut) * (dist === 1 ? 40 : 15); 
-                        } 
-                    } 
-                } 
-            }); 
-            return ev; 
-        }
+        }); 
+        if (worstIdx === -1) return; 
 
-        function handleSmartAction(sec) { 
+        const discEV = calculateEV(state.removed[0], state[sec]); 
+        const drawEV = calculateEV(state.top[randomIdx], state[sec]); 
+
+        if (state.removed[0] && discEV > drawEV && discEV > minEV) { 
+            const old = state[sec][worstIdx]; 
+            state[sec][worstIdx] = state.removed.shift(); 
+            state.removed.unshift(old); 
+        } else if (state.top[randomIdx] && drawEV > minEV) { 
+            const old = state[sec][worstIdx]; 
+            state[sec][worstIdx] = state.top.splice(randomIdx, 1)[0]; 
+            state.removed.unshift(old); 
+            pickTop(); 
+        } else if (randomIdx !== null) { 
+            state.removed.unshift(state.top.splice(randomIdx, 1)[0]); 
+            pickTop(); 
+        } 
+        render(); 
+    }
+
+    function changePresentation(targetDeck) {
+        AudioFX.playCardSound();
+        currentPresentationDeck = targetDeck;
+        render();
+    }
+
+    function updateActiveButtonStyles() {
+        ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => {
+            const btn = document.getElementById(`btn-view-${s}`);
+            if (btn) btn.classList.toggle('active-view', s === currentPresentationDeck);
+        });
+    }
+
+    function init() { 
+        AudioFX.playShuffle();
+        isGameOver = false; 
+        currentPresentationDeck = 'centerRight';
+        const deck = []; 
+        for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false }))); 
+        deck.sort(() => Math.random() - 0.5); 
+        ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => state[s] = deck.splice(0, 9)); 
+        state.top = deck; 
+        state.removed = []; 
+        pickTop(); 
+        render(); 
+    }
+
+    function pickTop() { randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; }
+
+    function createCard(card, sec, idx, show) { 
+        const wrap = document.createElement('div'); 
+        const isTopDiscard = (sec === 'removed' && idx === 0);
+        wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''} ${isTopDiscard ? 'last-active' : ''}`; 
+        
+        const displayVal = card.v === '10' ? '10' : card.v; 
+        wrap.innerHTML = `
+            <div class="card-inner">
+                <div class="card-back"></div>
+                <div class="card-front ${card.isRed ? 'red' : ''}">
+                    <div class="card-corner" style="position:absolute; top:4px; left:6px;">
+                        ${displayVal}<br><span style="font-size:0.65rem">${card.n}</span>
+                    </div>
+                    <div class="suit-main">${card.n}</div>
+                    <div class="card-corner" style="position:absolute; bottom:4px; right:6px; transform:rotate(180deg);">
+                        ${displayVal}<br><span style="font-size:0.65rem">${card.n}</span>
+                    </div>
+                </div>
+            </div>`; 
+
+        wrap.onclick = () => { 
             if (isGameOver) return; 
             AudioFX.playCardSound();
-            let worstIdx = -1; 
-            let minEV = Infinity; 
-            state[sec].forEach((c, idx) => { 
-                if (!c.inMeld) { 
-                    const ev = calculateEV(c, state[sec].filter((_, i) => i !== idx)); 
-                    if (ev < minEV) { minEV = ev; worstIdx = idx; } 
-                } 
-            }); 
-            if (worstIdx === -1) return; 
-            const discEV = calculateEV(state.removed[0], state[sec]); 
-            const drawEV = calculateEV(state.top[randomIdx], state[sec]); 
-            if (state.removed[0] && discEV > drawEV && discEV > minEV) { 
-                const old = state[sec][worstIdx]; 
-                state[sec][worstIdx] = state.removed.shift(); 
+            if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) { 
+                const old = state[sec][idx]; 
+                const newCard = state.removed[0] ? state.removed.shift() : state.top.splice(randomIdx, 1)[0]; 
+                if (!newCard) return; 
+                state[sec][idx] = newCard; 
                 state.removed.unshift(old); 
-            } else if (state.top[randomIdx] && drawEV > minEV) { 
-                const old = state[sec][worstIdx]; 
-                state[sec][worstIdx] = state.top.splice(randomIdx, 1)[0]; 
-                state.removed.unshift(old); 
+                if (state.removed.length > 1) pickTop(); 
+                render();
+            } else if (sec === 'top') { 
+                const picked = state.top.splice(randomIdx, 1)[0]; 
+                if (!picked) return; 
+                state.removed.unshift(picked); 
                 pickTop(); 
-            } else if (randomIdx !== null) { 
-                state.removed.unshift(state.top.splice(randomIdx, 1)[0]); 
-                pickTop(); 
+                render();
             } 
-            render(); 
-        }
+        }; 
+        return wrap; 
+    }
 
-        function changePresentation(targetDeck) {
-            AudioFX.playCardSound();
-            currentPresentationDeck = targetDeck;
-            render();
-        }
+    function render() { 
+        let total = 0; 
+        let winnerDeck = null;
 
-        function updateActiveButtonStyles() {
-            ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => {
-                const btn = document.getElementById(`btn-view-${s}`);
-                if (s === currentPresentationDeck) {
-                    btn.classList.add('active-view');
-                } else {
-                    btn.classList.remove('active-view');
-                }
-            });
-        }
-
-        function init() { 
-            AudioFX.playShuffle();
-            isGameOver = false; 
-            currentPresentationDeck = 'centerRight';
-            const deck = []; 
-            for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false }))); 
-            deck.sort(() => Math.random() - 0.5); 
-            ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => state[s] = deck.splice(0, 9)); 
-            state.top = deck; 
-            state.removed = []; 
-            pickTop(); 
-            render(); 
-        }
-
-        function pickTop() { randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; }
-
-        function createCard(card, sec, idx, show) { 
-            const wrap = document.createElement('div'); 
-            const isTopDiscard = (sec === 'removed' && idx === 0);
-            wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''} ${isTopDiscard ? 'last-active' : ''}`; 
-            
-            const displayVal = card.v === '10' ? '<span class="val-10">10</span>' : card.v; 
-            wrap.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-back"></div>
-                    <div class="card-front ${card.isRed ? 'red' : ''}">
-                        <div class="card-corner corner-top">
-                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 1px">${card.n}</span>
-                        </div>
-                        <div class="suit-main">${card.n}</div>
-                        <div class="card-corner corner-bottom">
-                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 1px">${card.n}</span>
-                        </div>
-                    </div>
-                </div>`; 
-
-            wrap.onclick = () => { 
-                if (isGameOver) return; 
-                AudioFX.playCardSound();
-                if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) { 
-                    const old = state[sec][idx]; 
-                    const newCard = state.removed[0] ? state.removed.shift() : state.top.splice(randomIdx, 1)[0]; 
-                    if (!newCard) return; 
-                    state[sec][idx] = newCard; 
-                    state.removed.unshift(old); 
-                    if (state.removed.length > 1 && state.removed[0] === old) pickTop(); 
-                    render();
-                } else if (sec === 'top') { 
-                    const picked = state.top.splice(randomIdx, 1)[0]; 
-                    if (!picked) return; 
-                    state.removed.unshift(picked); 
-                    pickTop(); 
-                    render();
-                } 
-            }; 
-            return wrap; 
-        }
-
-        function render() { 
-            let total = 0; 
-            let winnerDeck = null;
-
-            ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => { 
-                total += checkMelds(state[s]); 
-                if (state[s].every(c => c.inMeld)) {
-                    isGameOver = true; 
-                    winnerDeck = s;
-                }
-            }); 
-
-            if (isGameOver && winnerDeck) {
-                currentPresentationDeck = winnerDeck;
-                document.getElementById('center-title').innerText = `GANHOU: ${namesMap[winnerDeck]}! 🎉`;
-            } else {
-                document.getElementById('center-title').innerText = `VISUALIZANDO: ${namesMap[currentPresentationDeck]}`;
+        ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => { 
+            total += checkMelds(state[s]); 
+            if (state[s].every(c => c.inMeld)) {
+                isGameOver = true; 
+                winnerDeck = s;
             }
+        }); 
 
-            updateActiveButtonStyles();
-
-            document.getElementById('stat-melds').innerText = total; 
-            document.getElementById('stat-deck').innerText = state.top.length; 
-            
-            const topDiv = document.getElementById('deck-top'); 
-            topDiv.innerHTML = ''; 
-            if (randomIdx !== null && state.top[randomIdx]) topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver)); 
-            
-            const centerEl = document.getElementById('deck-centerRight'); 
-            centerEl.innerHTML = ''; 
-            
-            const shouldShowAsMaster = (currentPresentationDeck === 'centerRight' || isGameOver || currentPresentationDeck !== 'centerRight');
-            
-            state[currentPresentationDeck].forEach((c, i) => {
-                centerEl.appendChild(createCard(c, currentPresentationDeck, i, shouldShowAsMaster));
-            }); 
-
-            const removedEl = document.getElementById('deck-removed');
-            removedEl.innerHTML = '';
-            if (state.removed.length > 0) {
-                removedEl.appendChild(createCard(state.removed[0], 'removed', 0, true));
-            }
+        if (isGameOver && winnerDeck) {
+            currentPresentationDeck = winnerDeck;
+            document.getElementById('center-title').innerText = `GANHOU: ${namesMap[winnerDeck]}! 🎉`;
+        } else {
+            document.getElementById('center-title').innerText = `VISUALIZANDO: ${namesMap[currentPresentationDeck]}`;
         }
 
-        window.onload = init;
-    </script>
+        updateActiveButtonStyles();
+
+        document.getElementById('stat-melds').innerText = total; 
+        document.getElementById('stat-deck').innerText = state.top.length; 
+        
+        const topDiv = document.getElementById('deck-top'); 
+        topDiv.innerHTML = ''; 
+        if (randomIdx !== null && state.top[randomIdx]) topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver)); 
+        
+        const centerEl = document.getElementById('deck-centerRight'); 
+        centerEl.innerHTML = ''; 
+        state[currentPresentationDeck].forEach((c, i) => {
+            centerEl.appendChild(createCard(c, currentPresentationDeck, i, true));
+        }); 
+
+        const removedEl = document.getElementById('deck-removed');
+        removedEl.innerHTML = '';
+        if (state.removed.length > 0) {
+            removedEl.appendChild(createCard(state.removed[0], 'removed', 0, true));
+        }
+    }
+
+    window.onload = init;
+</script>
 </body>
 </html>

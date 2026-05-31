@@ -7,81 +7,185 @@
     <style>
         :root {
             --bg-table: radial-gradient(circle at center, #1a4a32 0%, #0d2e1a 100%);
-            --card-w: 80px;
-            --card-h: 118px;
+            /* Dimensionamento compacto para perfeita visibilidade em Landscape */
+            --card-h: 20vh;
+            --card-w: calc(var(--card-h) * 0.67);
             --gold: #fbc531;
             --gold-dark: #e1b12c;
             --red: #d63031;
             --dark: #1a1a1a;
-            --card-radius: 8px;
+            --card-radius: 6px;
             --panel-bg: rgba(255,255,255,0.08);
-            --shadow-card: 0 8px 25px rgba(0,0,0,0.5);
+            --shadow-card: 0 5px 12px rgba(0,0,0,0.5);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            user-select: none;
+        }
         
         body {
-            min-height: 100vh; margin: 0; padding: 12px;
+            height: 100vh;
+            width: 100vw;
+            margin: 0; 
+            padding: 8px calc(10px + env(safe-area-inset-right)) 8px calc(10px + env(safe-area-inset-left));
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: var(--bg-table); color: #fff;
-            display: flex; flex-direction: column; align-items: center;
-            overscroll-behavior: none; touch-action: manipulation;
+            background: var(--bg-table); 
+            color: #fff;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            overflow: hidden;
+            overscroll-behavior: none; 
+            touch-action: none;
         }
 
         .top-bar {
-            width: 100%; max-width: 440px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 22px; margin-bottom: 20px;
-            background: rgba(0,0,0,0.85); border: 2px solid var(--gold);
-            border-radius: 50px; backdrop-filter: blur(15px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+            width: 100%; 
+            max-width: 95%;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 4px 20px; 
+            margin-bottom: 6px;
+            background: rgba(0,0,0,0.85); 
+            border: 2px solid var(--gold);
+            border-radius: 50px; 
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            height: 7vh;
         }
 
         button {
-            border: 0; border-radius: 20px; padding: 10px 20px;
-            font-weight: 900; font-size: 0.75rem; text-transform: uppercase;
+            border: 0; 
+            border-radius: 20px; 
+            padding: 5px 12px;
+            font-weight: 900; 
+            font-size: 0.65rem; 
+            text-transform: uppercase;
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: #000; cursor: pointer; transition: transform 0.1s;
+            color: #000; 
+            cursor: pointer; 
+            transition: transform 0.1s;
         }
         button:active { transform: scale(0.95); }
 
         .board {
-            width: 100%; max-width: 440px;
+            width: 100%;
+            height: 82vh;
             display: grid;
-            grid-template-areas: "compra compra" "col1 col2" "col3 col4" "desc desc";
-            grid-template-columns: 1fr 1fr; gap: 14px;
+            grid-template-areas: 
+                "compra mestre desc"
+                "controles controles controles";
+            grid-template-columns: 1fr 2.4fr 1fr; 
+            grid-template-rows: 1fr auto;
+            gap: 8px;
+            align-items: stretch;
         }
 
         .container {
-            background: var(--panel-bg); border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 16px; padding: 12px; min-height: 150px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+            background: var(--panel-bg); 
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px; 
+            padding: 8px; 
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
+            display: flex; 
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
 
-        .purchase-area { grid-area: compra; display: flex; flex-direction: column; align-items: center; }
-        .discard-area { grid-area: desc; min-height: 220px; }
+        .purchase-area { grid-area: compra; }
+        .master-area { grid-area: mestre; }
+        .discard-area { grid-area: desc; }
         
+        .control-panel {
+            grid-area: controles;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: rgba(0,0,0,0.5);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .control-row {
+            display: flex;
+            gap: 6px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .row-label {
+            font-size: 0.55rem;
+            font-weight: 900;
+            color: #aaa;
+            text-transform: uppercase;
+            min-width: 65px;
+            letter-spacing: 0.5px;
+        }
+
         .grid-cards {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 10px; justify-items: center;
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px; 
+            justify-items: center;
+            align-items: center;
+            width: 100%;
         }
 
         .clickable-title {
-            width: 100%; margin-bottom: 12px; padding: 8px;
-            background: rgba(0,0,0,0.4); border: 1px solid var(--gold-dark);
-            color: var(--gold); border-radius: 10px; font-weight: 900;
-            font-size: 0.7rem; text-align: center; letter-spacing: 1.5px;
-            text-transform: uppercase; cursor: pointer;
+            width: 100%; 
+            padding: 5px 8px;
+            background: linear-gradient(135deg, rgba(251,197,49,0.2), rgba(0,0,0,0.6));
+            border: 1px solid var(--gold-dark);
+            color: var(--gold); 
+            border-radius: 6px; 
+            font-weight: 900;
+            font-size: 0.65rem; 
+            text-align: center; 
+            letter-spacing: 0.5px;
+            text-transform: uppercase; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            flex: 1;
         }
-        .is-static { cursor: default; border-color: #fff; color: #fff; }
+        .clickable-title:active { transform: scale(0.97); background: var(--gold); color: #000; }
+        
+        .clickable-title.active-view {
+            background: linear-gradient(135deg, #4cd137, #44bd32);
+            border-color: #4cd137;
+            color: #fff;
+        }
+
+        .is-static { 
+            cursor: default; 
+            border-color: rgba(255,255,255,0.3); 
+            color: #fff; 
+            background: rgba(0,0,0,0.4); 
+            width: auto;
+            margin-bottom: 5px;
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
 
         .card-wrapper {
-            width: var(--card-w); height: var(--card-h);
-            perspective: 1000px; position: relative;
+            width: var(--card-w); 
+            height: var(--card-h);
+            perspective: 1000px; 
+            position: relative;
         }
 
         .card-inner {
-            position: relative; width: 100%; height: 100%;
+            position: relative; 
+            width: 100%; 
+            height: 100%;
             transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             transform-style: preserve-3d;
         }
@@ -89,70 +193,86 @@
         .flipped .card-inner { transform: rotateY(180deg); }
 
         .card-front, .card-back {
-            position: absolute; inset: 0; backface-visibility: hidden;
-            border-radius: var(--card-radius); border: 1px solid #bbb;
+            position: absolute; 
+            inset: 0; 
+            backface-visibility: hidden;
+            border-radius: var(--card-radius); 
+            border: 1px solid #bbb;
             box-shadow: var(--shadow-card);
         }
 
         .card-back {
-            background: #2c3e50; border: 4px solid #fff;
+            background: #2c3e50; 
+            border: 2px solid #fff;
             background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px),
-                              repeating-linear-gradient(45deg, transparent 0, transparent 8px, rgba(0,0,0,0.1) 8px, rgba(0,0,0,0.1) 16px);
-            background-size: 10px 10px;
+                              repeating-linear-gradient(45deg, transparent 0, transparent 4px, rgba(0,0,0,0.1) 4px, rgba(0,0,0,0.1) 8px);
+            background-size: 6px 6px;
         }
 
         .card-front {
             background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%); 
             transform: rotateY(180deg);
-            display: flex; flex-direction: column; padding: 5px;
+            display: flex; 
+            flex-direction: column; 
+            padding: 4px;
             color: var(--dark);
         }
 
         .red { color: var(--red); }
 
         .card-corner {
-            position: absolute; display: flex; flex-direction: column;
-            align-items: center; line-height: 0.85; font-weight: 900;
-            font-size: 1.2rem;
+            position: absolute; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            line-height: 0.8; 
+            font-weight: 900;
+            font-size: 0.8rem;
         }
-        .corner-top { top: 5px; left: 5px; }
-        .corner-bottom { bottom: 5px; right: 5px; transform: rotate(180deg); }
+        .corner-top { top: 2px; left: 2px; }
+        .corner-bottom { bottom: 2px; right: 2px; transform: rotate(180deg); }
         
-        .val-10 { letter-spacing: -3px; margin-right: 2px; }
+        .val-10 { letter-spacing: -1px; margin-right: 1px; }
 
         .suit-main {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            font-size: 2.7rem; 
-            filter: drop-shadow(2px 2px 0px rgba(255,255,255,1));
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 1.4rem; 
+            filter: drop-shadow(1px 1px 0px rgba(255,255,255,1));
         }
 
         .in-meld .card-front {
-            border: 3px solid #4cd137 !important;
+            border: 2px solid #4cd137 !important;
             background: #f0fff0 !important;
-            box-shadow: 0 0 15px rgba(76, 209, 55, 0.4), inset 0 0 10px rgba(76, 209, 55, 0.1);
-            transform: rotateY(180deg) scale(1.05);
+            box-shadow: 0 0 6px rgba(76, 209, 55, 0.4), inset 0 0 4px rgba(76, 209, 55, 0.1);
+            transform: rotateY(180deg) scale(1.02);
             z-index: 10;
         }
 
         .last-active .card-front {
-            border: 3px solid var(--gold) !important;
-            box-shadow: 0 0 20px var(--gold), 0 0 40px rgba(251,197,49,0.4);
+            border: 2px solid var(--gold) !important;
+            box-shadow: 0 0 10px var(--gold), 0 0 20px rgba(251,197,49,0.4);
             animation: pulse 1.5s infinite alternate;
         }
 
         @keyframes pulse {
             from { transform: rotateY(180deg) scale(1); }
-            to { transform: rotateY(180deg) scale(1.05); }
+            to { transform: rotateY(180deg) scale(1.02); }
         }
 
         .card-stack::after {
-            content: ''; position: absolute; top: 4px; left: 4px;
-            width: 100%; height: 100%; background: #ccc;
-            border-radius: var(--card-radius); z-index: -1; border: 1px solid #999;
-        }
-
-        @media (max-width: 390px) {
-            :root { --card-w: 72px; --card-h: 106px; }
+            content: ''; 
+            position: absolute; 
+            top: 2px; 
+            left: 2px;
+            width: 100%; 
+            height: 100%; 
+            background: #ccc;
+            border-radius: var(--card-radius); 
+            z-index: -1; 
+            border: 1px solid #999;
         }
     </style>
 </head>
@@ -160,44 +280,49 @@
 
     <header class="top-bar">
         <button onclick="init()">Novo Jogo</button>
-        <div style="font-weight: 900; font-size: 0.85rem;">
+        <div style="font-weight: 900; font-size: 0.8rem;">
             JOGOS: <span id="stat-melds" style="color: #4cd137;">0</span>
-            <span style="margin:0 12px; opacity:0.3">|</span>
+            <span style="margin:0 10px; opacity:0.3">|</span>
             DECK: <span id="stat-deck" style="color: var(--gold);">0</span>
         </div>
     </header>
 
     <main class="board">
         <section class="container purchase-area">
-            <div class="clickable-title is-static" style="border:none; opacity:0.6">COMPRA</div>
+            <div class="clickable-title is-static">COMPRA</div>
             <div id="deck-top" class="card-stack"></div>
         </section>
 
-        <section class="container">
-            <div class="clickable-title" onclick="handleSmartAction('left')">ESQUERDA</div>
-            <div id="deck-left" class="grid-cards"></div>
-        </section>
-
-        <section class="container">
-            <div class="clickable-title" onclick="handleSmartAction('centerLeft')">CENTRO-E</div>
-            <div id="deck-centerLeft" class="grid-cards"></div>
-        </section>
-
-        <section class="container">
-            <div class="clickable-title is-static">MESTRE</div>
+        <section class="container master-area">
+            <div id="center-title" class="clickable-title is-static">MESTRE</div>
             <div id="deck-centerRight" class="grid-cards"></div>
         </section>
 
-        <section class="container">
-            <div class="clickable-title" onclick="handleSmartAction('right')">DIREITA</div>
-            <div id="deck-right" class="grid-cards"></div>
+        <section class="container discard-area">
+            <div class="clickable-title is-static" style="opacity:0.6;">DESCARTE</div>
+            <div id="deck-removed"></div>
         </section>
 
-        <section class="container discard-area">
-            <div class="clickable-title is-static" style="border:none; opacity:0.4">DESCARTE (GRID)</div>
-            <div id="deck-removed" class="grid-cards"></div>
-        </section>
+        <div class="control-panel">
+            <div class="control-row">
+                <div class="row-label">Jogar IA:</div>
+                <div class="clickable-title" onclick="handleSmartAction('left')">Esquerda</div>
+                <div class="clickable-title" onclick="handleSmartAction('centerLeft')">Centro-E</div>
+                <div class="clickable-title" onclick="handleSmartAction('right')">Direita</div>
+            </div>
+            <div class="control-row">
+                <div class="row-label">Ver na Tela:</div>
+                <div id="btn-view-left" class="clickable-title" onclick="changePresentation('left')">Esquerda</div>
+                <div id="btn-view-centerLeft" class="clickable-title" onclick="changePresentation('centerLeft')">Centro-E</div>
+                <div id="btn-view-centerRight" class="clickable-title active-view" onclick="changePresentation('centerRight')">Mestre</div>
+                <div id="btn-view-right" class="clickable-title" onclick="changePresentation('right')">Direita</div>
+            </div>
+        </div>
     </main>
+
+    <div id="deck-left" style="display:none;"></div>
+    <div id="deck-centerLeft" style="display:none;"></div>
+    <div id="deck-right" style="display:none;"></div>
 
     <script>
         // --- MOTOR DE ÁUDIO PROCEDURAL ---
@@ -248,6 +373,9 @@
         let state = { top: [], left: [], centerLeft: [], centerRight: [], right: [], removed: [] };
         let randomIdx = null;
         let isGameOver = false;
+        let currentPresentationDeck = 'centerRight'; 
+
+        const namesMap = { 'left': 'ESQUERDA', 'centerLeft': 'CENTRO-E', 'centerRight': 'MESTRE', 'right': 'DIREITA' };
 
         function isValidMeld(a, b, c) { 
             const sameValue = a.v === b.v && b.v === c.v; 
@@ -357,9 +485,27 @@
             render(); 
         }
 
+        function changePresentation(targetDeck) {
+            AudioFX.playCardSound();
+            currentPresentationDeck = targetDeck;
+            render();
+        }
+
+        function updateActiveButtonStyles() {
+            ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => {
+                const btn = document.getElementById(`btn-view-${s}`);
+                if (s === currentPresentationDeck) {
+                    btn.classList.add('active-view');
+                } else {
+                    btn.classList.remove('active-view');
+                }
+            });
+        }
+
         function init() { 
             AudioFX.playShuffle();
             isGameOver = false; 
+            currentPresentationDeck = 'centerRight';
             const deck = []; 
             for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false }))); 
             deck.sort(() => Math.random() - 0.5); 
@@ -383,11 +529,11 @@
                     <div class="card-back"></div>
                     <div class="card-front ${card.isRed ? 'red' : ''}">
                         <div class="card-corner corner-top">
-                            <span>${displayVal}</span><span style="font-size: 0.8rem; margin-top: 2px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 1px">${card.n}</span>
                         </div>
                         <div class="suit-main">${card.n}</div>
                         <div class="card-corner corner-bottom">
-                            <span>${displayVal}</span><span style="font-size: 0.8rem; margin-top: 2px">${card.n}</span>
+                            <span>${displayVal}</span><span style="font-size: 0.55rem; margin-top: 1px">${card.n}</span>
                         </div>
                     </div>
                 </div>`; 
@@ -416,25 +562,46 @@
 
         function render() { 
             let total = 0; 
-            let win = false; 
+            let winnerDeck = null;
+
             ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => { 
                 total += checkMelds(state[s]); 
-                if (state[s].every(c => c.inMeld)) win = true; 
+                if (state[s].every(c => c.inMeld)) {
+                    isGameOver = true; 
+                    winnerDeck = s;
+                }
             }); 
-            if (win) isGameOver = true; 
+
+            if (isGameOver && winnerDeck) {
+                currentPresentationDeck = winnerDeck;
+                document.getElementById('center-title').innerText = `GANHOU: ${namesMap[winnerDeck]}! 🎉`;
+            } else {
+                document.getElementById('center-title').innerText = `VISUALIZANDO: ${namesMap[currentPresentationDeck]}`;
+            }
+
+            updateActiveButtonStyles();
+
             document.getElementById('stat-melds').innerText = total; 
             document.getElementById('stat-deck').innerText = state.top.length; 
+            
             const topDiv = document.getElementById('deck-top'); 
             topDiv.innerHTML = ''; 
             if (randomIdx !== null && state.top[randomIdx]) topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver)); 
             
-            const areas = { 'deck-left': 'left', 'deck-centerLeft': 'centerLeft', 'deck-centerRight': 'centerRight', 'deck-right': 'right', 'deck-removed': 'removed' }; 
-            for (const id in areas) { 
-                const el = document.getElementById(id); 
-                el.innerHTML = ''; 
-                const isVisible = (areas[id] === 'centerRight' || areas[id] === 'removed' || isGameOver);
-                state[areas[id]].forEach((c, i) => el.appendChild(createCard(c, areas[id], i, isVisible))); 
-            } 
+            const centerEl = document.getElementById('deck-centerRight'); 
+            centerEl.innerHTML = ''; 
+            
+            const shouldShowAsMaster = (currentPresentationDeck === 'centerRight' || isGameOver || currentPresentationDeck !== 'centerRight');
+            
+            state[currentPresentationDeck].forEach((c, i) => {
+                centerEl.appendChild(createCard(c, currentPresentationDeck, i, shouldShowAsMaster));
+            }); 
+
+            const removedEl = document.getElementById('deck-removed');
+            removedEl.innerHTML = '';
+            if (state.removed.length > 0) {
+                removedEl.appendChild(createCard(state.removed[0], 'removed', 0, true));
+            }
         }
 
         window.onload = init;

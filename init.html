@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+Aumentar ainda mais a largura dos cards✅ Pronto!
+Aumentei ainda mais a largura dos cards. Agora eles estão com 88px de largura (antes era 80px).
+Aqui está o código atualizado:
+HTML<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -8,8 +11,8 @@
         :root {
             --ios7-blue: #007aff;
             --gold: #ffcc00;
-            --card-h: 112px;
-            --card-w: 80px;           /* ← Aumentado */
+            --card-h: 118px;      /* Aumentei um pouco a altura também para manter proporção */
+            --card-w: 88px;       /* ← Ainda mais largo */
         }
 
         * { 
@@ -99,7 +102,7 @@
 
         .table-row {
             display: flex;
-            gap: 14px;
+            gap: 12px;
             align-items: flex-start;
         }
 
@@ -108,7 +111,7 @@
             border-radius: 12px;
             padding: 10px 8px;
             text-align: center;
-            width: 92px;
+            width: 98px;
             flex-shrink: 0;
         }
 
@@ -146,7 +149,6 @@
             justify-content: center;
         }
 
-        /* Cards mais largos */
         .card-wrapper {
             width: var(--card-w);
             height: var(--card-h);
@@ -198,7 +200,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2.6rem;
             filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
         }
 
@@ -269,7 +271,7 @@
 <div id="deck-right" style="display:none;"></div>
 
 <script>
-    // JavaScript completo (sem alterações)
+    // JavaScript completo (sem mudanças)
     const AudioFX = {
         ctx: null,
         init() {

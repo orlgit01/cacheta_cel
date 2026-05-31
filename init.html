@@ -9,7 +9,7 @@
             --ios7-blue: #007aff;
             --gold: #ffcc00;
             --card-h: 112px;
-            --card-w: 75px;
+            --card-w: 80px;           /* ← Aumentado */
         }
 
         * { 
@@ -88,11 +88,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .top-bar button:active {
-            background: #d0d0d0;
-        }
-
-        /* Área Principal Unificada */
         .main-table {
             background: rgba(255,255,255,0.12);
             border: 1px solid rgba(255,255,255,0.3);
@@ -113,7 +108,7 @@
             border-radius: 12px;
             padding: 10px 8px;
             text-align: center;
-            width: 88px;
+            width: 92px;
             flex-shrink: 0;
         }
 
@@ -151,7 +146,7 @@
             justify-content: center;
         }
 
-        /* Cards Melhorados */
+        /* Cards mais largos */
         .card-wrapper {
             width: var(--card-w);
             height: var(--card-h);
@@ -182,8 +177,7 @@
         .card-back {
             background: linear-gradient(135deg, #2c3e50, #1a2533);
             border: 3px solid #e5e5e5;
-            background-image: 
-                radial-gradient(circle, rgba(255,255,255,0.2) 1px, transparent 1px);
+            background-image: radial-gradient(circle, rgba(255,255,255,0.2) 1px, transparent 1px);
             background-size: 8px 8px;
         }
 
@@ -204,26 +198,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.45rem;
+            font-size: 2.5rem;
             filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
         }
 
-        .card-corner {
-            font-weight: 900;
-            font-size: 0.88rem;
-            line-height: 1;
-        }
-
-        /* Destaques */
         .in-meld .card-front {
             border: 3px solid #34c759 !important;
             background: linear-gradient(135deg, #e8f8e8, #d0f0d0) !important;
-            box-shadow: 0 0 12px #34c759;
         }
 
         .last-active .card-front {
             border: 3px solid #ffcc00 !important;
-            box-shadow: 0 0 15px #ffcc00;
         }
     </style>
 </head>
@@ -244,19 +229,16 @@
 
         <div class="main-table">
             <div class="table-row">
-                <!-- COMPRA -->
                 <div class="side-panel">
                     <div class="clickable-title is-static">COMPRA</div>
                     <div id="deck-top"></div>
                 </div>
 
-                <!-- VISUALIZADOR -->
                 <div class="viewer-section">
-                    <div id="center-title" style="text-align:center; font-weight:600; margin-bottom:10px; color:#fff; font-size:15.5px; text-shadow: 0 1px 3px rgba(0,0,0,0.6);"></div>
+                    <div id="center-title" style="text-align:center; font-weight:600; margin-bottom:10px; color:#fff; font-size:15.5px;"></div>
                     <div id="deck-centerRight" class="grid-cards"></div>
                 </div>
 
-                <!-- DESCARTE -->
                 <div class="side-panel">
                     <div class="clickable-title is-static">DESCARTE</div>
                     <div id="deck-removed"></div>
@@ -287,7 +269,7 @@
 <div id="deck-right" style="display:none;"></div>
 
 <script>
-    // === JavaScript mantido exatamente igual (todas funcionalidades preservadas) ===
+    // JavaScript completo (sem alterações)
     const AudioFX = {
         ctx: null,
         init() {

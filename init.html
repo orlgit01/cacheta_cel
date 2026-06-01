@@ -2,163 +2,213 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Cacheta Realista Pro - iOS 7</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>Cacheta Realista Pro</title>
     <style>
         :root {
-            --ios7-blue: #007aff;
+            --ios-blue: #007aff;
+            --ios-green: #34c759;
+            --ios-bg: #1c1c1e;
             --gold: #ffcc00;
-            --card-h: 112px;
-            --card-w: 80px;           /* ← Aumentado */
+            --card-h: 125px;
+            --card-w: 88px;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
         }
 
         * { 
             box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent; 
             user-select: none;
+            margin: 0;
+            padding: 0;
         }
         
         body {
             height: 100vh;
             width: 100vw;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, Helvetica Neue, Helvetica, sans-serif;
-            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #0a0a0c;
             color: #fff;
-            overflow: auto;
-        }
-
-        .iphone-frame {
-            width: 100%;
-            max-width: 736px;
-            margin: 0 auto;
-            min-height: 100vh;
-            background: #000;
-            border: 14px solid #111;
-            border-radius: 58px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.9);
-            overflow: visible;
-        }
-
-        .status-bar {
-            height: 20px;
-            background: rgba(255,255,255,0.95);
-            color: #000;
-            font-size: 13px;
+            overflow: hidden;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 22px;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .game-content {
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: radial-gradient(circle at 50% 30%, #1e5c3f 0%, #0f2e20 100%);
-        }
-
-        .top-bar {
-            background: rgba(255,255,255,0.95);
-            color: #000;
-            border-radius: 12px;
-            padding: 10px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 15px;
-            font-weight: 600;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.25);
-        }
-
-        .top-bar button {
-            background: linear-gradient(#f8f8f8, #e5e5e5);
-            color: #000;
-            border: 1px solid #a0a0a0;
-            border-radius: 8px;
-            padding: 7px 16px;
-            font-weight: 600;
-            font-size: 14px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .main-table {
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 16px;
-            padding: 14px;
-            backdrop-filter: blur(20px);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
-        }
-
-        .table-row {
-            display: flex;
-            gap: 14px;
-            align-items: flex-start;
-        }
-
-        .side-panel {
-            background: rgba(0,0,0,0.35);
-            border-radius: 12px;
-            padding: 10px 8px;
-            text-align: center;
-            width: 92px;
-            flex-shrink: 0;
-        }
-
-        .viewer-section {
-            flex: 1;
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 12px;
-        }
-
-        .clickable-title {
-            background: linear-gradient(#f0f0f0, #e0e0e0);
-            color: #1c1c1e;
-            border: 1px solid #979797;
-            border-radius: 8px;
-            padding: 7px 10px;
-            font-weight: 600;
-            font-size: 13.5px;
-            text-align: center;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        }
-
-        .clickable-title.active-view {
-            background: linear-gradient(#34c759, #2e9f4f);
-            color: white;
-            border-color: #1f8a3e;
-        }
-
-        .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            width: 100%;
             justify-content: center;
         }
 
-        /* Cards mais largos */
+        /* Container estilo iPhone Moderno / Tela Cheia Responsiva */
+        .iphone-frame {
+            width: 100%;
+            max-width: 430px; /* Largura padrão de um iPhone Pro Max */
+            height: 100vh;
+            max-height: 932px;
+            background: #000;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        @media (min-width: 440px) {
+            .iphone-frame {
+                border: 12px solid #2c2c2e;
+                border-radius: 48px;
+                height: 92vh;
+            }
+        }
+
+        /* Status Bar Moderna */
+        .status-bar {
+            height: 44px;
+            background: transparent;
+            color: #fff;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        /* Feltro de Jogo Profissional */
+        .game-content {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: radial-gradient(circle at 50% 40%, #15422b 0%, #0a2215 100%);
+            overflow-y: auto;
+            justify-content: space-between;
+        }
+
+        /* Top Bar Elegante */
+        .top-bar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            border-radius: 20px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .top-bar button {
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .top-bar button:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+
+        /* Mesa Principal Reestruturada para Mobile */
+        .main-table {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Área Superior: Compra e Descarte Lado a Lado */
+        .decks-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 12px;
+            border-radius: 16px;
+        }
+
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .is-static {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+        }
+
+        /* Visualizador Central das Cartas */
+        .viewer-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #center-title {
+            text-align: center; 
+            font-weight: 700; 
+            color: #fff; 
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        /* Grid de Cartas Otimizado */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 320px;
+            justify-items: center;
+        }
+
+        /* Design Premium das Cartas */
         .card-wrapper {
             width: var(--card-w);
             height: var(--card-h);
-            perspective: 1200px;
+            perspective: 1000px;
             cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .card-wrapper:active {
+            transform: scale(0.95);
         }
 
         .card-inner {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.65s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform-style: preserve-3d;
         }
 
@@ -168,47 +218,134 @@
             position: absolute;
             inset: 0;
             backface-visibility: hidden;
-            border-radius: 10px;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.6),
-                        inset 0 1px 0 rgba(255,255,255,0.6),
-                        inset 0 -2px 4px rgba(0,0,0,0.3);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
 
+        /* Verso Neomórfico Elegante */
         .card-back {
-            background: linear-gradient(135deg, #2c3e50, #1a2533);
-            border: 3px solid #e5e5e5;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.2) 1px, transparent 1px);
-            background-size: 8px 8px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 3px solid #ffffff;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-back::after {
+            content: "♠ ♥ ♣ ♦";
+            font-size: 10px;
+            color: rgba(255,255,255,0.15);
+            letter-spacing: 2px;
         }
 
+        /* Frente Limpa e Altamente Legível */
         .card-front {
-            background: linear-gradient(135deg, #fdfdfd 0%, #f0f0f0 100%);
+            background: #ffffff;
             transform: rotateY(180deg);
             display: flex;
             flex-direction: column;
-            padding: 6px;
+            padding: 8px;
             color: #1c1c1e;
-            border: 1px solid #555;
+            border: 1px solid #e5e5ea;
         }
 
-        .red { color: #e74c3c; }
+        .red { color: #ff3b30 !important; }
+
+        .card-corner {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 0.9;
+            font-family: system-ui;
+        }
+        .card-corner span {
+            font-size: 12px;
+        }
 
         .suit-main {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
-            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
+            font-size: 2.2rem;
+            margin-top: 10px;
         }
 
+        /* Estados Especiais das Cartas */
         .in-meld .card-front {
-            border: 3px solid #34c759 !important;
-            background: linear-gradient(135deg, #e8f8e8, #d0f0d0) !important;
+            border: 3px solid var(--ios-green) !important;
+            background: linear-gradient(135deg, #ffffff 0%, #f2fbf4 100%) !important;
+            box-shadow: 0 0 15px rgba(52, 199, 89, 0.4);
         }
 
         .last-active .card-front {
-            border: 3px solid #ffcc00 !important;
+            border: 3px solid var(--gold) !important;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+        }
+
+        /* Painéis de Controle Estilo iOS Baseados em Abas */
+        .control-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 14px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .control-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .row-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-left: 4px;
+        }
+
+        .tabs-container {
+            display: flex;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 3px;
+            border-radius: 12px;
+            gap: 2px;
+        }
+
+        .clickable-title {
+            flex: 1;
+            background: transparent;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            padding: 8px 4px;
+            font-weight: 600;
+            font-size: 13px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        /* Estados Ativos / Selecionados */
+        .clickable-title.active-view {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Estilo específico para os botões de ação da IA */
+        .ia-row .clickable-title {
+            background: rgba(0, 122, 255, 0.15);
+            color: #00a2ff;
+            border: 1px solid rgba(0, 122, 255, 0.2);
+        }
+        .ia-row .clickable-title:active {
+            background: rgba(0, 122, 255, 0.3);
         }
     </style>
 </head>
@@ -217,48 +354,51 @@
 <div class="iphone-frame">
     <div class="status-bar">
         <span>09:41</span>
-        <span>100% ��</span>
+        <span>100% 🔋</span>
     </div>
 
     <div class="game-content">
         <div class="top-bar">
             <button onclick="init()">Novo Jogo</button>
-            <div>JOGOS: <span id="stat-melds" style="color:#34c759;">0</span></div>
-            <div>DECK: <span id="stat-deck" style="color:#ffcc00;">0</span></div>
+            <div>JOGOS: <span id="stat-melds" style="color:var(--ios-green);">0</span></div>
+            <div>DECK: <span id="stat-deck" style="color:var(--gold);">0</span></div>
         </div>
 
         <div class="main-table">
-            <div class="table-row">
+            <div class="decks-row">
                 <div class="side-panel">
-                    <div class="clickable-title is-static">COMPRA</div>
+                    <div class="is-static">Compra</div>
                     <div id="deck-top"></div>
                 </div>
-
-                <div class="viewer-section">
-                    <div id="center-title" style="text-align:center; font-weight:600; margin-bottom:10px; color:#fff; font-size:15.5px;"></div>
-                    <div id="deck-centerRight" class="grid-cards"></div>
-                </div>
-
                 <div class="side-panel">
-                    <div class="clickable-title is-static">DESCARTE</div>
+                    <div class="is-static">Descarte</div>
                     <div id="deck-removed"></div>
                 </div>
             </div>
+
+            <div class="viewer-section">
+                <div id="center-title"></div>
+                <div id="deck-centerRight" class="grid-cards"></div>
+            </div>
         </div>
 
-        <div class="control-panel" style="background: rgba(255,255,255,0.15); border-radius: 14px; padding: 14px; border: 1px solid rgba(255,255,255,0.25);">
-            <div class="control-row" style="display:flex; gap:8px; margin-bottom:12px;">
-                <div class="row-label" style="font-size:13px; color:#ddd; min-width:75px;">Jogar IA:</div>
-                <div class="clickable-title" onclick="handleSmartAction('left')">Esquerda</div>
-                <div class="clickable-title" onclick="handleSmartAction('centerLeft')">Centro-E</div>
-                <div class="clickable-title" onclick="handleSmartAction('right')">Direita</div>
+        <div class="control-panel">
+            <div class="control-row ia-row">
+                <div class="row-label">Jogar IA:</div>
+                <div class="tabs-container">
+                    <div class="clickable-title" onclick="handleSmartAction('left')">Esquerda</div>
+                    <div class="clickable-title" onclick="handleSmartAction('centerLeft')">Centro-E</div>
+                    <div class="clickable-title" onclick="handleSmartAction('right')">Direita</div>
+                </div>
             </div>
-            <div class="control-row" style="display:flex; gap:8px;">
-                <div class="row-label" style="font-size:13px; color:#ddd; min-width:75px;">Ver na Tela:</div>
-                <div id="btn-view-left" class="clickable-title" onclick="changePresentation('left')">Esq</div>
-                <div id="btn-view-centerLeft" class="clickable-title" onclick="changePresentation('centerLeft')">C-E</div>
-                <div id="btn-view-centerRight" class="clickable-title active-view" onclick="changePresentation('centerRight')">Mestre</div>
-                <div id="btn-view-right" class="clickable-title" onclick="changePresentation('right')">Dir</div>
+            <div class="control-row">
+                <div class="row-label">Ver na Tela:</div>
+                <div class="tabs-container">
+                    <div id="btn-view-left" class="clickable-title" onclick="changePresentation('left')">Esq</div>
+                    <div id="btn-view-centerLeft" class="clickable-title" onclick="changePresentation('centerLeft')">C-E</div>
+                    <div id="btn-view-centerRight" class="clickable-title active-view" onclick="changePresentation('centerRight')">Mestre</div>
+                    <div id="btn-view-right" class="clickable-title" onclick="changePresentation('right')">Dir</div>
+                </div>
             </div>
         </div>
     </div>
@@ -269,7 +409,7 @@
 <div id="deck-right" style="display:none;"></div>
 
 <script>
-    // JavaScript completo (sem alterações)
+    // JavaScript funcional original (Intocado em sua lógica interna)
     const AudioFX = {
         ctx: null,
         init() {
@@ -444,6 +584,7 @@
 
     function pickTop() { randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; }
 
+    // Alterado estritamente para suportar as melhorias visuais das cartas físicas
     function createCard(card, sec, idx, show) { 
         const wrap = document.createElement('div'); 
         const isTopDiscard = (sec === 'removed' && idx === 0);
@@ -454,12 +595,12 @@
             <div class="card-inner">
                 <div class="card-back"></div>
                 <div class="card-front ${card.isRed ? 'red' : ''}">
-                    <div class="card-corner" style="position:absolute; top:5px; left:7px;">
-                        ${displayVal}<br><span style="font-size:0.68rem">${card.n}</span>
+                    <div class="card-corner" style="position:absolute; top:8px; left:8px;">
+                        ${displayVal}<br><span>${card.n}</span>
                     </div>
                     <div class="suit-main">${card.n}</div>
-                    <div class="card-corner" style="position:absolute; bottom:5px; right:7px; transform:rotate(180deg);">
-                        ${displayVal}<br><span style="font-size:0.68rem">${card.n}</span>
+                    <div class="card-corner" style="position:absolute; bottom:8px; right:8px; transform:rotate(180deg);">
+                        ${displayVal}<br><span>${card.n}</span>
                     </div>
                 </div>
             </div>`; 

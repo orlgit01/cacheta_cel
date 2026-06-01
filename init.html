@@ -255,11 +255,11 @@
             margin-top: 10px;
         }
 
-        /* Estados Especiais das Cartas */
+        /* ESTADO MODIFICADO: Bordas Azuis ao invés de Verdes para jogos válidos (melds) */
         .in-meld .card-front {
-            border: 3px solid var(--ios-green) !important;
-            background: linear-gradient(135deg, #ffffff 0%, #f2fbf4 100%) !important;
-            box-shadow: 0 0 15px rgba(52, 199, 89, 0.4);
+            border: 3px solid var(--ios-blue) !important;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%) !important;
+            box-shadow: 0 0 15px rgba(0, 122, 255, 0.4);
         }
 
         .last-active .card-front {
@@ -340,7 +340,7 @@
     <div class="game-content">
         <div class="top-bar">
             <button onclick="init()">Novo Jogo</button>
-            <div>JOGOS: <span id="stat-melds" style="color:var(--ios-green);">0</span></div>
+            <div>JOGOS: <span id="stat-melds" style="color:var(--ios-blue);">0</span></div>
             <div>DECK: <span id="stat-deck" style="color:var(--gold);">0</span></div>
         </div>
 
@@ -586,7 +586,6 @@
         wrap.onclick = () => { 
             if (isGameOver) return; 
             
-            // Restrição solicitada: Apenas interações do deck mestre (centerRight) realizam a troca por toque de dedo
             if (sec === 'centerRight') { 
                 AudioFX.playCardSound();
                 const old = state[sec][idx]; 
@@ -597,7 +596,6 @@
                 if (state.removed.length > 1) pickTop(); 
                 render();
             } else if (sec === 'top') { 
-                // Permite puxar da compra manualmente para o descarte caso clique direto no deck de Compra
                 AudioFX.playCardSound();
                 const picked = state.top.splice(randomIdx, 1)[0]; 
                 if (!picked) return; 

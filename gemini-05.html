@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>Cacheta Realista Pro</title>
+    <style>
+        :root {
+            --ios-blue: #007aff;
+            --ios-green: #34c759;
+            --ios-bg: #1c1c1e;
+            --gold: #ffcc00;
+            --card-h: 125px;
+            --card-w: 88px;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            user-select: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            height: 100vh;
+            width: 100vw;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #0a0a0c;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Container estilo iPhone Moderno / Tela Cheia Responsiva */
+        .iphone-frame {
+            width: 100%;
+            max-width: 430px;
+            height: 100vh;
+            max-height: 932px;
+            background: #000;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        @media (min-width: 440px) {
+            .iphone-frame {
+                border: 12px solid #2c2c2e;
+                border-radius: 48px;
+                height: 92vh;
+            }
+        }
+
+        /* Feltro de Jogo Profissional */
+        .game-content {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: radial-gradient(circle at 50% 40%, #15422b 0%, #0a2215 100%);
+            overflow-y: auto;
+            justify-content: space-between;
+        }
+
+        /* Top Bar Elegante */
+        .top-bar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            border-radius: 20px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        .top-bar button {
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .top-bar button:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+
+        /* Mesa Principal Reestruturada para Mobile */
+        .main-table {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Área Superior: Compra e Descarte Lado a Lado */
+        .decks-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 12px;
+            border-radius: 16px;
+        }
+
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .is-static {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+        }
+
+        /* Visualizador Central das Cartas */
+        .viewer-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #center-title {
+            text-align: center; 
+            font-weight: 700; 
+            color: #fff; 
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        /* Grid de Cartas Otimizado */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 320px;
+            justify-items: center;
+        }
+
+        /* Design Premium das Cartas */
+        .card-wrapper {
+            width: var(--card-w);
+            height: var(--card-h);
+            perspective: 1000px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .card-wrapper:active {
+            transform: scale(0.95);
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .flipped .card-inner { transform: rotateY(180deg); }
+
+        .card-front, .card-back {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Verso Neomórfico Elegante */
+        .card-back {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 3px solid #ffffff;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-back::after {
+            content: "♠ ♥ ♣ ♦";
+            font-size: 10px;
+            color: rgba(255,255,255,0.15);
+            letter-spacing: 2px;
+        }
+
+        /* Frente Limpa e Altamente Legível */
+        .card-front {
+            background: #ffffff;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            padding: 8px;
+            color: #1c1c1e;
+            border: 1px solid #e5e5ea;
+        }
+
+        .red { color: #ff3b30 !important; }
+
+        .card-corner {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 0.9;
+            font-family: system-ui;
+        }
+        .card-corner span {
+            font-size: 12px;
+        }
+
+        .suit-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin-top: 10px;
+        }
+
+        /* Bordas Azuis para jogos válidos (melds) */
+        .in-meld .card-front {
+            border: 3px solid var(--ios-blue) !important;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%) !important;
+            box-shadow: 0 0 15px rgba(0, 122, 255, 0.4);
+        }
+
+        .last-active .card-front {
+            border: 3px solid var(--gold) !important;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+        }
+
+        /* Painéis de Controle Estilo iOS Baseados em Abas */
+        .control-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 14px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .control-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .row-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-left: 4px;
+        }
+
+        .tabs-container {
+            display: flex;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 3px;
+            border-radius: 12px;
+            gap: 2px;
+        }
+
+        .clickable-title {
+            flex: 1;
+            background: transparent;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            padding: 8px 4px;
+            font-weight: 600;
+            font-size: 13px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        /* Estados Ativos / Selecionados */
+        .clickable-title.active-view {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Estilo específico para os botões de ação da IA */
+        .ia-row .clickable-title {
+            background: rgba(0, 122, 255, 0.15);
+            color: #00a2ff;
+            border: 1px solid rgba(0, 122, 255, 0.2);
+        }
+        .ia-row .clickable-title:active {
+            background: rgba(0, 122, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="iphone-frame">
+    <div class="game-content">
+        <div class="top-bar">
+            <button onclick="init()">Novo Jogo</button>
+            <div>JOGOS: <span id="stat-melds" style="color:var(--ios-blue);">0</span></div>
+            <div>DECK: <span id="stat-deck" style="color:var(--gold);">0</span></div>
+        </div>
+
+        <div class="main-table">
+            <div class="decks-row">
+                <div class="side-panel">
+                    <div class="is-static">Compra</div>
+                    <div id="deck-top"></div>
+                </div>
+                <div class="side-panel">
+                    <div class="is-static">Descarte</div>
+                    <div id="deck-removed"></div>
+                </div>
+            </div>
+
+            <div class="viewer-section">
+                <div id="center-title"></div>
+                <div id="deck-centerRight" class="grid-cards"></div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="control-row ia-row">
+                <div class="row-label">Jogar IA:</div>
+                <div class="tabs-container">
+                    <div class="clickable-title" onclick="handleSmartAction('left')">Esquerda</div>
+                    <div class="clickable-title" onclick="handleSmartAction('centerLeft')">Centro-E</div>
+                    <div class="clickable-title" onclick="handleSmartAction('right')">Direita</div>
+                </div>
+            </div>
+            <div class="control-row">
+                <div class="row-label">Ver na Tela:</div>
+                <div class="tabs-container">
+                    <div id="btn-view-left" class="clickable-title" onclick="changePresentation('left')">Esq</div>
+                    <div id="btn-view-centerLeft" class="clickable-title" onclick="changePresentation('centerLeft')">C-E</div>
+                    <div id="btn-view-centerRight" class="clickable-title active-view" onclick="changePresentation('centerRight')">Mestre</div>
+                    <div id="btn-view-right" class="clickable-title" onclick="changePresentation('right')">Dir</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deck-left" style="display:none;"></div>
+<div id="deck-centerLeft" style="display:none;"></div>
+<div id="deck-right" style="display:none;"></div>
+
+<script>
+    const AudioFX = {
+        ctx: null,
+        init() {
+            if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        },
+        playCardSound() {
+            this.init();
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.1);
+        },
+        playShuffle() {
+            this.init();
+            for (let i = 0; i < 6; i++) setTimeout(() => this.playCardSound(), i * 70);
+        }
+    };
+
+    const naipes = ['♥', '♦', '♣', '♠'];
+    const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+    const vNum = { A: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, J: 11, Q: 12, K: 13 };
+
+    let state = { top: [], left: [], centerLeft: [], centerRight: [], right: [], removed: [] };
+    let randomIdx = null;
+    let isGameOver = false;
+    let currentPresentationDeck = 'centerRight';
+    let gameWinner = null; // Armazena quem ganhou de forma fixa sem travar a navegação de abas
+
+    const namesMap = { 'left': 'ESQUERDA', 'centerLeft': 'CENTRO-E', 'centerRight': 'MESTRE', 'right': 'DIREITA' };
+
+    function isValidMeld(a, b, c) { 
+        const sameValue = a.v === b.v && b.v === c.v;
+        if (sameValue) return new Set([a.n, b.n, c.n]).size === 3;
+        const sameSuit = a.n === b.n && b.n === c.n;
+        if (!sameSuit) return false;
+        const values = [vNum[a.v], vNum[b.v], vNum[c.v]].sort((x,y)=>x-y);
+        return values[0] + 1 === values[1] && values[1] + 1 === values[2];
+    }
+
+    function checkMelds(cards) { 
+        cards.forEach(card => card.inMeld = false); 
+        const allMelds = []; 
+        for (let i = 0; i < cards.length - 2; i++) { 
+            for (let j = i + 1; j < cards.length - 1; j++) { 
+                for (let k = j + 1; k < cards.length; k++) { 
+                    if (isValidMeld(cards[i], cards[j], cards[k])) 
+                        allMelds.push({ idxs: [i, j, k], type: cards[i].v === cards[j].v ? 'set' : 'run' }); 
+                } 
+            } 
+        } 
+        let bestMask = []; 
+        let bestCount = 0; 
+        function backtrack(start, chosen, used) { 
+            if (used.size > bestCount) { 
+                bestCount = used.size; 
+                bestMask = chosen.flatMap(m => m.idxs); 
+            }
+            for (let i = start; i < allMelds.length; i++) { 
+                const meld = allMelds[i]; 
+                if (meld.idxs.some(idx => used.has(idx))) continue; 
+                meld.idxs.forEach(idx => used.add(idx)); 
+                chosen.push(meld); 
+                backtrack(i + 1, chosen, used); 
+                chosen.pop(); 
+                meld.idxs.forEach(idx => used.delete(idx)); 
+            } 
+        } 
+        backtrack(0, [], new Set()); 
+        bestMask.forEach(idx => cards[idx].inMeld = true); 
+        return Math.floor(bestMask.length / 3); 
+    }
+
+    function calculateEV(card, column) { 
+        if (!card) return -1; 
+        const free = column.filter(c => !c.inMeld); 
+        if (free.length === 0) return 0; 
+        for (let i = 0; i < free.length; i++) { 
+            for (let j = i + 1; j < free.length; j++) { 
+                if (isValidMeld(card, free[i], free[j])) return 10000; 
+            } 
+        } 
+        let ev = 0; 
+        const seen = [...state.left, ...state.centerLeft, ...state.centerRight, ...state.right, ...state.removed]; 
+        free.forEach(c => { 
+            if (c.v === card.v && c.n !== card.n) { 
+                const diffSuits = naipes.filter(n => n !== card.n && n !== c.n); 
+                diffSuits.forEach(n => { 
+                    const copiesOut = seen.filter(s => s.v === card.v && s.n === n).length; 
+                    ev += (2 - copiesOut) * 25; 
+                }); 
+            } 
+            if (c.n === card.n) { 
+                const dist = Math.abs(vNum[c.v] - vNum[card.v]); 
+                if (dist === 1 || dist === 2) { 
+                    const targetVal = dist === 1 ? (vNum[c.v] > vNum[card.v] ? vNum[card.v] - 1 : vNum[c.v] + 1) : Math.floor((vNum[c.v] + vNum[card.v]) / 2); 
+                    const targetCard = valores[targetVal - 1]; 
+                    if (targetCard) { 
+                        const copiesOut = seen.filter(s => s.v === targetCard && s.n === card.n).length; 
+                        ev += (2 - copiesOut) * (dist === 1 ? 40 : 15); 
+                    } 
+                } 
+            } 
+        }); 
+        return ev; 
+    }
+
+    function handleSmartAction(sec) { 
+        if (isGameOver) return; 
+        AudioFX.playCardSound();
+        let worstIdx = -1; 
+        let minEV = Infinity; 
+        state[sec].forEach((c, idx) => { 
+            if (!c.inMeld) { 
+                const ev = calculateEV(c, state[sec].filter((_, i) => i !== idx)); 
+                if (ev < minEV) { minEV = ev; worstIdx = idx; } 
+            } 
+        }); 
+        if (worstIdx === -1) return; 
+
+        const discEV = calculateEV(state.removed[0], state[sec]); 
+        const drawEV = calculateEV(state.top[randomIdx], state[sec]); 
+
+        if (state.removed[0] && discEV > drawEV && discEV > minEV) { 
+            const old = state[sec][worstIdx]; 
+            state[sec][worstIdx] = state.removed.shift(); 
+            state.removed.unshift(old); 
+        } else if (state.top[randomIdx] && drawEV > minEV) { 
+            const old = state[sec][worstIdx]; 
+            state[sec][worstIdx] = state.top.splice(randomIdx, 1)[0]; 
+            state.removed.unshift(old); 
+            pickTop(); 
+        } else if (randomIdx !== null) { 
+            state.removed.unshift(state.top.splice(randomIdx, 1)[0]); 
+            pickTop(); 
+        } 
+        render(); 
+    }
+
+    // Botões "Ver na Tela" agora funcionam livremente e a qualquer momento, mesmo com o jogo ganho
+    function changePresentation(targetDeck) {
+        AudioFX.playCardSound();
+        currentPresentationDeck = targetDeck;
+        render();
+    }
+
+    function updateActiveButtonStyles() {
+        ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => {
+            const btn = document.getElementById(`btn-view-${s}`);
+            if (btn) btn.classList.toggle('active-view', s === currentPresentationDeck);
+        });
+    }
+
+    function init() { 
+        AudioFX.playShuffle();
+        isGameOver = false; 
+        gameWinner = null;
+        currentPresentationDeck = 'centerRight';
+        const deck = []; 
+        for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false }))); 
+        deck.sort(() => Math.random() - 0.5); 
+        ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => state[s] = deck.splice(0, 9)); 
+        state.top = deck; 
+        state.removed = []; 
+        pickTop(); 
+        render(); 
+    }
+
+    function pickTop() { randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; }
+
+    function createCard(card, sec, idx, show) { 
+        const wrap = document.createElement('div'); 
+        const isTopDiscard = (sec === 'removed' && idx === 0);
+        wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''} ${isTopDiscard ? 'last-active' : ''}`; 
+        
+        const displayVal = card.v === '10' ? '10' : card.v; 
+        wrap.innerHTML = `
+            <div class="card-inner">
+                <div class="card-back"></div>
+                <div class="card-front ${card.isRed ? 'red' : ''}">
+                    <div class="card-corner" style="position:absolute; top:8px; left:8px;">
+                        ${displayVal}<br><span>${card.n}</span>
+                    </div>
+                    <div class="suit-main">${card.n}</div>
+                    <div class="card-corner" style="position:absolute; bottom:8px; right:8px; transform:rotate(180deg);">
+                        ${displayVal}<br><span>${card.n}</span>
+                    </div>
+                </div>
+            </div>`; 
+
+        wrap.onclick = () => { 
+            if (isGameOver) return; 
+            
+            if (sec === 'centerRight') { 
+                AudioFX.playCardSound();
+                const old = state[sec][idx]; 
+                const newCard = state.removed[0] ? state.removed.shift() : state.top.splice(randomIdx, 1)[0]; 
+                if (!newCard) return; 
+                state[sec][idx] = newCard; 
+                state.removed.unshift(old); 
+                if (state.removed.length > 1) pickTop(); 
+                render();
+            } else if (sec === 'top') { 
+                AudioFX.playCardSound();
+                const picked = state.top.splice(randomIdx, 1)[0]; 
+                if (!picked) return; 
+                state.removed.unshift(picked); 
+                pickTop(); 
+                render();
+            } 
+        }; 
+        return wrap; 
+    }
+
+    function render() { 
+        let total = 0; 
+        let winnerDeck = null;
+
+        ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => { 
+            total += checkMelds(state[s]); 
+            if (state[s].every(c => c.inMeld)) {
+                winnerDeck = s;
+            }
+        }); 
+
+        // Se alguém ganhou pela primeira vez, registra o estado de fim de jogo e foca inicialmente nele
+        if (winnerDeck && !isGameOver) {
+            isGameOver = true;
+            gameWinner = winnerDeck;
+            currentPresentationDeck = winnerDeck;
+        }
+
+        // Exibe o título dinamicamente com base no deck selecionado, mantendo o aviso de vitória fixo caso haja um ganhador
+        if (isGameOver && gameWinner) {
+            document.getElementById('center-title').innerHTML = `GANHOU: ${namesMap[gameWinner]}! 🎉 <span style="font-size:11px; display:block; opacity:0.7; font-weight:normal; margin-top:3px;">Espiando: ${namesMap[currentPresentationDeck]}</span>`;
+        } else {
+            document.getElementById('center-title').innerText = `VISUALIZANDO: ${namesMap[currentPresentationDeck]}`;
+        }
+
+        updateActiveButtonStyles();
+
+        document.getElementById('stat-melds').innerText = total; 
+        document.getElementById('stat-deck').innerText = state.top.length; 
+        
+        const topDiv = document.getElementById('deck-top'); 
+        topDiv.innerHTML = ''; 
+        if (randomIdx !== null && state.top[randomIdx]) topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver)); 
+        
+        const centerEl = document.getElementById('deck-centerRight'); 
+        centerEl.innerHTML = ''; 
+        state[currentPresentationDeck].forEach((c, i) => {
+            // Revela todas as cartas caso o jogo tenha terminado, para que você possa inspecionar os outros baralhos
+            centerEl.appendChild(createCard(c, currentPresentationDeck, i, true));
+        }); 
+
+        const removedEl = document.getElementById('deck-removed');
+        removedEl.innerHTML = '';
+        if (state.removed.length > 0) {
+            removedEl.appendChild(createCard(state.removed[0], 'removed', 0, true));
+        }
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>

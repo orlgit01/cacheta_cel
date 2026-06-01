@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -9,8 +8,8 @@
         :root {
             --ios7-blue: #007aff;
             --gold: #ffcc00;
-            --card-h: 118px;      /* Aumentei um pouco a altura também para manter proporção */
-            --card-w: 88px;       /* ← Ainda mais largo */
+            --card-h: 112px;
+            --card-w: 80px;           /* ← Aumentado */
         }
 
         * { 
@@ -100,7 +99,7 @@
 
         .table-row {
             display: flex;
-            gap: 12px;
+            gap: 14px;
             align-items: flex-start;
         }
 
@@ -109,7 +108,7 @@
             border-radius: 12px;
             padding: 10px 8px;
             text-align: center;
-            width: 98px;
+            width: 92px;
             flex-shrink: 0;
         }
 
@@ -147,6 +146,7 @@
             justify-content: center;
         }
 
+        /* Cards mais largos */
         .card-wrapper {
             width: var(--card-w);
             height: var(--card-h);
@@ -198,7 +198,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.6rem;
+            font-size: 2.5rem;
             filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
         }
 
@@ -269,7 +269,7 @@
 <div id="deck-right" style="display:none;"></div>
 
 <script>
-    // JavaScript completo (sem mudanças)
+    // JavaScript completo (sem alterações)
     const AudioFX = {
         ctx: null,
         init() {

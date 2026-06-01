@@ -86,7 +86,7 @@
             font-weight: 600;
             letter-spacing: 0.5px;
             text-transform: uppercase;
-            margin-top: 8px; /* Pequeno espaçamento superior compensando a ausência da barra */
+            margin-top: 8px;
         }
 
         .top-bar button {
@@ -389,7 +389,6 @@
 <div id="deck-right" style="display:none;"></div>
 
 <script>
-    // JavaScript funcional original (Intocado em sua lógica interna)
     const AudioFX = {
         ctx: null,
         init() {
@@ -586,8 +585,10 @@
 
         wrap.onclick = () => { 
             if (isGameOver) return; 
-            AudioFX.playCardSound();
-            if (['left', 'centerLeft', 'centerRight', 'right'].includes(sec)) { 
+            
+            // Restrição solicitada: Apenas interações do deck mestre (centerRight) realizam a troca por toque de dedo
+            if (sec === 'centerRight') { 
+                AudioFX.playCardSound();
                 const old = state[sec][idx]; 
                 const newCard = state.removed[0] ? state.removed.shift() : state.top.splice(randomIdx, 1)[0]; 
                 if (!newCard) return; 
@@ -596,6 +597,8 @@
                 if (state.removed.length > 1) pickTop(); 
                 render();
             } else if (sec === 'top') { 
+                // Permite puxar da compra manualmente para o descarte caso clique direto no deck de Compra
+                AudioFX.playCardSound();
                 const picked = state.top.splice(randomIdx, 1)[0]; 
                 if (!picked) return; 
                 state.removed.unshift(picked); 

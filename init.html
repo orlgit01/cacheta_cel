@@ -255,11 +255,11 @@
             margin-top: 10px;
         }
 
-        /* Bordas Azuis para jogos válidos (melds) */
+        /* MODIFICAÇÃO: Borda Azul mais ESPESSA (5px) para jogos válidos (melds) */
         .in-meld .card-front {
-            border: 3px solid var(--ios-blue) !important;
+            border: 5px solid var(--ios-blue) !important;
             background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%) !important;
-            box-shadow: 0 0 15px rgba(0, 122, 255, 0.4);
+            box-shadow: 0 0 18px rgba(0, 122, 255, 0.5);
         }
 
         .last-active .card-front {
@@ -423,7 +423,7 @@
     let randomIdx = null;
     let isGameOver = false;
     let currentPresentationDeck = 'centerRight';
-    let gameWinner = null; // Armazena quem ganhou de forma fixa sem travar a navegação de abas
+    let gameWinner = null;
 
     const namesMap = { 'left': 'ESQUERDA', 'centerLeft': 'CENTRO-E', 'centerRight': 'MESTRE', 'right': 'DIREITA' };
 
@@ -535,7 +535,6 @@
         render(); 
     }
 
-    // Botões "Ver na Tela" agora funcionam livremente e a qualquer momento, mesmo com o jogo ganho
     function changePresentation(targetDeck) {
         AudioFX.playCardSound();
         currentPresentationDeck = targetDeck;
@@ -621,14 +620,12 @@
             }
         }); 
 
-        // Se alguém ganhou pela primeira vez, registra o estado de fim de jogo e foca inicialmente nele
         if (winnerDeck && !isGameOver) {
             isGameOver = true;
             gameWinner = winnerDeck;
             currentPresentationDeck = winnerDeck;
         }
 
-        // Exibe o título dinamicamente com base no deck selecionado, mantendo o aviso de vitória fixo caso haja um ganhador
         if (isGameOver && gameWinner) {
             document.getElementById('center-title').innerHTML = `GANHOU: ${namesMap[gameWinner]}! 🎉 <span style="font-size:11px; display:block; opacity:0.7; font-weight:normal; margin-top:3px;">Espiando: ${namesMap[currentPresentationDeck]}</span>`;
         } else {
@@ -647,7 +644,6 @@
         const centerEl = document.getElementById('deck-centerRight'); 
         centerEl.innerHTML = ''; 
         state[currentPresentationDeck].forEach((c, i) => {
-            // Revela todas as cartas caso o jogo tenha terminado, para que você possa inspecionar os outros baralhos
             centerEl.appendChild(createCard(c, currentPresentationDeck, i, true));
         }); 
 

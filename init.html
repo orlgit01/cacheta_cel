@@ -166,14 +166,19 @@
             border-radius: 20px;
         }
 
-        /* Grid de Cartas Otimizado */
+        /* Layout Flex Dinâmico Otimizado para formação e agrupamento de Trincas */
         .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             width: 100%;
-            max-width: 320px;
-            justify-items: center;
+            max-width: 340px;
+            justify-content: center;
+        }
+
+        /* Classe de agrupamento para separar visualmente as trincas formadas */
+        .meld-group-separator {
+            margin-right: 12px;
         }
 
         /* Design Premium das Cartas */
@@ -428,7 +433,6 @@
 
     const namesMap = { 'left': 'ESQUERDA', 'centerLeft': 'CENTRO-E', 'centerRight': 'MESTRE', 'right': 'DIREITA' };
 
-    // NOVA FUNÇÃO: Classifica as cartas por Naipe e depois por Valor Numérico
     function sortCards(cards) {
         return cards.sort((a, b) => {
             if (nOrder[a.n] !== nOrder[b.n]) {
@@ -447,23 +451,26 @@
         return values[0] + 1 === values[1] && values[1] + 1 === values[2];
     }
 
+    // Analisa melds e retorna as trincas/sequências encontradas mapeadas pelos índices reais originais
     function checkMelds(cards) { 
-        cards.forEach(card => card.inMeld = false); 
+        cards.forEach(card => { card.inMeld = false; card.meldId = null; }); 
         const allMelds = []; 
         for (let i = 0; i < cards.length - 2; i++) { 
             for (let j = i + 1; j < cards.length - 1; j++) { 
                 for (let k = j + 1; k < cards.length; k++) { 
                     if (isValidMeld(cards[i], cards[j], cards[k])) 
-                        allMelds.push({ idxs: [i, j, k], type: cards[i].v === cards[j].v ? 'set' : 'run' }); 
+                        allMelds.push({ idxs: [i, j, k] }); 
                 } 
             } 
         } 
         let bestMask = []; 
+        let bestMeldsChosen = [];
         let bestCount = 0; 
         function backtrack(start, chosen, used) { 
             if (used.size > bestCount) { 
                 bestCount = used.size; 
                 bestMask = chosen.flatMap(m => m.idxs); 
+                bestMeldsChosen = JSON.parse(JSON.stringify(chosen));
             }
             for (let i = start; i < allMelds.length; i++) { 
                 const meld = allMelds[i]; 
@@ -476,7 +483,15 @@
             } 
         } 
         backtrack(0, [], new Set()); 
-        bestMask.forEach(idx => cards[idx].inMeld = true); 
+        
+        // Atribui identificadores de jogo
+        bestMeldsChosen.forEach((m, mIdx) => {
+            m.idxs.forEach(idx => {
+                cards[idx].inMeld = true;
+                cards[idx].meldId = mIdx;
+            });
+        });
+        
         return Math.floor(bestMask.length / 3); 
     }
 
@@ -565,11 +580,11 @@
         gameWinner = null;
         currentPresentationDeck = 'centerRight';
         const deck = []; 
-        for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false }))); 
+        for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false, meldId: null }))); 
         deck.sort(() => Math.random() - 0.5); 
         ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => {
             state[s] = deck.splice(0, 9);
-            sortCards(state[s]); // Classifica inicialmente
+            sortCards(state[s]); 
         }); 
         state.top = deck; 
         state.removed = []; 
@@ -579,10 +594,12 @@
 
     function pickTop() { randomIdx = state.top.length > 0 ? Math.floor(Math.random() * state.top.length) : null; }
 
-    function createCard(card, sec, idx, show) { 
+    function createCard(card, sec, idx, show, addSeparator) { 
         const wrap = document.createElement('div'); 
         const isTopDiscard = (sec === 'removed' && idx === 0);
-        wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''} ${isTopDiscard ? 'last-active' : ''}`; 
+        
+        let sepClass = addSeparator ? ' meld-group-separator' : '';
+        wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''} ${isTopDiscard ? 'last-active' : ''}${sepClass}`; 
         
         const displayVal = card.v === '10' ? '10' : card.v; 
         wrap.innerHTML = `
@@ -602,12 +619,13 @@
         wrap.onclick = () => { 
             if (isGameOver) return; 
             
+            // O clique usa a propriedade 'originalIndex' injetada na renderização para manter a integridade funcional
             if (sec === 'centerRight') { 
                 AudioFX.playCardSound();
-                const old = state[sec][idx]; 
+                const old = state[sec][card.originalIndex]; 
                 const newCard = state.removed[0] ? state.removed.shift() : state.top.splice(randomIdx, 1)[0]; 
                 if (!newCard) return; 
-                state[sec][idx] = newCard; 
+                state[sec][card.originalIndex] = newCard; 
                 state.removed.unshift(old); 
                 if (state.removed.length > 1) pickTop(); 
                 render();
@@ -628,7 +646,7 @@
         let winnerDeck = null;
 
         ['left', 'centerLeft', 'centerRight', 'right'].forEach(s => { 
-            sortCards(state[s]); // Classifica/Ordena dinamicamente antes de verificar jogos e desenhar na tela
+            sortCards(state[s]); 
             total += checkMelds(state[s]); 
             if (state[s].every(c => c.inMeld)) {
                 winnerDeck = s;
@@ -654,18 +672,42 @@
         
         const topDiv = document.getElementById('deck-top'); 
         topDiv.innerHTML = ''; 
-        if (randomIdx !== null && state.top[randomIdx]) topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver)); 
+        if (randomIdx !== null && state.top[randomIdx]) topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver, false)); 
         
         const centerEl = document.getElementById('deck-centerRight'); 
         centerEl.innerHTML = ''; 
-        state[currentPresentationDeck].forEach((c, i) => {
-            centerEl.appendChild(createCard(c, currentPresentationDeck, i, true));
+
+        // PREPARAÇÃO DO LAYOUT EM JOGOS/TRINCAS FORMADOS:
+        // Clonamos a lista para preservar o índice original mapeado em 'originalIndex'
+        let displayList = state[currentPresentationDeck].map((c, i) => ({...c, originalIndex: i}));
+        
+        // Agrupamos: Primeiro as cartas em jogos válidos, seguidas pelas cartas livres
+        displayList.sort((a, b) => {
+            if (a.inMeld && b.inMeld) return a.meldId - b.meldId;
+            if (a.inMeld) return -1;
+            if (b.inMeld) return 1;
+            return 0;
+        });
+
+        // Desenha as cartas agrupadas adicionando um espaçador quando um bloco de jogo termina
+        displayList.forEach((c, i) => {
+            let nextCard = displayList[i + 1];
+            let addSeparator = false;
+            
+            // Se esta carta está em um jogo e a próxima não está, ou muda de jogo, adicionamos o espaçador
+            if (c.inMeld) {
+                if (!nextCard || !nextCard.inMeld || nextCard.meldId !== c.meldId) {
+                    addSeparator = true;
+                }
+            }
+            
+            centerEl.appendChild(createCard(c, currentPresentationDeck, i, true, addSeparator));
         }); 
 
         const removedEl = document.getElementById('deck-removed');
         removedEl.innerHTML = '';
         if (state.removed.length > 0) {
-            removedEl.appendChild(createCard(state.removed[0], 'removed', 0, true));
+            removedEl.appendChild(createCard(state.removed[0], 'removed', 0, true, false));
         }
     }
 

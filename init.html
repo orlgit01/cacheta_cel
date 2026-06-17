@@ -7,20 +7,20 @@
     <style>
         :root {
             --ios-blue: #007aff;
-            --ios-blue-glow: rgba(0, 122, 255, 0.6);
+            --ios-blue-glow: rgba(0, 122, 255, 0.5);
             --ios-green: #34c759;
             --ios-bg: #0b0d11;
             --gold: #ffcc00;
-            --gold-glow: rgba(255, 204, 0, 0.65);
+            --gold-glow: rgba(255, 204, 0, 0.45);
             --card-h: 132px;
             --card-w: 92px;
-            --glass-bg: rgba(15, 23, 42, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.16);
-            --panel-bg: rgba(10, 15, 26, 0.75);
+            --glass-bg: rgba(10, 18, 32, 0.82);
+            --glass-border: rgba(255, 255, 255, 0.14);
+            --panel-bg: rgba(7, 12, 22, 0.85);
             --panel-border: rgba(255, 255, 255, 0.08);
-            --shadow-flat: 0 6px 12px rgba(0, 0, 0, 0.45), 0 3px 6px rgba(0, 0, 0, 0.3);
-            --shadow-raised: 0 25px 40px rgba(0, 0, 0, 0.65), 0 12px 20px rgba(0, 0, 0, 0.4);
-            --felt-green: radial-gradient(circle at 50% 30%, #1c6643 0%, #0e3d26 60%, #051a10 100%);
+            --shadow-flat: 0 4px 10px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-raised: 0 20px 35px rgba(0, 0, 0, 0.55), 0 10px 15px rgba(0, 0, 0, 0.35);
+            --felt-green: radial-gradient(circle at 50% 30%, #1a5e3e 0%, #0d3622 60%, #061c11 100%);
         }
 
         * {
@@ -91,11 +91,11 @@
             content: "";
             position: absolute;
             inset: 0;
-            opacity: 0.22;
+            opacity: 0.18;
             pointer-events: none;
             background-image: 
-                radial-gradient(rgba(255,255,255,0.18) 1px, transparent 0),
-                radial-gradient(rgba(0,0,0,0.35) 1px, transparent 0);
+                radial-gradient(rgba(255,255,255,0.15) 1px, transparent 0),
+                radial-gradient(rgba(0,0,0,0.3) 1px, transparent 0);
             background-size: 3px 3px;
             background-position: 0 0, 1.5px 1.5px;
         }
@@ -205,7 +205,6 @@
             border-radius: 999px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             text-transform: uppercase;
-            transition: all 0.3s ease;
         }
 
         .grid-cards {
@@ -231,28 +230,21 @@
             top: 5%;
             height: 90%;
             width: 2px;
-            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.25) 50%, transparent);
+            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.2) 50%, transparent);
             border-radius: 1px;
         }
 
-        /* CARD WRAPPER & FÍSICA DE MOVIMENTO DE DISTRIBUIÇÃO */
         .card-wrapper {
             width: var(--card-w);
             height: var(--card-h);
             perspective: 1200px;
             cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-            will-change: transform, opacity;
-            animation: cardEntrance 0.5s cubic-bezier(0.19, 1, 0.22, 1) both;
-        }
-
-        @keyframes cardEntrance {
-            0% { transform: scale(0.3) translateY(100px) rotate(-15deg); opacity: 0; }
-            100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
+            transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+            will-change: transform;
         }
 
         .card-wrapper:hover {
-            transform: translateY(-12px) scale(1.06) rotate(1deg);
+            transform: translateY(-10px) scale(1.05) rotate(0.5deg);
             z-index: 10;
         }
 
@@ -269,7 +261,7 @@
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
             transform-style: preserve-3d;
         }
 
@@ -285,18 +277,17 @@
             border-radius: 12px;
             box-shadow: var(--shadow-flat);
             overflow: hidden;
-            transition: box-shadow 0.35s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.3s ease, background 0.3s ease;
+            transition: box-shadow 0.35s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.3s ease;
         }
 
-        /* Verso Premium com Textura Realista */
         .card-back {
-            background: radial-gradient(circle at 50% 50%, #2563eb 0%, #1d4ed8 40%, #1e3a8a 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             border: 4px solid #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 
-                inset 0 0 20px rgba(0,0,0,0.6),
+                inset 0 0 20px rgba(0,0,0,0.85),
                 var(--shadow-flat);
         }
 
@@ -304,37 +295,34 @@
             content: "";
             position: absolute;
             inset: 5px;
-            border-radius: 6px;
-            border: 1px dashed rgba(255, 255, 255, 0.3);
-            background: linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.05) 75%, transparent 75%, transparent);
-            background-size: 10px 10px;
+            border-radius: 8px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .card-back::after {
-            content: "♣ ♦ ♠ ♥";
-            font-size: 12px;
-            color: rgba(255,255,255,0.4);
+            content: "♠ ♥ ♣ ♦";
+            font-size: 11px;
+            color: rgba(255,255,255,0.25);
             letter-spacing: 2px;
             font-weight: 800;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
         }
 
-        /* Frente Realista com Sombreamento de Bordas */
         .card-front {
-            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%);
+            background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
             transform: rotateY(180deg);
             display: flex;
             flex-direction: column;
             padding: 10px;
-            color: #0f172a;
+            color: #1e293b;
             border: 1px solid #cbd5e1;
             box-shadow: 
-                inset 0 0 12px rgba(0,0,0,0.06),
+                inset 0 0 0 1px rgba(255,255,255,0.9),
                 var(--shadow-flat);
         }
 
         .red {
-            color: #ef4444 !important;
+            color: #dc2626 !important;
         }
 
         .card-corner {
@@ -355,36 +343,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.8rem;
+            font-size: 2.6rem;
             margin-top: 4px;
-            filter: drop-shadow(0 3px 4px rgba(0,0,0,0.15));
-            transition: transform 0.3s ease;
-        }
-        
-        .card-wrapper:hover .suit-main {
-            transform: scale(1.1);
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.12));
         }
 
-        /* GLOWS REALISTAS E BORDAS DE JOGOS */
         .in-meld .card-front {
             border: 3px solid var(--ios-blue) !important;
-            background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 70%, #e0f2fe 100%) !important;
-            box-shadow: 0 0 25px var(--ios-blue-glow), inset 0 0 10px rgba(0,122,255,0.15), var(--shadow-flat);
+            background: linear-gradient(145deg, #ffffff 0%, #e0f2fe 100%) !important;
+            box-shadow: 0 0 20px var(--ios-blue-glow), var(--shadow-flat);
         }
 
         .last-active .card-front {
             border: 3px solid var(--gold) !important;
-            box-shadow: 0 0 25px var(--gold-glow), inset 0 0 10px rgba(255,204,0,0.15), var(--shadow-flat);
-            animation: pulseGlow 2s infinite alternate;
-        }
-        
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 15px rgba(255,204,0,0.4), var(--shadow-flat); }
-            100% { box-shadow: 0 0 30px rgba(255,204,0,0.8), var(--shadow-flat); }
+            box-shadow: 0 0 20px var(--gold-glow), var(--shadow-flat);
         }
 
         .control-panel {
-            background: rgba(8, 14, 24, 0.9);
+            background: rgba(8, 14, 24, 0.88);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border-radius: 28px;
@@ -432,7 +408,7 @@
             font-size: 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .clickable-title:hover {
@@ -441,10 +417,10 @@
         }
 
         .clickable-title.active-view {
-            background: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.15);
             color: #fff;
             font-weight: 800;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
 
         .ia-row .clickable-title {
@@ -454,14 +430,13 @@
         }
 
         .ia-row .clickable-title:hover {
-            background: rgba(0, 122, 255, 0.2);
+            background: rgba(0, 122, 255, 0.18);
             color: #38bdf8;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,122,255,0.15);
         }
 
         .ia-row .clickable-title:active {
-            background: rgba(0, 122, 255, 0.3);
+            background: rgba(0, 122, 255, 0.25);
             transform: translateY(0);
         }
 
@@ -528,8 +503,8 @@
     <div class="game-content">
         <div class="top-bar">
             <button onclick="init()">Novo Jogo</button>
-            <div>JOGOS: <span id="stat-melds" style="color:var(--ios-blue); text-shadow: 0 0 10px var(--ios-blue-glow);">0</span></div>
-            <div>DECK: <span id="stat-deck" style="color:var(--gold); text-shadow: 0 0 10px var(--gold-glow);">0</span></div>
+            <div>JOGOS: <span id="stat-melds" style="color:var(--ios-blue);">0</span></div>
+            <div>DECK: <span id="stat-deck" style="color:var(--gold);">0</span></div>
         </div>
 
         <div class="main-table">
@@ -889,10 +864,6 @@
         const isTopDiscard = (sec === 'removed' && idx === 0);
         let sepClass = addSeparator ? ' meld-group-separator' : '';
         wrap.className = `card-wrapper ${show ? 'flipped' : ''} ${card.inMeld ? 'in-meld' : ''} ${isTopDiscard ? 'last-active' : ''}${sepClass}`;
-        
-        // Adiciona um atraso escalonado dinâmico na distribuição inicial para simular a mesa correndo
-        wrap.style.animationDelay = `${idx * 40}ms`;
-
         const displayVal = card.v === '10' ? '10' : card.v;
         wrap.innerHTML = `
             <div class="card-inner">
@@ -907,14 +878,17 @@
                     </div>
                 </div>
             </div>`;
+        
         wrap.onclick = () => {
             if (isGameOver) return;
-            if (sec === 'centerRight') {
+            if (sec === currentPresentationDeck) {
                 AudioFX.playCardSound();
-                const old = state[sec][card.originalIndex];
+                // Correção de Descarte crucial: captura o índice original correto mapeado pelo renderizador
+                const targetIdx = card.originalIndex;
+                const old = state[sec][targetIdx];
                 const newCard = state.removed[0] ? state.removed.shift() : state.top.splice(randomIdx, 1)[0];
                 if (!newCard) return;
-                state[sec][card.originalIndex] = newCard;
+                state[sec][targetIdx] = newCard;
                 state.removed.unshift(old);
                 if (state.removed.length > 1) pickTop();
                 render();
@@ -958,12 +932,19 @@
 
         const topDiv = document.getElementById('deck-top');
         topDiv.innerHTML = '';
-        if (randomIdx !== null && state.top[randomIdx]) topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver, false));
+        if (randomIdx !== null && state.top[randomIdx]) {
+            topDiv.appendChild(createCard(state.top[randomIdx], 'top', randomIdx, isGameOver, false));
+        }
 
         const centerEl = document.getElementById('deck-centerRight');
         centerEl.innerHTML = '';
 
-        let displayList = state[currentPresentationDeck].map((c, i) => ({...c, originalIndex: i}));
+        // Criação explícita da lista mutável contendo o índice real do estado físico da mão
+        let displayList = state[currentPresentationDeck].map((c, i) => {
+            c.originalIndex = i;
+            return c;
+        });
+
         displayList.sort((a, b) => {
             if (a.inMeld && b.inMeld) return a.meldId - b.meldId;
             if (a.inMeld) return -1;

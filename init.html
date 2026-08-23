@@ -106,14 +106,14 @@
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            padding: 12px 18px;
+            padding: 12px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            font-size: 11px;
+            gap: 8px;
+            font-size: 10px;
             font-weight: 900;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
             z-index: 2;
@@ -124,9 +124,9 @@
             color: #0f172a;
             border: none;
             border-radius: 14px;
-            padding: 8px 18px;
+            padding: 8px 12px;
             font-weight: 800;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -137,6 +137,11 @@
         .top-bar button:active {
             transform: scale(0.94);
             background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+        }
+
+        .stat-highlight {
+            color: var(--gold);
+            font-weight: 900;
         }
 
         .main-table {
@@ -464,7 +469,8 @@
                 gap: 12px;
             }
             .top-bar {
-                padding: 10px 14px;
+                padding: 10px 10px;
+                font-size: 9px;
             }
             .main-table {
                 padding: 14px;
@@ -478,12 +484,12 @@
                 --card-w: 78px;
             }
             .top-bar {
-                font-size: 10px;
-                padding: 8px 14px;
+                font-size: 9px;
+                padding: 8px 8px;
             }
             .top-bar button {
-                padding: 6px 14px;
-                font-size: 11px;
+                padding: 6px 10px;
+                font-size: 10px;
             }
             #center-title {
                 font-size: 11px;
@@ -504,7 +510,8 @@
         <div class="top-bar">
             <button onclick="init()">Novo Jogo</button>
             <div>JOGOS: <span id="stat-melds" style="color:var(--ios-blue);">0</span></div>
-            <div>DECK: <span id="stat-deck" style="color:var(--gold);">0</span></div>
+            <div>DECK: <span id="stat-deck" style="color:var(--ios-green);">0</span></div>
+            <div>IGUAIS: <span id="stat-last-match" class="stat-highlight">0</span></div>
         </div>
 
         <div class="main-table">
@@ -698,6 +705,7 @@
     let isGameOver = false;
     let currentPresentationDeck = 'centerRight';
     let gameWinner = null;
+    let lastDiscardedValue = null; // Armazena o valor da última carta descartada
 
     const namesMap = { 'left': 'ESQUERDA', 'centerLeft': 'CENTRO-E', 'centerRight': 'MESTRE', 'right': 'DIREITA' };
 
@@ -706,6 +714,12 @@
             if (nOrder[a.n] !== nOrder[b.n]) return nOrder[a.n] - nOrder[b.n];
             return vNum[a.v] - vNum[b.v];
         });
+    }
+
+    function calculateLastValueMatches() {
+        if (!lastDiscardedValue) return 0;
+        const areas = ['left', 'centerLeft', 'centerRight', 'right', 'removed'];
+        return areas.reduce((total, area) => total + state[area].filter(c => c.v === lastDiscardedValue).length, 0);
     }
 
     function isValidMeld(a, b, c) {
@@ -809,15 +823,19 @@
         const drawEV = calculateEV(state.top[randomIdx], state[sec]);
         if (state.removed[0] && discEV > drawEV && discEV > minEV) {
             const old = state[sec][worstIdx];
+            lastDiscardedValue = old.v;
             state[sec][worstIdx] = state.removed.shift();
             state.removed.unshift(old);
         } else if (state.top[randomIdx] && drawEV > minEV) {
             const old = state[sec][worstIdx];
+            lastDiscardedValue = old.v;
             state[sec][worstIdx] = state.top.splice(randomIdx, 1)[0];
             state.removed.unshift(old);
             pickTop();
         } else if (randomIdx !== null) {
-            state.removed.unshift(state.top.splice(randomIdx, 1)[0]);
+            const discarded = state.top.splice(randomIdx, 1)[0];
+            lastDiscardedValue = discarded.v;
+            state.removed.unshift(discarded);
             pickTop();
         }
         render();
@@ -841,6 +859,7 @@
         AudioFX.playShuffle();
         isGameOver = false;
         gameWinner = null;
+        lastDiscardedValue = null;
         currentPresentationDeck = 'centerRight';
         const deck = [];
         for (let i = 0; i < 2; i++) naipes.forEach(n => valores.forEach(v => deck.push({ v, n, isRed: '♥♦'.includes(n), inMeld: false, meldId: null })));
@@ -889,6 +908,7 @@
                 const newCard = state.removed[0] ? state.removed.shift() : state.top.splice(randomIdx, 1)[0];
                 if (!newCard) return;
                 state[sec][targetIdx] = newCard;
+                lastDiscardedValue = old.v;
                 state.removed.unshift(old);
                 if (state.removed.length > 1) pickTop();
                 render();
@@ -896,6 +916,7 @@
                 AudioFX.playCardSound();
                 const picked = state.top.splice(randomIdx, 1)[0];
                 if (!picked) return;
+                lastDiscardedValue = picked.v;
                 state.removed.unshift(picked);
                 pickTop();
                 render();
@@ -929,6 +950,7 @@
         updateActiveButtonStyles();
         document.getElementById('stat-melds').innerText = total;
         document.getElementById('stat-deck').innerText = state.top.length;
+        document.getElementById('stat-last-match').innerText = calculateLastValueMatches();
 
         const topDiv = document.getElementById('deck-top');
         topDiv.innerHTML = '';
